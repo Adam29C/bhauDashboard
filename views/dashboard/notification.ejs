@@ -1,0 +1,137 @@
+<% layout('../layout') %>
+<style>
+.th{
+    width: 180px;
+}
+tr{
+    color: #343a40e3;
+    font-size: 13px;
+    font-weight: 500;
+}
+</style>
+<div class="content">
+    <div class="container-fluid animated fadeIn">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Notifications</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid animated fadeIn">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="">
+                    <h4 class="mt-0 header-title">Notifications</h4>
+                    <a href="#custom-modal" class="btn btn-purple  width-md waves-effect waves-light  button-color float-right mb-2" data-animation="door" data-overlaycolor="#36404a" data-plugin="custommodal" >Send New Notification</a>
+                    <table   class="table table-bordered  nowrap text-center" >
+                        <thead>
+                        <tr>
+                            <th>Sr.</th>
+                            <th>Game Name</th>
+                            <th>Game Result</th>
+                            <th>Delete Notifiction</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notiData">
+                                <%  if(Object.keys(data).length === 0) {%>
+                                    <tr><td colspan="4" style="text-align:center;font-size:20px;    font-weight: bolder;">No Notification Available</td></tr>
+                                <%  }
+                                else
+                                { 
+                                    for(index in data){ 
+                                    var i = parseInt([index]);
+                                    var j = i+1;%>
+                                <tr>
+                                    <td><%= j %></td>
+                                    <td><%= data[index].title %></td>
+                                    <td><%= data[index].message %></td>
+                                    <td class="th">
+                                        <button class="btn btn-dark waves-effect waves-light btn-xs" data-id="<%= data[index]._id %>" onclick="decline(this)"> <i class="  far fa-trash-alt mr-1"   ></i> <span>Delete Notifiction</span> </button>
+                                    </td>
+                                </tr>
+                                <% }} %>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div id="custom-modal" class="modal-demo">
+                    <button type="button" class="close" onclick="Custombox.modal.close();">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="custom-modal-title">Send New Notification</h4>
+                    <div class="custom-modal-text">
+                        <div class="">
+                                <div class="form-group">
+                                    <label for="gamename">Title</label>
+                                    <input type="text" class="form-control" id="title" placeholder="Enter Title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="result">Message</label>
+                                    <textarea class="form-control" rows="5" id="example-textarea" placeholder="Enter Message"></textarea>                                                  
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="submit" onclick="Custombox.modal.close();">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+   $("#submit").on("click", function(){
+        const title = $("#title").val();
+        const message = $("#example-textarea").val();
+        $.ajax({
+            type: "post",
+            url: "/common/notification",
+            data: { title : title, message: message, gameId: 4},
+            success: function(data) {
+                let Html;
+                var i = 1;
+                data.forEach(function(e) {
+                    Html += '<tr><td>' + i + '</td><td>' + e.title + '</td><td>' + e.message +'</td><td class="th"><button class="btn btn-dark waves-effect waves-light btn-xs" data-id="'+ e._id +'" onclick="decline(this)"> <i class="  far fa-trash-alt mr-1" ></i> <span>Delete Notifiction</span> </button></td></tr>';
+                    i++
+                }); $("#notiData").html(Html);
+                $("#title").val('');
+                $("#example-textarea").val('');
+            }
+        });
+
+    });
+
+    function decline(obj)
+    {
+        const id = $(obj).attr('data-id');
+        $.ajax({
+            type: "post",
+            url: "/common/notification/1",
+            data: { id : id},
+            success: function(data) {
+                
+                let Html;
+                var i = 1;
+                if(Object.keys(data).length === 0)
+                {
+                    Html = '<tr><td colspan="4" style="text-align:center;font-size:20px;    font-weight: bolder;">No Notification Available</td></tr>';
+                    $("#notiData").html(Html);
+                }
+
+                data.forEach(function(e) {
+                    Html += '<tr><td>' + i + '</td><td>' + e.title + '</td><td>' + e.message +'</td><td class="th"><button class="btn btn-dark waves-effect waves-light btn-xs" data-id="'+ e._id +'" onclick="decline(this)"> <i class="  far fa-trash-alt mr-1" ></i> <span>Delete Notifiction</span> </button></td></tr>';
+                    i++
+                }); $("#notiData").html(Html);
+            }
+        });
+    }
+
+</script>

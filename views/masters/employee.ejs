@@ -1,0 +1,245 @@
+<% layout('../layout') %>
+<div class="content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xl-12 col-md-12">
+				<div class="card-box pt-0 pb-0">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item" aria-current="page">
+								<a href="/"> Home </a>
+							</li>
+							<li class="breadcrumb-item active" aria-current="page">
+								Manage Employee
+							</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid animated fadeIn">
+		<div class="row">
+			<div class="col-xl-12 col-md-12">
+				<div class="card-box">
+					<h4 class="mt-0 header-title">Manage Employee</h4>
+					<a
+						href="/employee/registerNewEmployee"
+						class="btn btn- btn-rounded width-md waves-effect waves-light float-right mb-2"
+						>Create Employee</a
+					>
+					<div class="table-responsive" data-pattern="priority-columns">
+						<table
+							id="datatable"
+							class="table table-bordered dt-responsive nowrap text-center"
+						>
+							<thead>
+								<tr>
+									<th>Sno</th>
+									<th>Employee Username</th>
+									<th>Name</th>
+									<th>Login Status</th>
+									<th>Change Password</th>
+									<th>Block Employee</th>
+									<th>Edit Employee</th>
+									<th>Delete Employee</th>
+								</tr>
+							</thead>
+							<tbody id="bank">
+								<% let i = 1; empList.forEach(function(row){ %>
+								<tr>
+									<td><%= i %></td>
+									<td><%= row.name %></td>
+									<td><%= row.username %></td>
+									<td><%= row.loginStatus %></td>
+									<td>
+										<button
+											type="button"
+											class="btn btn-dark btn-rounded width-xs waves-effect waves-light btn-sm" data-toggle="modal" data-target=".bs-example" 
+											onclick="changeId('<%= row._id %>')"
+										>
+											Change Password
+										</button>
+									</td>
+									<td>
+										<%if(row.banned === 1){ %>
+										<button
+											type="button"
+											class="btn btn-danger btn-rounded width-xs waves-effect waves-light btn-xs"
+											onclick="block('<%= row._id %>', 0)"
+										>
+											Block
+										</button>
+										<%}else{ %>
+										<button
+											type="button"
+											class="btn btn-success waves-effect width-xs waves-light btn-xs"
+											onclick="block('<%= row._id %>', 1)"
+										>
+											Un-Block
+										</button>
+										<% } %>
+									</td>
+									<td>
+										<a
+											href="/employee/editEmp/<%= row._id %>"
+											type="button"
+											class="btn btn-primary btn-rounded width-xs waves-effect waves-light btn-xs"
+											>Edit Employee</a
+										>
+									</td>
+									<td>
+										<button
+											type="button"
+											class="btn btn-danger btn-rounded width-xs waves-effect waves-light btn-xs"
+											onclick="dltEmp('<%= row._id %>')"
+										>
+											Delete Emp
+										</button>
+									</td>
+								</tr>
+								<% i++ }); %>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade bs-example-modal-sm bs-example"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit Game Provider</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+				<div class="form-group">
+					<label>Enter New Password</label><br>
+					<input type="text" class="form-control" name="pass1" id="pass1">
+					<input type="hidden" name="empId" id="empId" >
+				</div>
+				<div class="form-group">
+					<label>Confirm Password</label><br>
+					<input type="text" class="form-control" name="pass2" id="pass2">
+				</div>
+				<button type="submit" class="btn btn-raised btn-success" onclick="changepassWord()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+	function changeId(id){
+		$("#empId").val(id)
+	}
+
+
+	function changepassWord(){
+		const pass1 = $("#pass1").val();
+		const pass2 = $("#pass2").val();
+		const empId = $("#empId").val()
+		if(pass1 !== pass2 || pass1 == '' || pass2 == ''){
+			return toastr.info("1. Kindly Enter Same Password <br />2. Password Field Cannot Be Empty","Possible Error");
+		}
+
+		fetch("/employee/updatePaasword", {
+			method: "POST",
+			body: JSON.stringify({ password: pass1, adminId: empId }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "same-origin",
+		})
+		.then((res) => res.json())
+		.then((body) => {
+			toastr.info("Password Updated Successfully","Kuber Starline");
+			location.reload()
+		});
+	}
+
+	function block(id, status) {
+		// $("#datatable").DataTable().destroy();
+		fetch("/employee/blockEmployee", {
+			method: "POST",
+			body: JSON.stringify({ id: id, status: status }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "same-origin",
+		})
+			.then((res) => res.json())
+			.then((body) => {
+
+			return	location.reload()
+
+				let data = body.response;
+				let html = "";
+				let i = 1;
+				data.forEach((e) => {
+					let btn = "";
+					let id = "'" + e._id + "'";
+					if (e.banned === 1) {
+						btn =
+							'<button type="button" class="btn btn-danger btn-rounded width-xs waves-effect waves-light btn-xs" onclick="block(' +
+							id +
+							', 0)">Block</button>';
+					} else {
+						btn =
+							'<button type="button" class="btn btn-success waves-effect width-xs waves-light btn-xs" onclick="block(' +
+							id +
+							', 1)">Un-Block</button>';
+					}
+
+					html +=
+						"<tr><td>" +
+						i +
+						"</td>\
+                        <td>" +
+						e.name +
+						"</td>\
+                        <td>" +
+						e.username +
+						"</td>\
+                        <td>" +
+						e.last_login +
+						"</td>\
+                        <td>" +
+						e.loginStatus +
+						"</td>\
+                        <td>" +
+						btn +
+						'</td>\
+                        <td><a href="/employee/editEmp/' +
+						e._id +
+						'" type="button" class="btn btn-primary btn-rounded width-xs waves-effect waves-light btn-xs">Edit Employee</a></td>\
+                        <td><button type="button" class="btn btn-danger btn-rounded width-xs waves-effect waves-light btn-xs" onclick="dltEmp(' +
+						id +
+						')">Delete Emp</button>';
+					i++;
+				});
+				$("#bank").html(html);
+				$("#datatable").dataTable();
+			});
+	}
+
+	function dltEmp(id) {
+		fetch("/employee/deleteEmp", {
+			method: "POST",
+			body: JSON.stringify({ id: id }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "same-origin",
+		})
+			.then((res) => res.json())
+			.then((body) => {
+				location.reload();
+			});
+	}
+</script>

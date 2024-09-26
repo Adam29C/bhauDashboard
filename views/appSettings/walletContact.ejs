@@ -1,0 +1,155 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+  <h4 class="header-title mt-0 mb-3">Update Wallet related query contact no</h4>
+  <div class="card-box">
+    <div class="form-group">
+      <label for="userName"> Contact No </label>
+      <input
+        type="text"
+        class="form-control"
+        id="userName"
+        value="<%= data[0].number %>"
+      />
+      <input type="hidden" value="<%= data[0]._id %>" id="id" />
+    </div>
+    <div class="form-group text-right mb-0">
+      <button
+        class="btn btn-primary waves-effect waves-light mr-1"
+        type="submit"
+        id="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <h4 class="header-title mt-0 mb-3">Update Application Headline</h4>
+  <div class="card-box">
+    <div class="form-group">
+      <label for="headeline"> Enter Headline </label>
+      <input type="text" class="form-control" id="headeline" value="" />
+      <!-- <input type="hidden" value="<%= data[0]._id %>" id="id"> -->
+    </div>
+    <div class="form-group text-right mb-0">
+      <button
+        class="btn btn-primary waves-effect waves-light mr-1"
+        type="submit"
+        id="submit_Headline"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <h4 class="header-title mt-0 mb-3">Update UPI</h4>
+  <div class="card-box">
+    <div class="form-group">
+      <label for="upiid"> Enter UPI Name </label>
+      <input type="text" class="form-control" id="upiid" value="" />
+      <!-- <input type="hidden" value="<%= data[0]._id %>" id="id"> -->
+    </div>
+    <div class="form-group text-right mb-0">
+      <button
+        class="btn btn-primary waves-effect waves-light mr-1"
+        type="submit"
+        id="submit_UPI"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+  $("#submit").click(function () {
+    const number = $("#userName").val();
+    const id = $("#id").val();
+    $.ajax({
+      type: "POST",
+      url: "/appSettings/updatewalletContact",
+      data: { number: number, id: id },
+      success: function (data) {
+        document.getElementById("userName").value = data.number;
+        document.getElementById("id").value = data._id;
+        toastr["info"](
+          "Wallet Contact Number Updated Successfully",
+          "Bhau777 Bets Games"
+        );
+        toastr.options = {
+          closeButton: true,
+          debug: false,
+          newestOnTop: true,
+          progressBar: true,
+          positionClass: "toast-top-right",
+          preventDuplicates: false,
+          onclick: null,
+          showDuration: "300",
+          hideDuration: "1000",
+          timeOut: "5000",
+          extendedTimeOut: "1000",
+          showEasing: "linear",
+          hideEasing: "linear",
+          showMethod: "slideDown",
+          hideMethod: "fadeOut",
+        };
+      },
+    });
+  });
+
+  //  GET HEADLINS
+
+  function getHeadLine() {
+    const headline = $("#headeline").val();
+
+    console.log("headline", headline);
+    $.ajax({
+      type: "GET",
+      url: "/appSettings/getHeadLine",
+      data: {},
+      success: function (result) {
+        if (result.status) {
+          document.getElementById("headeline").value = result.headline;
+          document.getElementById("upiid").value = result.upiID;
+          document.getElementById("dayCount").value = result.dayCount;
+          // console.log("result", result.headline);
+        }
+      },
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", getHeadLine);
+
+  $("#submit_Headline").click(function () {
+    const headline = $("#headeline").val();
+    $.ajax({
+      type: "POST",
+      url: "/appSettings/addHeadLine",
+      data: { headline: headline },
+      success: function (data) {
+        console.log("data", data);
+        toastr["info"](data.message, "Bhau777 Bets Games");
+        location.reload();
+      },
+    });
+  });
+
+  $("#submit_UPI").click(function () {
+    const upiid = $("#upiid").val();
+    $.ajax({
+      type: "POST",
+      url: "/appSettings/addManualPayment",
+      data: { upiId: upiid },
+      success: function (data) {
+        toastr["info"](data.message, "Bhau777 Bets Games");
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      },
+    });
+  });
+
+
+</script>

@@ -1,0 +1,138 @@
+<% layout('../layout') -%>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Detailed Bidding Report</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-xl-12">
+        <div class="card-box">
+            <h4 class="header-title mt-0 mb-3">Detailed Bidding Report</h4>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="col-form-label">Game Name </label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control provider">
+                            <% for(index in provider) { %>
+                                <option value="<%= provider[index]._id %>"><%= provider[index].providerName %></option>
+                            <%}%>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label" >Game Type </label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control gameType">
+                           <% for(index in list) { %>
+                            <option value="<%= list[index]._id %>"><%= list[index].gameName %></option>
+                            <%}%>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label">Game Session </label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control session">
+                            <option value="Open">Open</option>
+                            <option value="Close">Close</option>
+                            <!-- <option value="3">Full Sangam</option>
+                            <option value="4">Half Sangam</option> -->
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label">Date</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="mm/dd/yyyy" id="datepicker-autoclose" autocomplete="off">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="ti-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center">
+                    <!-- <button class="btn btn-danger waves-effect waves-light btn-sm"> <span>Cancel&nbsp;</span></button> -->
+                    <button class="btn btn-dark  button-color  waves-effect waves-light btn-sm" id="submitInfo"> <span>Submit&nbsp;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="bidReport" class="table table-bordered dt-responsive nowrap text-center">
+                            <thead>
+                            <tr>
+                                <th>Sr</th>
+                                <th>Username</th>
+                                <th>Bracket</th>
+                                <th>Bidding Points</th>
+                                <th>Winning Points</th>
+                                <th>Created At</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  $("#submitInfo").click(function() {
+    const providerName = $(".provider").val();
+    const gameType = $(".gameType").val();
+    const session = $(".session").val()
+    const date = $("#datepicker-autoclose").val();
+    $("#bidReport").DataTable().destroy();
+    $.ajax({
+        type: 'GET',
+        url: "/totalBids/gameBidsData",
+        contentType: "text/plain",
+        data : {providerName : providerName, gameType: gameType, session: session, date: date},
+        dataType: 'json',
+        success: function (data) {
+            if(Object.keys(data).length === 0)
+            {
+                toastr["info"]("No Recorde Found","Bhau777 Games");
+                $("#bidReport").DataTable().clear().draw();
+            }
+            else
+            {
+                let html = '';
+                let i = 1;
+                data.forEach(e => {
+                    html += '<tr><td>'+ i +'</td>\
+                        <td>'+ e.userName +'</td>\
+                        <td>'+ e.bidDigit +'</td>\
+                        <td>'+ e.biddingPoints +'</td>\
+                        <td>'+ e.gameWinPoints +'</td>\
+                        <td>'+ e.createdAt +'</td></tr>';
+                    i++;
+                });
+                $("#tableBody").html(html);
+                $("#bidReport").dataTable();
+            }
+        }
+    });
+});
+</script>

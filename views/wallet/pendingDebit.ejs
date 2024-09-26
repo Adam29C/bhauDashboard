@@ -1,0 +1,534 @@
+<% layout('../layout') %>
+<style>
+  a {
+    cursor: pointer;
+  }
+  .user-content {
+    padding-top: 50px;
+    text-align: center;
+    padding: 50px 20px 0 20px;
+  }
+  .walletbalance {
+    font-weight: 500;
+    color: #888888;
+    margin-bottom: 0;
+  }
+  .user-content h1 {
+    font-size: 18px;
+    text-align: left;
+    font-weight: 600;
+    color: #3c4858;
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+  .user-content p {
+    text-align: left;
+    font-weight: 500;
+    color: #888888;
+  }
+  .profile-page .page-header {
+    height: 380px;
+    background-position: center;
+  }
+
+  .page-header {
+    height: 100px;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .avatar {
+    margin: -60px 30px 0;
+  }
+  .header-filter::before {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .main-raised {
+    margin: 0;
+    border-radius: 6px;
+    box-shadow: 0 16px 13px 2px rgba(0, 0, 0, 0.14),
+      0 0px 8px 1px rgba(0, 0, 0, 0.12), 0 0px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  .main {
+    background: #fff;
+    position: relative;
+    z-index: 3;
+    text-align: center;
+  }
+
+  .profile-page .profile {
+    text-align: center;
+  }
+
+  .profile-page .profile img {
+    max-width: 160px;
+    width: 100%;
+    margin: 0 auto;
+    -webkit-transform: translate3d(0, -50%, 0);
+    -moz-transform: translate3d(0, -50%, 0);
+    -o-transform: translate3d(0, -50%, 0);
+    -ms-transform: translate3d(0, -50%, 0);
+    transform: translate3d(0, -50%, 0);
+  }
+
+  .img-raised {
+    box-shadow: 0 5px 15px -8px rgba(0, 0, 0, 0.24),
+      0 8px 10px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  .rounded-circle {
+    border-radius: 50% !important;
+  }
+
+  .img-fluid,
+  .img-thumbnail {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #3c4858;
+    font-weight: 700;
+    font-family: "Roboto Slab", "Times New Roman", serif;
+    font-size: 20px;
+  }
+
+  .profile-page .description {
+    margin: 1.071rem auto 0;
+    max-width: 600px;
+    color: #999;
+    font-weight: 300;
+  }
+  .profile-page .profile-tabs {
+    margin-top: 4.284rem;
+  }
+  .profile-page .gallery {
+    margin-top: 3.213rem;
+    padding-bottom: 50px;
+  }
+
+  .profile-page .gallery img {
+    width: 100%;
+    margin-bottom: 2.142rem;
+  }
+
+  .profile-page .profile .name {
+    margin-top: -80px;
+  }
+
+  .rounded {
+    border-radius: 6px !important;
+  }
+  .user-data .table td {
+    font-weight: 500;
+  }
+  .user-data {
+    padding-top: 40px;
+  }
+</style>
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box pt-0 pb-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/"> Home </a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Pending Request
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box">
+          <h3 class="header-title mt-0 mb-3">
+            Pending Debit Requests : Bank Account
+          </h3>
+          <div class="table-responsive" data-pattern="priority-columns">
+            <table
+              id="datatable"
+              class="table table-bordered dt-responsive nowrap creditReq text-center"
+            >
+              <thead>
+                <tr class="text-danger">
+                  <th>Sr.</th>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th>Mobile</th>
+                  <th>Amount</th>
+                  <th>Type</th>
+                  <th>Mode</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="debitBody" class="text-dark">
+                <% var i =1; let total = 0; for(var index in data) { total =
+                total + data[index].reqAmount; %>
+
+                <tr id="dhan<%= data[index].userId %>">
+                  <td><%= i %></td>
+                  <td><%=data[index].fullname %></td>
+                  <td><%=data[index].username %></td>
+                  <td><%=data[index].mobile %></td>
+                  <td><%=data[index].reqAmount %></td>
+                  <td>
+                    <p class="badge badge-purple"><%=data[index].reqType %></p>
+                  </td>
+                  <td>
+                    <p class="badge badge-purple">
+                      <%=data[index].withdrawalMode %>
+                    </p>
+                  </td>
+                  <td>
+                    <p class="badge badge-success">
+                      <%=data[index].reqStatus %>
+                    </p>
+                  </td>
+                  <td>
+                    <%=data[index].reqDate%>&nbsp;<%= data[index].reqTime %>
+                  </td>
+                  <td class="text-center">
+                    <button
+                      data-userId="<%= data[index].userId %>"
+                      data-rowId="<%= data[index]._id %>"
+                      data-amount="<%=data[index].reqAmount %>"
+                      type="button"
+                      class="btn button-color waves-effect waves-light btn-xs"
+                      data-toggle="modal"
+                      data-target=".bs-example-modal-sm"
+                      onclick="getCurrentBal(this)"
+                      title="Approve Request"
+                    >
+                      <i class="fas fa-check-circle"></i>
+                    </button>
+
+                    <button
+                      data-username="<%=data[index].username %>"
+                      data-userId="<%= data[index].userId %>"
+                      data-rowId="<%= data[index]._id %>"
+                      type="button"
+                      class="btn waves-effect waves-light btn-danger btn-xs"
+                      id="creditDecline"
+                      onclick="decline(this)"
+                      title="Decline Request"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+
+                    <button
+                      data-username="<%=data[index].username %>"
+                      data-userId="<%= data[index].userId %>"
+                      type="button"
+                      class="btn waves-effect waves-light btn-purple btn-xs"
+                      data-toggle="modal"
+                      data-target="#custom-modal-edit"
+                      id="userProfile"
+                      onclick="getProfile(this)"
+                      title="User Profile"
+                    >
+                      <i class="fas fa-user"></i>
+                    </button>
+                  </td>
+                </tr>
+                <% i++ } %>
+              </tbody>
+            </table>
+
+            <br />
+            <h3 class="header-title mt-0 mb-3" id="totAmount">
+              Total Amount : <%= total %>/-
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade bs-example-modal-sm show"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="mySmallModalLabel"
+    aria-modal="true"
+  >
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="mySmallModalLabel"></h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-hidden="true"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <h4 class="modal-title text-center" id="balancecURRENT">
+            Current Bal : 4000/-
+          </h4>
+          <div class="mt-3">
+            <h5 class="text-center">Request Amount</h5>
+            <input type="text" class="form-control" id="amount" required />
+            <input type="hidden" id="userid" />
+            <input type="hidden" id="rowId" />
+            <input type="hidden" id="username" />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-dark mt-2 waves-effect waves-light"
+            data-dismiss="modal"
+            onclick="approveDebit()"
+            style="float: right"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 
+    <div id="custom-modal-edit"  class="modal fade bs-example-modal-center show" tabindex="-1" role="dialog" aria-labelledby="myCenterModalLabel"  aria-modal="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="myCenterModalLabel">User Profile</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="bg-picture card-box">
+                        <div class="profile-info-name">
+                            <img src="../assets/images/users/user-1.jpg" class="rounded-circle avatar-xl img-thumbnail float-left mr-3" alt="profile-image">
+                            <h1 id="notFound"></h1>
+                            <div class="profile-info-detail overflow-hidden">
+                                <h4 class="m-0 font-20" id="username"></h4>
+                                <p class="font-14 text-muted" id="balance"><i></i></p>
+                                <p class="text-black-50 font-16" id="address"></p>
+                                <p class="font-16 text-black-50" id="city"></p>
+                                <p class="font-16 text-black-50" id="pincode"></p>
+                                <p class="font-16 text-black-50" id="accNo"></p>
+                                <p class="font-16 text-black-50" id="bankName"></p>
+                                <p class="font-16 text-black-50" id="ifsc"></p>
+                                <p class="font-16 text-black-50" id="accHolder"></p>
+                                <p class="font-16 text-black-50" id="paytm"></p>
+                                <p class="font-16 text-black-50" id="phonepe"></p>
+                                <p class="font-16 text-black-50" id="tez"></p>
+                                <p class="font-16 text-black-50" id="regular"></p>
+                            </div>
+    
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+  <div
+    id="custom-modal-edit"
+    class="modal fade bs-example-modal-center show"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myCenterModalLabel"
+    aria-modal="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title text-center">User Profile</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="">
+            <div class="profile-content">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6 ml-auto mr-auto">
+                    <!-- <div class="profile"> -->
+                      <!-- <div class="avatar">
+                        <img
+                          width="110"
+                          height="150"
+                          src="https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTU0NjQzOTk4OTQ4OTkyMzQy/ansel-elgort-poses-for-a-portrait-during-the-baby-driver-premiere-2017-sxsw-conference-and-festivals-on-march-11-2017-in-austin-texas-photo-by-matt-winkelmeyer_getty-imagesfor-sxsw-square.jpg"
+                          alt="Circle Image"
+                          class="img-raised rounded-circle img-fluid"
+                        />
+                      </div> -->
+                      <div class="name">
+                        <h3 class="title" id="nameeee"></h3>
+                        <p class="walletbalance" id="balance"></p>
+                      </div>
+                    <!-- </div> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="user-data">
+              <div class="container">
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td>Bank Name</td>
+                      <td id="bankName"></td>
+                    </tr>
+                    <tr>
+                      <td>Account Number</td>
+                      <td id="accNo"></td>
+                    </tr>
+                    <tr>
+                      <td>IFSC Code</td>
+                      <td id="ifsc"></td>
+                    </tr>
+                    <tr>
+                      <td>Account Holder Name</td>
+                      <td id="accHolder"></td>
+                    </tr>
+                    <tr>
+                      <td>Paytm Number</td>
+                      <td id="paytm"></td>
+                    </tr>
+                    <tr>
+                      <td>Personal Number</td>
+                      <td id="regular"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function getCurrentBal(obj) {
+    const rowId = $(obj).attr("data-rowId");
+    const id = $(obj).attr("data-userId");
+    const amt = $(obj).attr("data-amount");
+
+    $.ajax({
+      type: "POST",
+      url: "/fundRequest/getBal",
+      data: { id: id },
+      success: function (data) {
+        $("#mySmallModalLabel").html(data.data.username);
+        $("#balancecURRENT").html(
+          "Current Bal : " + data.data.wallet_balance + "/-"
+        );
+        $("#userid").val(id);
+        $("#rowId").val(rowId);
+        $("#amount").val(amt);
+        $("#username").val(data.data.username);
+      },
+    });
+  }
+
+  function approveDebit() {
+    const id = $("#userid").val();
+    const rowId = $("#rowId").val();
+    const amount = $("#amount").val();
+    const username = $("#username").val();
+
+    $.ajax({
+      type: "POST",
+      url: "/fundRequest/updateWallet/2",
+      data: { userId: id, rowId: rowId, amount: amount, username: username },
+      success: function (data) {
+        const tr_id = "dhan" + id;
+        $("#datatable")
+          .DataTable()
+          .row("#" + tr_id)
+          .remove()
+          .draw();
+        toastr["success"]("Request Approved Successfully", "Bhau777 Games");
+      },
+    });
+  }
+
+  function getProfile(obj) {
+    const id = $(obj).attr("data-userId");
+    $.ajax({
+      type: "get",
+      url: "/fundRequest/getProfile",
+      data: { userId: id },
+      success: function (response) {
+        let status = response.status;
+        if (status === 1) {
+          let data = response.data;
+
+          console.log("====================================");
+          console.log("data", data.userData1.name);
+          console.log("====================================");
+
+          document.getElementById("nameeee").innerHTML =
+            "Name : " + data.userData1.username ;
+          document.getElementById("balance").innerHTML =
+            "Wallet Balance : " + data.userData1.wallet_balance + "/-";
+          document.getElementById("accNo").innerHTML =
+            data.userData2.account_no;
+          document.getElementById("bankName").innerHTML =
+            data.userData2.bank_name;
+          document.getElementById("ifsc").innerHTML = data.userData2.ifsc_code;
+          document.getElementById("accHolder").innerHTML =
+            data.userData2.account_holder_name;
+          document.getElementById("paytm").innerHTML =
+            data.userData2.paytm_number;
+          document.getElementById("regular").innerHTML = data.userData1.mobile;
+        } else {
+          document.getElementById("username").innerHTML = "NULL";
+          document.getElementById("balance").innerHTML = "NULL";
+          document.getElementById("accNo").innerHTML = "NULL";
+          document.getElementById("bankName").innerHTML = "NULL";
+          document.getElementById("ifsc").innerHTML = "NULL";
+          document.getElementById("accHolder").innerHTML = "NULL";
+          document.getElementById("paytm").innerHTML = "NULL";
+          document.getElementById("regular").innerHTML = "NULL";
+        }
+      },
+    });
+  }
+
+  function decline(obj) {
+    const rowId = $(obj).attr("data-rowId");
+    const id = $(obj).attr("data-userId");
+    const status = $(obj).attr("data-stat");
+    $.ajax({
+      type: "patch",
+      url: "/fundRequest/decline",
+      data: { rowId: rowId },
+      success: function (data) {
+        let id = data.userId;
+        const tr_id = "dhan" + id;
+        $("#datatable")
+          .DataTable()
+          .row("#" + tr_id)
+          .remove()
+          .draw();
+        toastr["success"]("Request Declined Successfully", "Bhau777 Games");
+      },
+    });
+  }
+</script>

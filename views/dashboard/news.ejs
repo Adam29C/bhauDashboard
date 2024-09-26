@@ -1,0 +1,64 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">News</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="card-box">
+        <div class="form-group">
+            <label for="userName"> Message* </label>
+            <textarea class="form-control" rows="5" id="description" placeholder="Enter Message Here"></textarea>
+            <input type="hidden" id="id" value="<%= data[0]._id %>">
+        </div>
+        <div class="form-group text-right mb-0">
+            <button class="btn btn-primary waves-effect waves-light mr-1" type="submit" id="submit">
+                Submit
+            </button>
+        </div>
+        <h4 class="header-title mt-0 mb-3" id="news"> <%= data[0].Description %></h4>
+    </div>
+</div>
+<script>
+    $("#submit").click(function(){
+        const note = $('#description').val();
+        const id=  $('#id').val();
+        $.ajax({
+            type: "POST",
+            url: "/common/news",
+            data: { note : note, id:id },
+            success: function(data)
+            {
+                document.getElementById("news").innerHTML = note ;
+                $('#description').val(" ");
+                toastr["info"]("Profile Note Updated Successfully", "Bhau777 Games");
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "linear",
+                    "hideEasing": "linear",
+                    "showMethod": "slideDown",
+                    "hideMethod": "fadeOut"
+                }
+            }
+        });
+    });
+</script>

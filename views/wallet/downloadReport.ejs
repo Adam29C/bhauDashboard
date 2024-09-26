@@ -1,0 +1,373 @@
+<% layout('../layout') %>
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box pt-0 pb-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/">Home</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Sales Report
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-12">
+    <div class="card-box">
+      <h4 class="header-title mt-0 mb-3" style="font-size: 16px">
+        Sales Report
+      </h4>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="col-form-label">Search Type</label>
+            <div class="input-group">
+              <select
+                name="req_status"
+                class="form-control"
+                id="req_status"
+                required=""
+              >
+                <option value="0">All Approved</option>
+                <option value="1">Approved 1000 Only</option>
+                <option value="2">Approved Below 5000 Only</option>
+                <option value="3">Approved Below 20000 Only</option>
+                <option value="4">Approved Above 20000 Only</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="col-form-label">Report Type</label>
+            <div class="input-group">
+              <select
+                name="report_type"
+                class="form-control"
+                id="report_type"
+                required
+              >
+                <option value="0">Kotk XLS</option>
+                <option value="6">Cash free</option>
+                <!-- <option value="0">Dhanlaxmi Kotk XLS</option>
+								<option value="1">Tirupatie Kotk XLS</option>
+								<option value="2">Mahalaxmi Kotk XLS</option>
+								<option value="3">R-TRADERS Report</option>
+								<option value="4">Trak Pay</option> -->
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="col-form-label">Report Date</label>
+          <div class="form-group">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control datepicker eDate"
+                placeholder="mm/dd/yyyy"
+                id="datepicker-autoclose"
+                autocomplete="off"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text"
+                  ><i class="ti-calendar"></i
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="col-xl-12">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Submit</label>
+                  <div class="input-group mt-1">
+                    <button
+                      class="btn button-color waves-effect waves-light btn-sm"
+                      onclick="seeReport()"
+                    >
+                      <span>See Report Data</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Submit</label>
+                  <div class="input-group mt-1">
+                    <button
+                      class="btn button-color waves-effect waves-light btn-sm"
+                      onclick="GenerateReportNEW()"
+                    >
+                      <span>Download Report&nbsp;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-12">
+    <div class="card-box">
+      <table
+        id="creditDebitTab"
+        class="table table-bordered nowrap text-center text-dark"
+      >
+        <thead>
+          <tr>
+            <th>Sno</th>
+            <th>Username</th>
+            <th>Acc Holder</th>
+            <th>Bank</th>
+            <th>IFSC</th>
+            <th>A/C NO</th>
+            <th>Amt</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <h4
+        class="header-title text-center mt-0 mb-3"
+        style="font-size: 16px"
+        id="amountTotal"
+      ></h4>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/xlsJs/FileSaver.js"></script>
+<script src="../../assets/xlsJs/jszip.js"></script>
+<script src="../../assets/xlsJs/myexcel.js"></script>
+
+<script>
+  function seeReport() {
+    const searchType = $("#req_status").val();
+    const reportType = $("#report_type").val();
+    const reportDate = $("#datepicker-autoclose").val();
+
+    let jsonData = {
+      searchType: searchType,
+      reportType: reportType,
+      reportDate: reportDate,
+    };
+    $("#creditDebitTab").DataTable().destroy();
+    fetch("/debitReport/showCondition", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        let i = 1;
+        let tableData;
+        const arr = json.Profile;
+
+        if (Object.keys(arr).length === 0) {
+          toastr["info"]("No Records Found", "Bhau777 Games");
+          return $("#creditDebitTab").DataTable().clear().draw();
+        }
+
+        $.each(arr, function (key, e) {
+          tableData +=
+            "<tr><td>" +
+            i +
+            "</td>\
+                                <td>" +
+            e.username +
+            "</td>\
+                                <td>" +
+            e.name +
+            "</td>\
+                                <td>" +
+            e.bname +
+            "</td>\
+                                <td>" +
+            e.ifsc +
+            "</td>\
+                                <td>" +
+            e.account_no +
+            "</td>\
+                                <td>" +
+            e.reqAmount +
+            "</td>\
+                                <td>" +
+            e.reqDate +
+            "</td></tr>";
+          i++;
+        });
+
+        $("#tbody").html(tableData);
+        $("#creditDebitTab").dataTable({
+          pageLength: 50,
+        });
+        const amt = json.totalAmt;
+        $("#amountTotal").html(`Total Amount : ${amt}/-`);
+      });
+  }
+
+  function GenerateReportNEW() {
+    const searchType = $("#req_status").val();
+    const reportType = $("#report_type").val();
+    const reportDate = $("#datepicker-autoclose").val();
+
+    if (parseInt(reportType) === 4) {
+      return generateAllTrakPay(reportDate, searchType);
+    }
+
+    let Product_Code = "RPAY";
+    let Bank_Code_Indicator = "M";
+    let Client_Code = "";
+    let Dr_Ac_No = "";
+
+    switch (reportType) {
+      case "0":
+        Client_Code = "DHANLAX";
+        Dr_Ac_No = "7812280361";
+        break;
+      case "1":
+        Client_Code = "TIRUPATIE";
+        Dr_Ac_No = "7812280194";
+        break;
+      case "2":
+        Client_Code = "MAHATR";
+        Dr_Ac_No = "7812280217";
+        break;
+      case "3":
+        Client_Code = "RTRADERS";
+        Dr_Ac_No = "6812971446";
+        break;
+    }
+
+    let jsonData = {
+      searchType: searchType,
+      reportType: reportType,
+      reportDate: reportDate,
+      Product_Code: "RPAY",
+      Bank_Code_Indicator: "M",
+      Client_Code: Client_Code,
+      Dr_Ac_No: Dr_Ac_No,
+    };
+
+    fetch("/debitReport/xlsDataNewCondition", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const amt = json.totalAmt;
+        $("#amountTotal").html(`Total Amount : ${amt}/-`);
+        const filename = json.filename;
+        const text = json.writeString;
+        var element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+        );
+        element.setAttribute("download", filename);
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      });
+  }
+
+  function generateAllTrakPay(reportDate, searchType) {
+    let jsonData = {
+      reportDate: reportDate,
+      searchType: searchType,
+    };
+
+    fetch("/debitReport/xlsDataDailyTrakCondition", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const amt = json.totalAmt;
+        $("#amountTotal").html(`Total Amount : ${amt}/-`);
+        const xlsData = json.Profile;
+        const reportDate = json.date;
+        var excel = $JExcel.new("Calibri light 10 #333333");
+        var headers = [
+          "Merchant Id",
+          "Beneficiary Name",
+          "Beneficiary Bank",
+          "Beneficiary a/c No",
+          "Beneficiary Bank Branch",
+          "Beneficiary IFSC Code",
+          "Amount",
+        ];
+
+        var formatHeader = excel.addStyle({
+          border: "none,none,none,thin #333333",
+          font: "Calibri 12 #ffff B",
+        });
+
+        for (var i = 0; i < headers.length; i++) {
+          excel.set(0, i, 0, headers[i], formatHeader);
+          excel.set(0, i, undefined, "auto");
+        }
+
+        let a = 1;
+        $.each(xlsData, function (key, e) {
+          let j = 0;
+          excel.set(0, 0, a, "111291");
+          j++;
+          excel.set(0, j, a, e.name);
+          j++;
+          excel.set(0, j, a, e.bank_name);
+          j++;
+          excel.set(0, j, a, e.account_no);
+          j++;
+          excel.set(0, j, a, e.bank_name);
+          j++;
+          excel.set(0, j, a, e.ifsc);
+          j++;
+          excel.set(0, j, a, e.reqAmount);
+          j++;
+          a++;
+        });
+        excel.generate("payout" + reportDate + "_Batch.xlsx");
+      });
+  }
+
+  function updateClass() {
+    const div = document.getElementById("creditDebitTab");
+    console.log("divdivdiv", div);
+
+    if (window.innerWidth < 620) {
+      div.classList.add("table-responsive");
+    } else {
+      div.classList.remove("table-responsive");
+    }
+  }
+
+  // Add event listener for window resize
+  window.addEventListener("resize", updateClass);
+
+  // Call the function on page load
+  updateClass();
+</script>

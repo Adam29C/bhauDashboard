@@ -1,0 +1,192 @@
+<% layout('../layout') %>
+<div class="page-content-wrapper">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-8 offset-2">
+				<div class="card">
+					<div class="card-body">
+						<h4 class="header-title text-center mb-3">Payment Mode List</h4>
+						<button
+							type="button"
+							data-toggle="modal"
+							data-target=".bs-example-modal-LS"
+							class="btn btn-info button-color  btn-sm waves-effect waves-light"
+							style="float: right; margin-top: -45px;"
+						>
+							Add New Mode
+						</button>
+						<table
+							id="datatable"
+							class="table text-center table-sm table-bordered"
+						>
+							<thead>
+								<tr>
+									<th>Mode</th>
+									<th>Redirect Url</th>
+									<th>Status</th>
+									<th>Edit</th>
+									<th>Delete Mode</th>
+								</tr>
+							</thead>
+							<tbody id="bankTable">
+								<% for(index in data) { %>
+								<tr id="mb<%= data[index]._id %>">
+									<td><%=data[index].mode%></td>
+									<td><%=data[index].redirectURL%></td>
+									<td>
+										<% if (data[index].disabled == false ){ %> Disabled <% }
+										else { %> Active <% }%>
+									</td>
+									<td>
+										<% if ( data[index].disabled == false ){ %>
+										<button
+											class="btn btn-warning waves-effect waves-light btn-sm"
+											onclick="blockUnblock('<%= data[index]._id %>', 'true')"
+										>
+											<i class="fas fa-user mr-1"></i> <span>Un-Block</span>
+										</button>
+										<% } else { %>
+										<button
+											class="btn btn-success waves-effect waves-light btn-sm"
+											onclick="blockUnblock('<%= data[index]._id %>', 'false')"
+										>
+											<i class="fas fa-user-alt-slash mr-1"></i>
+											<span>Block</span>
+										</button>
+										<% }%>
+									</td>
+									<td>
+										<button
+											class="btn btn-danger waves-effect waves-light btn-sm"
+											onclick="dltUPI('<%= data[index]._id %>')"
+										>
+											<span>Delete Mode</span>
+										</button>
+									</td>
+								</tr>
+								<% } %>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div
+	class="modal fade bs-example-modal-LS"
+	tabindex="-1"
+	role="dialog"
+	aria-labelledby="mySmallModalLabel"
+	aria-hidden="true"
+>
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title mt-0" id="mySmallModalLabel">Add New UPI</h5>
+				<button
+					id="closeModal"
+					type="button"
+					class="close"
+					data-dismiss="modal"
+					aria-label="Close"
+				>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="card-box" id="upiDiv">
+					<div class="form-group">
+						<label for="userName">Payment Mode</label>
+						<input
+							type="text"
+							name="modeName"
+							parsley-trigger="change"
+							class="form-control"
+							id="modeName"
+						/>
+						<p id="errorText"></p>
+					</div>
+					<div class="form-group">
+						<label for="url">Redirect URL(Only For WEB Payment)</label>
+						<input type="text" name="urlWeb" class="form-control" id="urlWeb" />
+					</div>
+					<div class="form-group">
+						<label for="userName">Status</label>
+						<select class="form-control" name="status" id="status143">
+							<option value="true">Active</option>
+							<option value="false">Disabled</option>
+						</select>
+					</div>
+					<div class="form-group text-right mb-0">
+						<button
+							class="btn btn-primary waves-effect waves-light mr-1"
+							onclick="insertdata();"
+						>
+							Add Mode
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function insertdata() {
+		const name = document.getElementById("modeName").value;
+		const status = document.getElementById("status143").value;
+		const urlWeb = document.getElementById("urlWeb").value;
+		$.ajax({
+			type: "POST",
+			url: "/masters/modeAdd",
+			data: { mode: name, status: status, urlWeb: urlWeb },
+			success: function (result) {
+				let message = result.message;
+				if (result.status === 1) {
+					$("#closeModal").click();
+					toastr["success"](message, "Kuber Starline");
+					window.location.reload();
+				} else {
+					toastr["success"](message, "Kuber Starline");
+				}
+			},
+		});
+	}
+
+	function blockUnblock(bankId, blockStatus) {
+		const id = bankId;
+		const status = blockStatus;
+		$.ajax({
+			type: "POST",
+			url: "/masters/disable_mode",
+			data: { id: id, status: status },
+			success: function (result) {
+				let message = result.message;
+				if (result.status === 1) {
+					window.location.reload();
+				} else {
+					toastr["warning"](message, "Kuber Starline");
+				}
+			},
+		});
+	}
+
+	function dltUPI(upiId) {
+		const id = upiId;
+		$.ajax({
+			type: "POST",
+			url: "/masters/dlt_mode",
+			data: { id: id },
+			success: function (result) {
+				let message = result.message;
+				if (result.status === 1) {
+					window.location.reload();
+				} else {
+					toastr["warning"](message, "Kuber Starline");
+				}
+			},
+		});
+	}
+</script>

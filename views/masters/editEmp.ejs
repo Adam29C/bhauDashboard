@@ -1,0 +1,677 @@
+<% layout('../layout') %>
+<style>
+#main{
+		position: relative!important;
+		left: auto!important;
+		top: auto!important;
+	}
+</style>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Create Employee</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid animated fadeIn">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h4 class="mt-0 header-title">Register New Employee</h4>
+                    <form role="form" id="setData" method="post" action="javascript:void(0)">
+                        <div class="" style="height: 180px;">
+                            <div class="form-group">
+                                <label for="userName">Username</label>
+                                <input type="text" name="username" parsley-trigger="change" class="form-control" id="username" value="<%= empDetails.username %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="userName">Login Permission</label>
+                                <select class="form-control" name="loginFor" id="loginFor" required="required">
+                                    <option value="0"
+                                        <% if( empDetails.loginFor == 0) { %>
+                                            Selected
+                                            <% } %>
+                                    > Both </option>
+                                    <option value="1"
+                                        <% if( empDetails.loginFor == 1) { %>Selected
+                                            <% } %>
+                                    > Dahsboard </option>
+                                    <option value="2"
+                                        <% if( empDetails.loginFor == 2) { %>Selected
+                                            <% } %>
+                                    > Chat Panel </option>
+                                </select>
+                            </div>
+                        </div>
+                    <div class="" id="divRegister2">
+                        <label for="t">All Permissions</label>
+
+
+                    <div class="row">
+                        <% let permission = empList %>
+                        <div class="col-md-4">
+                            <div class="checkbox checkbox-purple" style="margin: 0px 0px 0 16px;">
+                                <input name="main" id="main" type="checkbox" value="main"
+                                    <% if(permission['main']){ %>
+                                        checked
+                                    <% } %>
+                                >
+                                <label class="parentClass" for="main">Dashboard</label>
+                            </div>
+                            <div class="checkbox checkbox-purple ">
+                                <input id="users" name="users" type="checkbox" value="users"
+                                    <% if(permission['users']){ %>
+                                        checked
+                                    <% } %>
+                                >
+                                <label class="parentClass" for="users">Users</label>   
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="games" name="games" type="checkbox" value="games"
+                                    <% if(permission['games']){ %>
+                                        checked
+                                    <% } %>
+                                >
+                                <label class="parentClass" for="games">Games</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="gamesProvider" name="gamesProvider" type="checkbox" value="gamesProvider" 
+                                            <% if(permission['gamesProvider']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="gamesProvider">Games Provider</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="gamesSetting" name="gamesSetting" type="checkbox" value="gamesSetting"
+
+                                            <% if(permission['gamesSetting']){ %>
+                                                checked
+                                            <% } %>
+
+                                        >
+                                        <label for="gamesSetting">Games Setting</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="gamesRates" name="gamesRates" type="checkbox" value="gamesRates"
+                                        <% if(permission['gamesRates']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="gamesRates">Games Rates</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="gamesResult" name="gamesResult" type="checkbox" value="gamesResult" <% if(permission['gamesResult']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="gamesResult">Games Result</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="gamesRevert" name="gamesRevert" type="checkbox" value="gamesRevert" <% if(permission['gamesRevert']){ %>
+                                            checked
+                                        <% } %>
+                                    >
+                                        <label for="gamesRevert">Games Revert</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="gamesRefund" name="gamesRefund" type="checkbox" value="gamesRefund" <% if(permission['gamesRefund']){ %>
+                                            checked
+                                        <% } %>
+                                    >
+                                        <label for="gamesRefund">Games Refund</label>
+                                    </div>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="starline" name="starline" type="checkbox" value="starline" <% if(permission['starline']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="starline">Starline</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineProvider" name="starlineProvider" type="checkbox" value="starlineProvider" <% if(permission['starlineProvider']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="starlineProvider">Starline Provider</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineSetting" name="starlineSetting" type="checkbox" value="starlineSetting" <% if(permission['starlineSetting']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="starlineSetting">Starline Setting</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineRates" name="starlineRates" type="checkbox" value="starlineRates" <% if(permission['starlineRates']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="starlineRates">Starline Rates</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineProfit" name="starlineProfit" type="checkbox" value="starlineProfit" <% if(permission['starlineProfit']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="starlineProfit">Starline Profit Loss</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineResult" name="starlineResult" type="checkbox" value="starlineResult" <% if(permission['starlineResult']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="starlineResult">Starline Result</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineRevert" name="starlineRevert" type="checkbox" value="starlineRevert" <% if(permission['starlineRevert']){ %>
+                                            checked
+                                        <% } %>
+                                    >
+                                        <label for="starlineRevert">Starline Revert</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineRefund" name="starlineRefund" type="checkbox" value="starlineRefund" <% if(permission['starlineRefund']){ %>
+                                            checked
+                                        <% } %>
+                                    >
+                                        <label for="starlineRefund">Starline Refund</label>
+                                    </div>
+                            </div>
+                            <div class="checkbox checkbox-purple" >
+                                <input id="ab" name="ab" type="checkbox" value="ab" <% if(permission['ab']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="ab">Andar Bahar</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abProvider" name="abProvider" type="checkbox" value="abProvider" <% if(permission['abProvider']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="abProvider">AB Provider</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abSetting" name="abSetting" type="checkbox" value="abSetting" <% if(permission['abSetting']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="abSetting">AB Setting</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abRates" name="abRates" type="checkbox" value="abRates" <% if(permission['abRates']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="abRates">AB Rates</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abProftLoss" name="abProftLoss" type="checkbox" value="abProftLoss" <% if(permission['abProftLoss']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="abProftLoss">AB Profit Loss</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abResult" name="abResult" type="checkbox" value="abResult" <% if(permission['abResult']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="abResult">AB Result</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abRevert" name="abRevert" type="checkbox" value="abRevert"<% if(permission['abRevert']){ %>
+                                            checked
+                                            <% } %>
+                                        >
+                                        <label for="abRevert">AB Revert</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abRefund" name="abRefund" type="checkbox" value="abRefund"<% if(permission['abRefund']){ %>
+                                            checked
+                                            <% } %>
+                                        >
+                                        <label for="abRefund">AB Refund</label>
+                                    </div>
+                            </div>
+                    </div>
+                    <div class="col-md-4">
+                            <div class="checkbox checkbox-purple">
+                                <input id="cg" name="cg" type="checkbox" value="cg" <% if(permission['cg']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="cg">Cutting Group</label>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                
+                                <input id="bookie" name="bookie" type="checkbox" value="bookie"<% if(permission['bookie']){ %>
+                                    checked
+                                <% } %> >
+
+                                <label class="parentClass" for="bookie">Bookie Corner</label>
+                                    
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="ocCutting" name="ocCutting" type="checkbox" value="ocCutting" <% if(permission['ocCutting']){ %>
+                                            checked
+                                        <% } %> >
+                                        <label for="ocCutting">OC Cutting Group</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="fcg" name="fcg" type="checkbox" value="fcg"  <% if(permission['fcg']){ %>
+                                            checked
+                                        <% } %>
+                                    >
+                                        <label class="parentClass" for="fcg">Final Cutting Group</label>
+                                    </div>
+                            </div>
+
+
+
+
+                            <div class="checkbox checkbox-purple">
+                                <input id="wallet" name="wallet" type="checkbox" value="wallet" <% if(permission['wallet']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="wallet">Wallet</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="fundRequest" name="fundRequest" type="checkbox" value="fundRequest" <% if(permission['fundRequest']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="fundRequest">Fund Request</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="exportDebit" name="exportDebit" type="checkbox" value="exportDebit" <% if(permission['exportDebit']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="exportDebit">ExportDebitReport</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="invoices" name="invoices" type="checkbox" value="invoices" <% if(permission['invoices']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="invoices">Invoices</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="viewWallet" name="viewWallet" type="checkbox" value="viewWallet" <% if(permission['viewWallet']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="viewWallet">View Wallet</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="reqONOFF" name="reqONOFF" type="checkbox" value="reqONOFF" <% if(permission['reqONOFF']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="reqONOFF">Request ON/OFF</label>
+                                    </div>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="creditrequest" name="creditrequest" type="checkbox" value="creditrequest" <% if(permission['creditrequest']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="creditrequest">creditrequest</label>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="appDebit" name="appDebit" type="checkbox" value="appDebit" <% if(permission['appDebit']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="appDebit">Approved Debit Page</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="paytmReq" name="paytmReq" type="checkbox" value="paytmReq" <% if(permission['paytmReq']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="paytmReq">Paytm Request</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="bankReq" name="bankReq" type="checkbox" value="bankReq" <% if(permission['bankReq']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="bankReq">Bank Account Request</label>
+                                    </div>
+                            </div>
+                            <!-- 6776 -->
+                            <div class="checkbox checkbox-purple">
+                                <input id="pendingDebitReq" name="pendingDebitReq" type="checkbox" value="pendingDebitReq" <% if(permission['pendingDebitReq']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="pendingDebitReq">Pending Debit Request</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="pendingBankReq" name="pendingBankReq" type="checkbox" value="pendingBankReq" <% if(permission['pendingBankReq']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="pendingBankReq">Pending Bank Request</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="pendingPaytmReq" name="pendingPaytmReq" type="checkbox" value="pendingPaytmReq" <% if(permission['pendingPaytmReq']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="pendingPaytmReq">Pending Paytm Request</label>
+                                    </div>
+                            </div>
+                            <!-- edfee -->
+                            <div class="checkbox checkbox-purple">
+                                <input id="decDebit" name="decDebit" type="checkbox" value="decDebit" <% if(permission['decDebit']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="decDebit">Declined Request</label>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="noti" name="noti" type="checkbox" value="notification" <% if(permission['notification']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="noti">Notification</label>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="news"  name="news" type="checkbox" value="news" <% if(permission['news']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="news">News</label>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="deleteUser"  name="deleteUser" type="checkbox" value="deleteUser" <% if(permission['deleteUser']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="deleteUser">Delete User</label>
+                            </div>
+                            <div class="checkbox checkbox-purple">
+                                <input id="appSetting" name="appSetting" type="checkbox" value="app_settings" <% if(permission['app_settings']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="appSetting">App Settings</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="howToPlay" name="howToPlay" type="checkbox" value="howToPlay" <% if(permission['howToPlay']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="howToPlay">How To Play</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="withdrawScreen" name="withdrawScreen" type="checkbox" value="withdrawScreen" <% if(permission['withdrawScreen']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="withdrawScreen">Withdraw Screen</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="noticeBoard" name="noticeBoard" type="checkbox" value="noticeBoard" <% if(permission['noticeBoard']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="noticeBoard">Notice Board</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="profileNote" name="profileNote" type="checkbox" value="profileNote" <% if(permission['profileNote']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="profileNote">Profile Note</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="walletContact" name="walletContact" type="checkbox" value="walletContact" <% if(permission['walletContact']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="walletContact">Wallet Contact</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="appVersion" name="appVersion" type="checkbox" value="appVersion" <% if(permission['appVersion']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="appVersion">App Version</label>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="checkbox checkbox-purple">
+                                <input id="masters" name="masters" type="checkbox" value="masters" <% if(permission['masters']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="masters">Masters</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="upiId" name="upiId" type="checkbox" value="upiId" <% if(permission['upiId']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="upiId">Upi Id</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="addFoundMode" name="addFoundMode" type="checkbox" value="addFoundMode" <% if(permission['addFoundMode']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="addFoundMode">Add Fund Mode</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="manageEmp" name="manageEmp" type="checkbox" value="manageEmp" <% if(permission['manageEmp']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="manageEmp">Manage Employee</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="createEmployee" name="createEmployee" type="checkbox" value="createEmployee" <% if(permission['createEmployee']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="createEmployee">Create Employee</label>
+                                    </div>
+                            </div>
+                            <div class="checkbox checkbox-purple" >
+                                <input id="reports" name="reports" type="checkbox" value="reports" <% if(permission['reports']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label class="parentClass" for="reports">Reports</label>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="jodiAll" name="jodiAll" type="checkbox" value="jodiAll" <% if(permission['jodiAll']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="jodiAll">Jodi All</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="salesReport" name="salesReport" type="checkbox" value="salesReport" <% if(permission['salesReport']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="salesReport">Sales Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starLineSaleReport" name="starLineSaleReport" type="checkbox" value="starLineSaleReport" <% if(permission['starLineSaleReport']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="starLineSaleReport">Starline Sales Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abSalesReport" name="abSalesReport" type="checkbox" value="abSalesReport" <% if(permission['abSalesReport']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="abSalesReport">Andar Bahar Sales Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="abTotalBids" name="abTotalBids" type="checkbox" value="abTotalBids" <% if(permission['abTotalBids']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="abTotalBids">Andar Bahar Total Bids</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="fundReport" name="fundReport" type="checkbox" value="fundReport" <% if(permission['fundReport']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="fundReport">Fund Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="totalBids" name="totalBids" type="checkbox" value="totalBids" <% if(permission['totalBids']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="totalBids">Total Bids</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="ajaySir" name="ajaySir" type="checkbox" value="ajaySir" <% if(permission['ajaySir']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="ajaySir">Sir Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="credDebReport" name="credDebReport" type="checkbox" value="credDebReport" <% if(permission['credDebReport']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="credDebReport">Credit Debit Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="dailyReport" name="dailyReport" type="checkbox" value="dailyReport" <% if(permission['dailyReport']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="dailyReport">Daily Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="biddingReport" name="biddingReport" type="checkbox" value="biddingReport" <% if(permission['biddingReport']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="biddingReport">Bidding Report</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="customerBal" name="customerBal" type="checkbox" value="customerBal" <% if(permission['customerBal']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="customerBal">Customer Balance</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="allUserBIds" name="allUserBIds" type="checkbox" value="allUserBIds" <% if(permission['allUserBIds']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="allUserBIds">All User Bids</label>
+                                    </div>
+                                    
+                                    <!-- <div class="checkbox checkbox-purple childClass">
+                                        <input id="userBidsRatio" name="userBidsRatio" type="checkbox" value="userBidsRatio" <% if(permission['userBidsRatio']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="userBidsRatio">User Bids Ratio</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineBidsRatio" name="starlineBidsRatio" type="checkbox" value="starlineBidsRatio" <% if(permission['starlineBidsRatio']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                        <label for="starlineBidsRatio">User Starline Bids Ratio</label>
+                                    </div> -->
+                            </div>
+                            <div class="checkbox checkbox-purple childClass">
+                                <input id="delete" name="delete" type="checkbox" value="delete" <% if(permission['delete']){ %>
+                                                checked
+                                            <% } %>
+                                        >
+                                <label for="delete">Deleted Users</label>
+                            </div>
+                            <div class="checkbox checkbox-purple childClass">
+                                <input id="upiReport" name="upiReport" type="checkbox" value="upiReport" <% if(permission['upiReport']){ %>
+                                    checked
+                                <% } %>
+                            >> 
+                                <label for="upiReport">Upi Fund Report</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group text-center mt-3">
+                            <button type="submit" class="btn btn-success btn-rounded width-md waves-effect waves-light" id="register">Submit</button>
+                        </div>
+                    </div>   
+                    </div>
+                    <input type="hidden" value="<%= empDetails._id %>" name="emp_id" id="emp_id">
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#register").click(function (event) {
+        var formData = $('form').serializeArray();
+
+        // console.log("formData" ,formData);
+
+
+    // return
+            $.ajax({
+                type: "POST",
+                url: "/employee/updateEmployee",
+                data: formData,
+                success: function (result) {               
+                    if(result.status == 1){
+                        $( "#resetForm" ).trigger("click");
+                        !function(t) {
+                            var e = function() {};
+                            e.prototype.init = function() {
+                                Swal.fire({
+                                    title: result.message,
+                                    type:"success",
+                                    confirmButtonClass:"btn btn-confirm mt-2",
+                                })
+                            }, t.SweetAlert = new e, t.SweetAlert.Constructor = e
+                        }(window.jQuery),
+                        function(t) {
+                            window.jQuery.SweetAlert.init();
+                            // location.reload();    
+                        }();
+                    }
+                    else{
+                        if(result.status == 2){
+                            let error = result.error;
+                            splitError = error.split(":");
+                            let splitAgain =  splitError[2].split("_");
+                            $("#divRegister2").css('display', 'none');
+                            $("#divRegister1").css('display', 'block');
+                            $("#errorSubmit").html('* '+ splitAgain[0].toUpperCase()+' ALREADY EXIST');
+                        }
+                        else{
+                            $("#divRegister2").css('display', 'none');
+                            $("#divRegister1").css('display', 'block');
+                            $("#errorSubmit").html('* '+ result.message);
+                        }
+                    }
+                }
+            });
+    });      
+</script>

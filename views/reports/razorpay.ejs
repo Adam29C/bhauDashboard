@@ -1,0 +1,169 @@
+<% layout('../layout') %>
+<div class="content">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xl-12 col-md-12">
+				<div class="card-box pt-0 pb-0">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item" aria-current="page">
+								<a href="/"> Home </a>
+							</li>
+							<li class="breadcrumb-item active" aria-current="page">
+								Razorpay Fund Report
+							</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xl-12">
+		<div class="card-box">
+			<h4 class="header-title mt-0 mb-3">Razorpay Fund Report</h4>
+			<div class="row">
+				<div class="col-md-4">
+					<label class="col-form-label">Date</label>
+					<div class="form-group">
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control sDate datepicker"
+								placeholder="mm/dd/yyyy"
+								id="datepicker-autoclose"
+								autocomplete="off"
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label class="col-form-label">Date</label>
+					<div class="form-group">
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control eDate datepicker"
+								placeholder="mm/dd/yyyy"
+								id="datepicker-autoclose"
+								autocomplete="off"
+							/>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<label class="col-form-label">Get Report</label>
+					<div class="form-group">
+						<div class="input-group">
+							<button
+								class="btn btn-dark waves-effect  button-color  waves-light btn-sm"
+								id="sbmitInfo"
+							>
+								<span>Submit&nbsp;</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xl-12 col-md-12">
+				<div class="card-box">
+					<div class="table-responsive" data-pattern="priority-columns">
+						<table
+							id="fundTable"
+							class="table table-bordered text-center dt-responsive nowrap"
+						>
+							<thead>
+								<tr>
+									<th>Sr.</th>
+									<th>Username</th>
+									<th>Mobile</th>
+									<th>Amount</th>
+									<th>Date</th>
+									<th>Transaction ID</th>
+								</tr>
+							</thead>
+							<tbody id="fundData"></tbody>
+							<tfoot id="totalAmt"></tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$("#sbmitInfo").click(function () {
+		$("#sbmitInfo").attr("disabled", true);
+
+		const StartDate = $(".sDate").val();
+		const EndDate = $(".eDate").val();
+		$("#fundTable").DataTable().destroy();
+		if (!StartDate || !EndDate) {
+			toastr["info"](
+				"Starting Date And End Date Cannot Be Empty",
+				"Bhau777 Games"
+			);
+		} else {
+			$.ajax({
+				type: "post",
+				url: "/fundReport/razorpayReport",
+				data: {
+					sdate: StartDate,
+					edate: EndDate,
+				},
+				success: function (body) {
+					let data = body.data;
+					if (Object.keys(data).length === 0) {
+						$("#sbmitInfo").attr("disabled", false);
+						toastr["info"]("No Data Found", "Bhau777 Games");
+						$("#fundTable").DataTable().clear().draw();
+						$("#totalAmt").html(
+							'<tr><td colspan="7" ><h3>Total Amount : 0/-</h3></td></tr>'
+						);
+					} else {
+						let Html;
+						var i = 1;
+						let total_amt = 0;
+
+						data.forEach(function (e) {
+							total_amt += e.reqAmount;
+							Html +=
+								"<tr><td>" +
+								i +
+								"</td><td>" +
+								e.username +
+								"</td><td>" +
+								e.mobile +
+								"</td><td>" +
+								e.reqAmount +
+								"</td><td>" +
+								e.reqDate +
+								"</td><td>" +
+								e.transaction_id +
+								"</td></tr>";
+							i++;
+						});
+						$("#fundData").html(Html);
+						$("#totalAmt").html(
+							'<tr><td colspan="6" ><h3>Total Amount : ' +
+								total_amt +
+								"/-</h3></td></tr>"
+						);
+						$("#fundTable").dataTable({
+							pageLength: 50,
+							aLengthMenu: [
+								[25, 50, 100, 200, -1],
+								[25, 50, 100, 200, "All"],
+							],
+							iDisplayLength: -1,
+						});
+						$("#sbmitInfo").attr("disabled", false);
+					}
+				},
+			});
+		}
+	});
+</script>

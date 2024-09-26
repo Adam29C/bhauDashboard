@@ -1,0 +1,166 @@
+<% layout('../layout') %>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Users Bid Ratio</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h4 class="mt-0 header-title">Users Bid Ratio(ON HOLD)</h4>
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="analysys" class="table table-bordered dt-responsive nowrap text-center">
+                            <thead>
+                            <tr>
+                                <th>Sno.</th>
+                                <th>User name</th>
+                                <th>Total Bids</th>
+                                <th>Win</th>
+                                <th>Lose</th>
+                                <th>Pending</th>
+                                <th>Play Total</th>
+                                <th>Win Total</th>
+                                <th>Profit / Loss</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="market-ratio" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalScrollableTitle">User Market Bid Ratio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-box">
+                        <h4 class="header-title mt-0 text-center">Daily Sales</h4>
+                       <div class="widget-chart text-center">
+                            <div id="morris-donut-example" dir="ltr" style="height: 245px;" class="morris-chart"></div>
+                            <a href="" onclick="getRatio()">CLICK</a>
+                            <ul class="list-inline chart-detail-list mb-0">
+                                <li class="list-inline-item">
+                                    <h5 style="color: #ff8acc;"><i class="fa fa-circle mr-1"></i>Series A</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 style="color: #5b69bc;"><i class="fa fa-circle mr-1"></i>Series B</h5>
+                                </li>
+                            </ul>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $.ajax({
+        type : 'POST',
+        url: '/analysys/gameAnalysys',
+        dataType: 'JSON',
+        success: function (data) 
+        {
+            $("#analysys").DataTable().destroy();
+            if (Object.keys(data).length === 0)
+            {
+                toastr["info"]("No Recorde Found","Bhau777 Games");
+                $("#analysys").DataTable().clear().draw();
+            }
+            else
+            {
+                let i=1;
+                let html = '';
+                data.forEach(function(e) {
+                    let bidPoints = e.sumbiddingPoints;
+                    let winPoints = e.sumWinPoint;
+                    let pfStatus = "In Profit";
+                    if(bidPoints > winPoints){
+                        pfStatus = "In Loss";
+                    }
+                    html+= '<tr><td>'+i+'</td>\
+                            <td>'+ e.username +'</td>\
+                            <td>'+ e.countBids +'</td>\
+                            <td>'+ e.winCount +'</td>\
+                            <td>'+ e.loseCount +'</td>\
+                            <td>'+ e.pendingCount +'</td>\
+                            <td>'+ bidPoints +'</td>\
+                            <td>'+ winPoints +'</td>\
+                            <td>'+ pfStatus +'</td>\
+                            <td><button type="button" class="btn btn-dark waves-effect waves-light btn-xs" data-toggle="modal"  data-target="#market-ratio"><i class="fas fa-chart-line mr-1"></i> <span>Market Ratio</span></button></td></tr>';
+                        i++
+                });
+                $("#tbody").html(html);
+                $("#analysys").dataTable();
+            }
+        }, 
+        error: function (e) {
+            alert("Contact Support Patner: " + JSON.stringify(e));
+        }
+    });
+});
+
+
+function getRatio()
+{
+    !function(e) {
+        "use strict";
+        var a=function() {};
+        a.prototype.createDonutChart=function(e, a, r) {
+            Morris.Donut( {
+                element: e, data: a, resize: !0, colors: r
+            }
+            )
+        }
+        ,
+        a.prototype.init=function()
+        {
+            this.createDonutChart("morris-donut-example", [ {
+                label: "Download Sales", value: 12
+            }
+            , {
+                label: "In-Store Sales", value: 30
+            }
+            , {
+                label: "Mail-Order Sales", value: 20
+            }
+            ], ["#ff8acc", "#5b69bc", "#35b8e0"])
+        }
+        ,
+        e.MorrisCharts=new a,
+        e.MorrisCharts.Constructor=a
+    }
+
+    (window.jQuery),
+    function(e) {
+        "use strict";
+        window.jQuery.MorrisCharts.init()
+    }
+
+    ();
+
+}
+</script>

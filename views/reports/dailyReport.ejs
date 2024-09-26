@@ -1,0 +1,222 @@
+<% layout('../layout') -%>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Daily Report</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-12">
+        <div class="card-box">
+            <h4 class="header-title mt-0 mb-3">Daily Report</h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="col-form-label">Start Date</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker sdate" placeholder="mm/dd/yyyy" id="datepicker-autoclose" autocomplete="off">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="ti-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label" >End Date</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker edate" placeholder="mm/dd/yyyy" id="datepicker-autoclose" autocomplete="off">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="ti-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label">Player Name </label>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Type Username" id="findUser" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label">Report Type</label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control rtype">
+                            <option value="PG">Play Game</option>
+                            <option value="UR">User Registration</option>
+                            <option value="RDP">Request For Deposite Point</option>
+                            <option value="RWP">Request For Withdraw Point</option>
+                            <option value="CRDP">Cancel Request For Deposite Point</option>
+                            <option value="CRWP">Cancel Request For Withdraw Point</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-danger waves-effect waves-light btn-sm"> <span>Cancel&nbsp;</span></button>
+                    <button class="btn btn-dark  button-color  waves-effect waves-light btn-sm" id="submitInfo"> <span>Submit&nbsp;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <table id="dailyData" class="table table-bordered text-center text-dark nowrap">
+                        <thead>
+                        <tr>
+                            <th>Sr.</th>
+                            <th>Date</th>
+                            <th>Notification</th>
+                        </tr>
+                        </thead>
+                        <tbody id="dataDaily">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+$("#submitInfo").click(function()
+{
+    const sdate = $(".sdate").val();
+    const edate = $(".edate").val();
+    const rtype = $(".rtype").val();
+    const username = $("#findUser").val();
+    $.ajax({
+            type: 'POST',
+            url: "/fundReport/dailyData",
+            data: { sdate : sdate, edate: edate, reqType : rtype, username: username },
+            dataType: 'json',
+            success: function (data) {
+                if (Object.keys(data).length === 0)
+                {
+                     $("#dataDaily").html('');
+                }
+                else
+                {
+                    let i=1;
+                    if (rtype === "PG") //PG = PLAY GAME
+                    {
+                        let html = '';
+                        data.forEach(function(e) {
+                            html += '<tr><td>'+ i +'</td><td>'+ e.gameDate +'</td><td>\
+                                '+e.userName +' Added '+e.biddingPoints +' On '+ e.gameTypeName +' In '+ e.providerName +'</td></tr>'
+                            i++
+                        });
+                        $("#dataDaily").html(html);
+                    }
+                    else if (rtype === "UR") //UR = USER RESGISTRATION
+                    { 
+                        data.forEach(function(e) {
+                        $('#datatable').dataTable().fnAddData( [
+                            i,
+                            e.CtreatedAt,
+                            '<p>'+ e.name +' Registered Successfully</p>',
+                        ]);
+                        i++
+                    });
+                    
+                    }
+                    else if (rtype === "RDP") //RDP = Request For Deposite Point
+                    {
+                        data.forEach(function(e) {
+                        $('#datatable').dataTable().fnAddData( [
+                            i,
+                            e.reqDate +' '+ e.reqTime,
+                            '<p>'+ e.fullname +' Requested '+ e.reqAmount +' Points For Deposite</p>'
+                        ]);
+                        i++
+                    });
+                    }
+                    else if (rtype === "RWP") // RWP = Request For Withdraw Point
+                    {
+                        data.forEach(function(e) {
+                        $('#datatable').dataTable().fnAddData( [
+                            i,
+                            e.reqDate +' '+ e.reqTime,
+                            '<p>'+ e.fullname +' Requested '+ e.reqAmount +' Points For Withdraw</p>'
+                        ]);
+                        i++
+                    });
+                    }
+                    else if (rtype === "CRDP") // CRDP = Cancel Request For Deposite Point
+                    {
+                        data.forEach(function(e) {
+                        $('#datatable').dataTable().fnAddData( [
+                            i,
+                            e.reqDate +' '+ e.reqTime,
+                            '<p>'+ e.UpdatedBy +' Cancelled Requset of '+e.reqAmount +' Points For Deposite For User '+e.fullname+'</p>'                           
+                        ]);
+                        i++
+                    });
+                    }
+                    else //CRWP = Cancel Request For Withdraw Point
+                    {
+                        data.forEach(function(e) {
+                        $('#datatable').dataTable().fnAddData( [
+                        i,
+                            e.reqDate +' '+ e.reqTime,
+                            '<p>'+ e.UpdatedBy +' Cancelled Requset of '+e.reqAmount +' Points For Withdraw For User '+e.fullname+'</p>'     
+                        ]);
+                        i++
+                    });
+                    }
+                }
+            }, 
+            error: function (e) {
+                alert("Contact Support Patner:  " + JSON.stringify(e));
+            }
+        });
+});
+
+$('#findUser').autocomplete({
+    source: function (req, res) {
+            $.ajax({
+                url: "/salesReport/getUsername",
+                dataType: "json",
+                type: "POST",
+                data: req,
+                success: function (data) {
+                    var result = [];
+                    data.forEach(function (e) {
+                        let obj = {
+                            id : e._id,
+                            label  : e.username
+                        };
+                        result.push(obj);
+                    });
+                    res(result);
+                },
+                error: function (err) {
+                    console.log(err.status);
+                }
+            });
+    },
+    minLength: 1,
+    autoFocus: true,
+    select: function (event, ui) {
+        if (ui.item) {
+            $('#findUser').val(ui.item.label);
+        }
+    }
+});
+
+
+
+</script>

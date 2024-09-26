@@ -1,0 +1,62 @@
+<% layout('../layout') %>
+<div class="content">
+    <div class="container-fluid animated fadeIn">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                 <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                          <li class="breadcrumb-item active" aria-current="page">All User</li>
+                         </ol>
+                    </nav>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid animated fadeIn">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h4 class="mt-0 header-title">View All Users</h4>
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="dataTable" class="table text-center table-bordered" >
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Idea</th>
+                                    <th>Username</th>
+                                    <th>Submitted At</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    setTimeout(function () {
+		getUser();
+	}, 1000);
+
+    function getUser(){ 
+        $('#dataTable').dataTable({
+            ajax: {
+                url: '/common/userIdea',
+                type: 'POST'
+            },
+            serverSide: true,
+            "pageLength": 50,
+            columns: [
+                {'data': '_id'},
+                {'data': 'idea'},
+                {'data': 'username'},
+                {'data': 'createdAt'}
+            ]
+        });
+    }
+</script>

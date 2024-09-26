@@ -1,0 +1,268 @@
+<% layout('../layout') %>
+<style>
+    .th{width: 15%;}
+</style>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">StarLine Game Result</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box ">
+                <h4 class="mt-0 mb-0 header-title text-center">StarLine Game Result</h4>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-8 col-md-12">
+            <div class="card-box">
+                <div class="alert alert-danger" style="display: none;" id="alertDigit">
+                        <strong>Oh!</strong> You Entered A Wrong Winning Digit
+                </div>
+                <p>Enter Your Game Settings</p>
+                <div class="form-row">
+                    <div class="form-group col-xl-3">
+                        <label for="gamename">Provider Name</label>
+                        <select class="form-control" name="providerId" id="providerId" required="required">
+                            <%  for(index in data){  %>
+                            <%= data %>
+                            <option value="<%=data[index]._id %>|<%=data[index].providerName %>"> <%=data[index].providerName %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group col-xl-3">
+                        <label for="gamename">Session</label>
+                        <select class="form-control" name="session"  id="session" required="required">
+                            <option value="Open">Open</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xl-3">
+                        <label for="gamename">Result Date</label>
+                        <input required="required" type="text" name="resultDate" id="resultDate" class="datepicker form-control" placeholder="Select Date" autocomplete="off">
+                    </div>
+                    <div class="form-group col-xl-3">
+                        <label for="gamename">Winning Digit</label>
+                        <input required="required" type="text" class="form-control" name="winningDigit" id="winningDigit" data-validate="number" maxlength="3" placeholder="Enter Winning Digit">
+                        <p id="p_error" class="text-center" ></p>
+                    </div>
+                </div>
+                <p class="text-center mb-0">
+                    <button class="btn btn-danger waves-effect waves-light btn-sm">Cancel</button>
+                    <button onclick="insertdata()" class="btn button-color btn-sm">Submit</button>
+                </p>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-12">
+            <div class="card-box">
+                <p>Search Result</p>
+                <div class="form-group ">
+                    <label for="gamename">Result Date</label>
+                    <input required="required" name="date"  type="text" class="datepicker form-control" placeholder="Select Date" id="datepicker-autoclose" autocomplete="off">
+                </div>
+                <p class="text-center mb-0">
+                    <button type="submit" data-toggle="modal" data-target="#custom-modal-result-history" id="getResult" class="btn button-color btn-sm ">Submit</button>
+                </p>
+                <br />
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box">
+                <div id="resultStatus" style="display: none;">
+                    <h5 id="resultCount" class="text-center">  </h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-center table-bordered mb-0">
+                        <thead>
+                        <tr>
+                            <th>Game Name</th>
+                            <th>Session</th>
+                            <th>Result Date</th>
+                            <th>Winning Digits</th>
+                            <th>Get Winners</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableresult" >
+
+                        <% for (index in result) {  %>
+                        <tr id="mb<%=result[index]._id %>">
+                            <td>
+                                <%=result[index].providerName %>
+                            </td>
+                            <td>
+                                <%=result[index].session %>
+                            </td>
+                            <td>
+                                <%=result[index].createdAt %>
+                            </td>
+                            <td>
+                                <%=result[index].winningDigit %>
+                            </td>
+                            <td class="th"> <p class="text-center mb-0"><a href="/winner/starWinner/?providerId=<%=result[index].winningDigit %>|<%=result[index].providerId %>|<%=result[index].resultDate %>|<%=result[index]._id %>|<%= result[index].status %>|<%= result[index].winningDigitFamily%>" class="btn btn-bordred-purple waves-effect waves-light btn-xs"> <i class="fas fa-user-check mr-1"></i> <span>Get Winners List</span> </a></p>
+                            </td>
+                            <td class="th">
+                                <% if( result[index].status === 0  ) {%>
+                                <p class="text-center mb-0"><button type="button" data-id="<%=result[index]._id %>" data-provider="<%=result[index].providerId %>"   data-pastCurrent="0" onclick="dlt(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs"><i class="mdi mdi-square-edit-outline mr-1"></i><span>Delete Result </span></button>
+                                </p>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% }  %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    function insertdata() {
+        const providerId = document.getElementById('providerId').value;
+        const session = document.getElementById('session').value;
+        const resultDate = document.getElementById('resultDate').value;
+        const winningDigit = document.getElementById('winningDigit').value;
+        let Digit = parseInt(winningDigit);
+        document.getElementById("alertDigit").style.display = "none";
+        var panaArray = [
+            127,136,145,190,235,280,370,389,460,479,569,578,118,226,244,299,334,488,550,668,677,'000',128,137,146,236,245,290,380,470,489,560,579,678,100,119,155,227,335,344,399,588,669,777,129,138,147,156,237,246,345,390,480,570,589,679,110,200,228,255,336,499,660,688,778,444,120,139,148,157,238,247,256,346,490,580,670,689,166,229,300,337,355,445,599,779,788,111,130,149,158,167,239,248,257,347,356,590,680,789,112,220,266,338,400,446,455,699,770,888,140,159,168,230,249,258,267,348,357,456,690,780,113,122,177,339,366,447,500,799,889,555,555,123,150,169,178,240,259,268,349,358,367,457,790,600,114,277,330,448,466,556,880,899,222,124,160,278,179,250,269,340,359,368,458,467,890,115,133,188,223,377,449,557,566,700,999,125,134,170,189,260,279,350,369,468,378,459,567,116,224,233,288,440,477,558,800,990,666,126,135,180,234,270,289,360,379,450,469,478,568,117,144,199,225,388,559,577,667,900,333
+        ]
+        var n = panaArray.includes(Digit);
+        if(n){
+        $.ajax({
+            type: "POST",
+            url: "/starlinegameresult/",
+            data: { providerId: providerId, session: session, resultDate: resultDate, winningDigit: winningDigit, gameId : 2 },
+            success: function (result) {
+                $('#winningDigit').val("");
+                const result1 = result.status;
+                const e = result.data;
+                if (result1 == 0)  {
+                    ! function(t) {
+                        var e = function() {};
+                        e.prototype.init = function() {
+                            Swal.fire({
+                                type: "error",
+                                title: "Oops...",
+                                text: result.data,
+                                confirmButtonClass: "btn btn-confirm mt-2",
+                            })
+                        }, t.SweetAlert = new e, t.SweetAlert.Constructor = e
+                    }(window.jQuery),
+                        function(t) {
+                            window.jQuery.SweetAlert.init()
+                        }();
+                }
+                else if(result1 == 1) 
+                {                    
+                    let html = '<tr id="mb'+e.resultId +'"><td>' + e.providerName +' </td><td>Open<td>' + e.time + '</td><td>' + e.winningDigit + '</td><td class="th"><p class="text-center mb-0"><a href="/winner/starWinner/?providerId='+ e.winningDigit +'|'+ e.providerId +'|'+ e.resultDate +'|'+ e.resultId +'|'+ e.status +'|'+ e.digitFamily +'" class="btn btn-bordred-purple waves-effect waves-light btn-xs"><i class="fas fa-user-check mr-1"></i><span>Get Winners List</span></a></p></td><td class="th"><p class="text-center mb-0"><button type="button" data-id="'+e.resultId +'" data-provider="'+ e.providerId +'"  data-pastCurrent="0" onclick="dlt(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs"><i class="mdi mdi-square-edit-outline mr-1"></i><span>Delete Result </span></button></p></td></tr>';
+                    $("#tableresult").prepend(html);
+                    $("#winningDigit").val('');
+                }
+                else if(result1 == 3){
+                    toastr["info"](result.message,"Bhau777 Games"); 
+                }
+            },
+            error: function(data) {
+                alert("Something Occurred Please Contact Support Team");
+            }
+        });
+    }
+    else{
+          document.getElementById("alertDigit").style.display = "block";
+        toastr["warning"]("Please Insert Valid Winning Digit","Bhau777 Games");
+    }
+    }
+
+    function dlt(obj){
+        const id = $(obj).attr('data-id');
+        const providerId = $(obj).attr('data-provider');
+        const dltPast = $(obj).attr('data-pastCurrent');
+        $.ajax({
+            type: "delete",
+            url: "/starlinegameresult/delete",
+            data: { resultId : id , providerId : providerId, dltPast : dltPast},
+            success: function(data) {
+                if(data.status == 1)
+                {
+                    $("#mb"+id).remove();
+                }
+            }
+        });
+    }
+
+    $( "#getResult" ).on( "click", function() {
+        const date = $('#datepicker-autoclose').val();
+        $.ajax({
+            type: "GET",
+            url: "/starlinegameresult/pastResult",
+            data: {date: date},
+            success:
+                function (data) 
+                {
+                    let arrayResult = data.result;
+                    let countResult = data.countResult;
+                    let providerCount = data.providerCount;
+                    let pendingCount = data.pendingCount;
+                    let stringHtml = 'Total Result Declared : '+countResult+',&nbsp;&nbsp; Total Result To Declared : '+providerCount+",&nbsp;&nbsp; Pending Result : "+pendingCount
+                    $("#resultStatus").css("display", "block");
+                    $('#resultCount').html(stringHtml)
+
+                    if(Object.keys(arrayResult).length > 0){
+                        let Html;
+                        arrayResult.forEach(function(e) 
+                        {
+                            let status = e.status;
+                            let dltBtn = '';
+                            if(status == 0)
+                            {
+                                dltBtn = '<p class="text-center mb-0"><button type="button" data-id="'+e._id +'" data-provider="'+ e.providerId +'"  data-session="'+e.session+'" data-pastCurrent="1" onclick="dlt(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs"><i class="mdi mdi-square-edit-outline mr-1"></i><span>Delete Result </span></button></p>'
+                            }
+
+                            Html += '<tr id="mb'+e._id +'"><td>' + e.providerName +' </td>\
+                                <td>Open<td>' + e.resultDate + '</td>\
+                                <td>' + e.winningDigit + '</td>\
+                                <td class="th"><p class="text-center mb-0"><a href="/winner/starWinner/?providerId='+ e.winningDigit +'|'+ e.providerId +'|'+ e.resultDate +'|'+ e._id +'|'+ e.status +'|'+ e.digitFamily +'" class="btn btn-bordred-purple waves-effect waves-light btn-xs"><i class="fas fa-user-check mr-1"></i><span>Get Winners List</span></a></p></td>\
+                                <td class="th">'+dltBtn+'</td></tr>';
+                        });
+                        $("#tableresult").html(Html);
+                    }
+                    else{
+                        toastr["info"]("Oopss!!! No Data Found","Bhau777 Games"); 
+                    }
+                }
+        });
+    });
+    
+    const pusher = new Pusher('c5324b557c7f3a56788a', {
+        cluster: 'ap2',
+        forceTLS: true
+    });
+
+    const channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data)
+    {
+        if(data.type === 5206){
+            redirect()
+        }
+    });
+
+    function  redirect()
+    {
+        location.reload();
+    }
+</script>

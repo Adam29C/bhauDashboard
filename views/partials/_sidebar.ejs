@@ -1,0 +1,448 @@
+<style>
+  .avatar-lg {
+    height: 5rem !important;
+    background: none !important ;
+    width: 12.5rem;
+  }
+  .rounded-circle {
+    border-radius: 30% !important;
+  }
+  .img-thumbnail {
+    padding: 10px;
+    /* background-color: #11305C; */
+    border: none;
+    border-radius: 0.25rem;
+    max-width: 100%;
+    height: auto;
+  }
+  .left-side-menu-dark .left-side-menu {
+    background-color: #478667ff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-right: 2px solid #3c4650;
+  }
+  .hide {
+    display: none;
+  }
+</style>
+<div class="left-side-menu">
+  <div class="slimscroll-menu">
+    <div class="user-box text-center">
+      <img
+        src="/logo/Logo_green.svg"
+        alt="user-img"
+        title="Mat Helme"
+        class="img-thumbnail avatar-lg"
+      />
+      <!-- <div class="dropdown">
+				<a
+					href="#"
+					class="text-dark dropdown-toggle h5 mt-2 mb-1 d-block"
+					data-toggle="dropdown"
+				>
+					<%= userInfo.name %></a
+				>
+			</div>
+			<p class="text-muted"><%= userInfo.designation %></p> -->
+    </div>
+
+    <div id="sidebar-menu">
+      <ul class="metismenu" id="side-menu">
+        <li class="<%= permission['main'].displayClass %>">
+          <a href="/dashboard">
+            <i class="mdi mdi-view-dashboard"></i>
+            <span> Dashboard </span>
+          </a>
+        </li>
+        <li class="<%= permission['users'].displayClass %>">
+          <a href="/userList">
+            <i class="fas fa-user-friends"></i>
+            <span> All Users </span>
+          </a>
+        </li>
+        <li class="<%= permission['games'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="fas fa-gamepad"></i>
+            <span> Games </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['gamesProvider'].displayClass %>">
+              <a href="/games">Games Provider</a>
+            </li>
+            <li class="<%= permission['gamesSetting'].displayClass %>">
+              <a href="/gamesSetting">Games Setting</a>
+            </li>
+            <li class="<%= permission['gamesRates'].displayClass %>">
+              <a href="/gameList">Game Rates</a>
+            </li>
+            <li class="<%= permission['gamesResult'].displayClass %>">
+              <a href="/gameResult">Game Result</a>
+            </li>
+            <li class="<%= permission['gamesRevert'].displayClass %>">
+              <a href="/gameResult/revertPayment">Revert Result Payment</a>
+            </li>
+            <li class="<%= permission['gamesRefund'].displayClass %>">
+              <a href="/gameResult/refundPayment">Refund User Points</a>
+            </li>
+
+            <!-- <% if(userInfo.role == 0){ %>
+						<li>
+							<a href="/gameResult/revertPayment">Revert Result Payment</a>
+						</li>
+						<li><a href="/gameResult/refundPayment">Refund User Points</a></li>
+						<% } %> -->
+          </ul>
+        </li>
+        <li class="<%= permission['starline'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="ti-star"></i>
+            <span> Starline </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['starlineProvider'].displayClass %>">
+              <a href="/starlineProvider">Star Games Provider</a>
+            </li>
+            <li class="<%= permission['starlineSetting'].displayClass %>">
+              <a href="/starlinegamesetting">Star Games Setting</a>
+            </li>
+            <li class="<%= permission['starlineRates'].displayClass %>">
+              <a href="/starlinegamerates">Star Game Rates</a>
+            </li>
+            <li class="<%= permission['starlineProfit'].displayClass %>">
+              <a href="/starProfitLoss">Star Game Profit Loss</a>
+            </li>
+            <li class="<%= permission['starlineResult'].displayClass %>">
+              <a href="/starlinegameresult">Star Game Result</a>
+            </li>
+
+<!-- 
+			<script>
+				console.log("gamesRevert:", "<%= JSON.stringify(permission) %>")
+			  </script> -->
+
+
+
+
+            <li class="<%= permission['starlineRevert'].displayClass %>">
+              <a href="/starlinegameresult/revertPayment"
+                >Star Revert Result Payment</a
+              >
+            </li>
+            <li class="<%= permission['starlineResult'].displayClass %>">
+              <a href="/starlinegameresult/refundPayment">Refund User Points</a>
+            </li>
+
+            <!-- <% if(userInfo.role == 0){ %>
+            <li>
+              <a href="/starlinegameresult/revertPayment"
+                >Star Revert Result Payment</a
+              >
+            </li>
+            <li>
+              <a href="/starlinegameresult/refundPayment">Refund User Points</a>
+            </li>
+            <% } %> -->
+          </ul>
+        </li>
+        <li class="<%= permission['ab'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="mdi mdi-diamond"></i>
+            <span> Andar Bahar </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['abProvider'].displayClass %>">
+              <a href="/providerAB">AB Game Provider</a>
+            </li>
+            <li class="<%= permission['abSetting'].displayClass %>">
+              <a href="/andarbahargamesetting">AB Game Setting</a>
+            </li>
+            <li class="<%= permission['abRates'].displayClass %>">
+              <a href="/andarbahargamerates">AB Game Rates</a>
+            </li>
+            <li class="<%= permission['abProftLoss'].displayClass %>">
+              <a href="/ABProfitLoss">AB Game Profit Loss</a>
+            </li>
+            <li class="<%= permission['abResult'].displayClass %>">
+              <a href="/andarbahargameresult">AB Game Result</a>
+            </li>
+            <% if(userInfo.role == 0){ %>
+            <li>
+              <a href="/andarbahargameresult/revertPayment"
+                >AB Revert Result Payment</a
+              >
+            </li>
+            <li>
+              <a href="/andarbahargameresult/refundPayment"
+                >Refund User Points</a
+              >
+            </li>
+            <% } %>
+          </ul>
+        </li>
+        <li class="<%= permission['cg'].displayClass %>">
+          <a href="/cuttinggroup">
+            <i class="dripicons-graph-pie"></i>
+            <span> Cutting Group </span>
+          </a>
+        </li>
+
+        <li class="<%= permission['bookie'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="ti-wallet"></i>
+            <span> Bookie Corner </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['ocCutting'].displayClass %>">
+              <a href="/finalOCcuttinggroup">
+                <span>OC Cutting Group </span>
+              </a>
+            </li>
+            <li class="<%= permission['fcg'].displayClass %>">
+              <a href="/finalOCcuttinggroup/finalOCGroup">
+                <span>Final OC Cutting Group </span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="<%= permission['wallet'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="ti-wallet"></i>
+            <span> Wallet </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['fundRequest'].displayClass %>">
+              <a href="/fundRequest"
+                >Fund Requests
+                <span class="badge badge-warning float-right" id="reqCount"
+                  >0</span
+                ></a
+              >
+            </li>
+            <li class="<%= permission['exportDebit'].displayClass %>">
+              <a href="/debitReport">Export Debit Report</a>
+            </li>
+            <li class="<%= permission['exportDebit'].displayClass %>">
+              <a href="/debitReport/moneyCheck">Download Debit Report</a>
+            </li>
+            <li class="<%= permission['exportDebit'].displayClass %>">
+              <a href="/customerBalance/search">Search Account</a>
+            </li>
+            <li class="<%= permission['invoices'].displayClass %>">
+              <a href="/customerBalance/profileChange">Invoices</a>
+            </li>
+            <li class="<%= permission['viewWallet'].displayClass %>">
+              <a href="/customerBalance">View Wallet</a>
+            </li>
+            <li class="<%= permission['reqONOFF'].displayClass %>">
+              <a href="/reqOnOff">Requests On / Off</a>
+            </li>
+          </ul>
+        </li>
+        <li class="<%= permission['appDebit'].displayClass %>">
+          <a href="/approvedReports/creditUPI">
+            <i class="ti-check"></i>
+            <span>Credit Request (UPI) </span>
+          </a>
+        </li>
+        <li class="<%= permission['appDebit'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="ti-check"></i>
+            <span> Approved Debit Requests </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <!-- <li class="<%= permission['paytmReq'].displayClass %>">
+							<a href="/approvedReports/paytm">Paytm Requests</a>
+						</li> -->
+
+            <li class="<%= permission['bankReq'].displayClass %>">
+              <a href="/approvedReports/bank">Bank Account(Export)</a>
+            </li>
+
+            <li class="<%= permission['bankReq'].displayClass %>">
+              <a href="/approvedReports/bankManual">Bank Account(Manual)</a>
+            </li>
+          </ul>
+        </li>
+        <li class="<%= permission['fundRequest'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="far fa-clock"></i>
+            <span> Pending Debit Requests </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['fundRequest'].displayClass %>">
+              <a href="/fundRequest/pendingBank">Pending Bank Requests</a>
+            </li>
+            <li class="<%= permission['fundRequest'].displayClass %>">
+              <a href="/fundRequest/pendingPaytm">Pending Paytm Requests</a>
+            </li>
+          </ul>
+        </li>
+        <li class="<%= permission['decDebit'].displayClass %>">
+          <a href="/approvedReports/declined">
+            <i class="ti-close"></i>
+            <span> Declined Requests </span>
+          </a>
+        </li>
+        <li class="<%= permission['reports'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="ti-agenda"></i>
+            <span> Reports </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <!-- <li class="<%= permission['jodiAll'].displayClass %>">
+							<a href="/jodiAll">Jodi All</a>
+						</li> -->
+
+            <li class="<%= permission['salesReport'].displayClass %>">
+              <a href="/salesReport">Sales Report </a>
+            </li>
+
+            <li class="<%= permission['starLineSaleReport'].displayClass %>">
+              <a href="/salesReport/starline">Starline Sales Report</a>
+            </li>
+
+            <li class="<%= permission['abSalesReport'].displayClass %>">
+              <a href="/salesReport/andarBahar">Andar Bahar Sales Report</a>
+            </li>
+
+            <li class="<%= permission['abTotalBids'].displayClass %>">
+              <a href="/totalBids/andarBaharBids">Andar Bahar Total Bids</a>
+            </li>
+
+            <li class="<%= permission['fundReport'].displayClass %>">
+              <a href="/fundReport">Fund Report</a>
+            </li>
+
+            <li class="<%= permission['upiReport'].displayClass %>">
+              <a href="/fundReport/upiReport">UPI Fund Report</a>
+            </li>
+
+            <li class="<%= permission['upiReport'].displayClass %>">
+              <a href="/fundReport/trakpay">Trak Pay Fund Report</a>
+            </li>
+            <li class="<%= permission['upiReport'].displayClass %>">
+              <a href="/fundReport/razorpay">RazorPay Fund Report</a>
+            </li>
+
+            <li class="<%= permission['totalBids'].displayClass %>">
+              <a href="/totalBids/games">Total Bids</a>
+            </li>
+
+            <li class="<%= permission['credDebReport'].displayClass %>">
+              <a href="/creditDebit">Credit/Debit Report</a>
+            </li>
+
+            <li class="<%= permission['dailyReport'].displayClass %>">
+              <a href="/fundReport/dailyReport">Daily Report </a>
+            </li>
+
+            <li class="<%= permission['biddingReport'].displayClass %>">
+              <a href="/totalBids/biddingReport">Bidding Report</a>
+            </li>
+
+            <li class="<%= permission['biddingReport'].displayClass %>">
+              <a href="/salesReport/analysis">User Analysis</a>
+            </li>
+
+            <li class="<%= permission['customerBal'].displayClass %>">
+              <a href="/customerBalance">Customer Balance</a>
+            </li>
+
+            <li class="<%= permission['allUserBIds'].displayClass %>">
+              <a href="/totalBids/allUserBids">All User Bids</a>
+            </li>
+
+            <!-- <li class="<%= permission['userBidsRatio'].displayClass  %>"><a href="/analysys/usersBidsRatio">Users Bids Ratio</a></li>
+                       
+                        <li class="<%= permission['starlineBidsRatio'].displayClass  %>"><a href="/analysys/userStarlineRatio">Users Starline Bids Ratio</a></li> -->
+          </ul>
+        </li>
+        <li class="<%= permission['notification'].displayClass %>">
+          <a href="/common/notification">
+            <i class="mdi mdi-bell-ring-outline"></i>
+            <span> Notification </span>
+          </a>
+        </li>
+        <%if(userInfo.role == 0){%>
+        <li class="<%= permission['notification'].displayClass %>">
+          <a href="/common/userIdea">
+            <i class="mdi mdi-bell-ring-outline"></i>
+            <span> User Idea's </span>
+          </a>
+        </li>
+        <% } %>
+        <li class="<%= permission['news'].displayClass %>">
+          <a href="/common/news">
+            <i class="ti-blackboard"></i>
+            <span> News </span>
+          </a>
+        </li>
+        <li class="<%= permission['delete'].displayClass %>">
+          <a href="/userList/deletedUser">
+            <i class="ti-blackboard"></i>
+            <span> Deleted User </span>
+          </a>
+        </li>
+        <li class="<%= permission['app_settings'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="fe-settings"></i>
+            <span> App Settings </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['howToPlay'].displayClass %>">
+              <a href="/appSettings/HTP">How to play </a>
+            </li>
+            <li class="<%= permission['app_settings'].displayClass %>">
+              <a href="/appSettings/withDraw">Withdraw Screen</a>
+            </li>
+            <li class="<%= permission['noticeBoard'].displayClass %>">
+              <a href="/appSettings/noticeBoard">Notice Board</a>
+            </li>
+            <li class="<%= permission['profileNote'].displayClass %>">
+              <a href="/appSettings/profileNote">Profile Note</a>
+            </li>
+            <li class="<%= permission['walletContact'].displayClass %>">
+              <a href="/appSettings/walletContact">Wallet Contact</a>
+            </li>
+            <%if(userInfo.role == 0){%>
+            <li><a href="/appSettings/versionSetting">App Version</a></li>
+            <%}%>
+          </ul>
+        </li>
+        <li class="<%= permission['masters'].displayClass %>">
+          <a href="javascript: void(0);">
+            <i class="ti-money"></i>
+            <span> Masters </span>
+            <span class="menu-arrow"></span>
+          </a>
+          <ul class="nav-second-level" aria-expanded="false">
+            <li class="<%= permission['bank'].displayClass %>">
+              <a href="/masters">Banks </a>
+            </li>
+            <%if(userInfo.role == 0){%>
+            <li><a href="/masters/UPI">UPI Id </a></li>
+            <li><a href="/masters/fundMode">Add Fund Mode</a></li>
+            <%}%>
+            <li class="<%= permission['manageEmp'].displayClass %>">
+              <a href="/employee">Manage Employee </a>
+            </li>
+            <li class="<%= permission['createEmployee'].displayClass %>">
+              <a href="/employee/registerNewEmployee">Register New Employee </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>

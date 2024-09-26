@@ -1,0 +1,198 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card-box">
+        <h4 class="m-t-0 header-title">Application Version & Other Settings</h4>
+        <div class="row">
+          <div class="col-12">
+            <div class="p-2 form-horizontal">
+              <form
+                action="/appSettings/updateAppSet"
+                enctype="multipart/form-data"
+                method="POST"
+                id="appSettingsForm"
+              >
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label" for="simpleinput"
+                    >App Version</label
+                  >
+                  <% if(data && data.appVersion){ %>
+                  <div class="col-sm-10 row">
+                    <div class="col-sm-4">
+                      <input
+                        type="text"
+                        id="version"
+                        name="appVer"
+                        class="form-control"
+                        value="<%= data.appVersion %>"
+                        onchange="changevalue('<%= data.appVersion %>')"
+                      />
+                      <input
+                        type="hidden"
+                        id="id"
+                        name="id"
+                        value="<%= data._id %>"
+                      />
+                      <input type="hidden" id="type" name="type" value="3" />
+                      <div class="col-sm mt-2">
+                        <!-- <button class="btn btn-primary waves-effect waves-light mr-1"  onclick="updateVersion()">Update Version</button> -->
+                        <button
+                          class="btn btn-primary  button-color  waves-effect waves-light mr-1"
+                          type="submit"
+                        >
+                          Update Version
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="apk"
+                        name="apk"
+                        accept=".apk"
+                        hidden
+                      />
+                      <label for="apk" class="form-control" tabindex="0"
+                        >Upload File</label
+                      >
+                      <span id="file-name"><%= data.apkFileName %></span>
+                    </div>
+                  </div>
+                  <% } %>
+                </div>
+              </form>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="example-textarea"
+                  >Maintanance
+                </label>
+                <div class="col-sm-10">
+                  <% if(data.maintainence == true){ %>
+                  <h4>App Is Under Maintanance</h4>
+                  <button
+                    class="btn btn-primary button-color waves-effect waves-light mr-1"
+                    onclick="main(false, '<%= data._id %>')"
+                  >
+                    Turn Off Maintanance
+                  </button>
+                  <% } else{%>
+                  <h4>App Is Not Under Maintanance</h4>
+                  <button
+                    class="btn btn-primary button-color waves-effect waves-light mr-1"
+                    onclick="main(true, '<%= data._id %>')"
+                  >
+                    Turn On Maintanance
+                  </button>
+                  <% } %>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="simpleinput"
+                  >Force Update</label
+                >
+                <div class="col-sm-10">
+                  <% if(data.forceUpdate == true){ %>
+                  <h4>Force Update Is Enabled</h4>
+                  <button
+                    class="btn btn-primary button-color waves-effect waves-light mr-1"
+                    onclick="force(false, '<%= data._id %>')"
+                  >
+                    Turn Off Force Update
+                  </button>
+                  <% } else{%>
+                  <h4>Force Update Is Disabled</h4>
+                  <button
+                    class="btn btn-primary  button-color waves-effect waves-light mr-1"
+                    onclick="force(true, '<%= data._id %>')"
+                  >
+                    Turn On Force Update
+                  </button>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <!-- </form>  -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .input-label {
+    padding: 10px;
+    display: table;
+    color: black;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+</style>
+<script>
+  function force(status, id) {
+    $.ajax({
+      type: "POST",
+      url: "/appSettings/updateAppSet",
+      data: { status: status, id: id, type: 1 },
+      success: function (data) {
+        location.reload();
+      },
+    });
+  }
+
+  function main(status, id) {
+    $.ajax({
+      type: "POST",
+      url: "/appSettings/updateAppSet",
+      data: { status: status, id: id, type: 2 },
+      success: function (data) {
+        location.reload();
+      },
+    });
+  }
+
+  function updateVersion() {
+    const id = $("#id").val();
+    const appVer = $("#version").val();
+    return;
+    $.ajax({
+      type: "POST",
+      url: "/appSettings/updateAppSet",
+      data: { appVer: appVer, id: id, type: 3, apk: apk },
+      success: function (data) {
+        if (data.status == 1) {
+          toastr["info"]("Version Updated Successfully", "Bhau777 Games");
+          $("#id").val(id);
+        } else {
+          toastr["info"](data.message, "Bhau777 Games");
+        }
+      },
+    });
+  }
+</script>
+
+<script>
+  document.getElementById("apk").addEventListener("change", function () {
+    var fileName = this.files[0]
+      ? this.files[0].name
+      : "<%= data.apkFileName %>";
+    document.getElementById("file-name").textContent = fileName;
+  });
+
+  const changevalue = (currentVersion) => {
+    let inputElement = document.getElementById("version");
+let userInput = parseFloat(inputElement.value);
+
+if (userInput <= currentVersion) {
+    // Handle validation error - reset the input to the current version
+    inputElement.value = currentVersion;
+    alert("Entered version cannot be less than or equal to the current version.");
+}                      
+};
+
+
+
+  
+</script>

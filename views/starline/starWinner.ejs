@@ -1,0 +1,211 @@
+<% layout('../layout') %>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/dashboard"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Starline Game Winners List</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12">
+        <div class="card-box" style="height: 74px;">
+            <h4 class="header-title mt-0 mb-3 text-center" style="color: rgb(141, 128, 128)">
+                Starline Game Winners Of Date : <%= data.gameDate %>, 
+                <% if( Object.keys(data.winnerList).length != 0 ) {%>
+                Provider : <%= data.winnerList[0].providerName %> ,<% } %>Digit : <%= data.winDigit %>-<%= data.digitFamily %>
+            </h4>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table  class="table table-bordered dt-responsive nowrap text-center text-dark">
+                            <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Winner Name</th>
+                                <th>Mobile No.</th>
+                                <th>Game</th>
+                                <th>Bid Digit</th>
+                                <th>Bid Date</th>
+                                <th>Bidding Amount</th>
+                                <th>Rate</th>
+                                <th>Total Amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>     
+                            <% if( Object.keys(data.winnerList).length != 0 ) {%>
+                                <tr >
+                                    <td colspan="9" class="text-center"><h1 class="text-center" style="color: rgb(141, 128, 128);font-size: x-large;">Single Digit Winners </h1></td>
+                                </tr>
+                            <% 
+                                let totAmount = 0;
+                                let totAmountPana = 0;
+                                let digit = data.winDigit;
+                                let digitFamily = data.digitFamily;
+                                let j = 1;
+                                let resultData = data.winnerList; 
+                                for(index in resultData) {  
+                                    if(digitFamily === resultData[index].bidDigit) {
+                                    var calAmt = resultData[index].biddingPoints * resultData[index].gameTypePrice;
+                                    totAmount = totAmount + calAmt;
+                                %>
+                                    <tr>
+                                        <td>   <%= j %>  </td>
+                                        <td>   <%= resultData[index].userName %>  </td>   
+                                        <td>   <%= resultData[index].mobileNumber %>  </td>   
+                                        <td>   <%= resultData[index].gameTypeName %>  </td>   
+                                        <td><p class="badge badge-purple">
+                                            <%= resultData[index].bidDigit %>
+                                        </p></td>   
+                                        <td><p class="badge badge-purple">
+                                                <%= resultData[index].gameDate %> 
+                                        </p</td>   
+                                        <td>   <%= resultData[index].biddingPoints %>  </td>   
+                                        <td>   <%= resultData[index].gameTypePrice %>  </td>   
+                                        <td>   <%= calAmt %>  </td>
+                                    </tr>
+                                <% j++ }} %>
+                                <tr>
+                                    <td colspan="9" class="text-center">  <h1 class="text-center" style="color: rgb(141, 128, 128);font-size: x-large;">Panna Winners </h1></td>
+                                </tr>
+                                 <% for(index in resultData) 
+                                 {  
+                                    if(digit === resultData[index].bidDigit) {
+                                    var calAmt = resultData[index].biddingPoints * resultData[index].gameTypePrice;
+                                    totAmountPana = totAmountPana + calAmt;
+                                %>
+                                    <tr>
+                                        <td>   <%= j %>  </td>
+                                        <td>   <%= resultData[index].userName %>  </td>   
+                                        <td>   <%= resultData[index].mobileNumber %>  </td>   
+                                        <td>   <%= resultData[index].gameTypeName %>  </td>   
+                                        <td><p class="badge badge-purple">
+                                            <%= resultData[index].bidDigit %>
+                                        </p></td>   
+                                        <td><p class="badge badge-purple">
+                                                <%= resultData[index].gameDate %> 
+                                        </p</td>   
+                                        <td>   <%= resultData[index].biddingPoints %>  </td>   
+                                        <td>   <%= resultData[index].gameTypePrice %>  </td>   
+                                        <td>   <%= calAmt %>  </td>
+                                    </tr>
+                                <% j++ }} %>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="9">Total Payable Amount : <%= totAmount + totAmountPana %> /-</th>
+                                </tr>
+                            </tfoot>
+                            <% } else {%>
+                                <tr class="text-center"><td colspan="9"> No Data Available </td></tr>
+                            <%}%>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ <% if(data.resultStatus === 0){ %>
+        <div class="col-xl-12 text-center">
+            <a href="#custom-modal" class="btn btn-dark waves-effect width-md waves-light" data-animation="flash" id="confirmPayemt" data-plugin="custommodal" data-overlaycolor="#36404a"> ***Confirm Payment***  </a>  
+        </div>
+        <input type="hidden" value="<%= data.provider %>" id="providerId" />
+        <input type="hidden" value="<%= data.winDigit %>" id="digit" />
+        <input type="hidden" value="<%= data.digitFamily %>" id="digitFamily" />
+        <input type="hidden" value="<%= data.gameDate %>" id="date" />
+        <input type="hidden" value="<%= data.resultId %>" id="resultId" />
+
+        <div id="custom-modal" class="modal-demo" style="display: none;margin-left: 18%;">
+            <div class="custom-modal-text  mr-2 ml-2" >
+                <h1 style="font-size: medium;color: #3e6a6b;"> Are You Sure Want To Confirm Payment ?</h1>
+                <div class="row">
+                    <div class="col-xl-2" style="display: none;" id="loaderProg">
+                        <img src="../../assets/images/loader.gif" style="width: 80px;"/>
+                    </div>
+                    <div class="col-xl-10" style="margin-left: auto;">
+                        <button type="button" class="btn btn-dark " style="float: right;margin-top: 10%;" onclick="Custombox.modal.close();">  Close </button>
+                        <button type="button" class="btn btn-dark mx-2" style="float: right;margin-top: 10%;" id="hideIt" onclick="add();">Confirm </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="LangTable">
+	    	<a href="/starlinegameresult" id="aa"></a></div>
+        </div>
+    <%  } %>
+<script>
+
+function add()
+{
+    $("#hideIt").attr("disabled", true);
+    const providerId = document.getElementById('providerId').value;
+    const windigit = document.getElementById('digit').value;
+    const digitFamily = document.getElementById('digitFamily').value;
+    const gameDate = document.getElementById('date').value;
+    const resultId = document.getElementById('resultId').value;
+    document.getElementById('loaderProg').style.display = 'block';
+
+    fetch("/addWinpoints/starWinners", {
+        method: 'POST', 
+        body: JSON.stringify({ providerId: providerId, windigit: windigit, gameDate: gameDate,digitFamily: digitFamily, resultId: resultId}),
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: 'same-origin',
+    })
+    .then(res => res.json())
+    .then(body => {
+        document.getElementById('loaderProg').style.display = 'none';
+        Custombox.modal.close();
+         ! function(t) {
+            var e = function() {};
+            e.prototype.init = function() {
+                Swal.fire({
+                    title:"Payment Done Successfully",
+                    type:"success",
+                    confirmButtonClass:"btn btn-confirm mt-2",
+                })
+            }, t.SweetAlert = new e, t.SweetAlert.Constructor = e
+        }(window.jQuery),
+        function(t) {
+            window.jQuery.SweetAlert.init()
+            var audio = new Audio('../../assets/sound/eventually.mp3');
+            audio.play();
+            $('.swal2-confirm').click(function(){
+                document.getElementById("aa").click();
+            });
+        }();
+    })
+}
+
+const pusher = new Pusher('c5324b557c7f3a56788a', {
+    cluster: 'ap2',
+    forceTLS: true
+});
+
+const channel = pusher.subscribe('my-channel');
+channel.bind('my-event', function(data) 
+{
+    if(data.type === 5206){
+        redirect()
+    }
+});
+
+function  redirect()
+{
+    document.getElementById("aa").click();
+}
+
+
+
+</script>

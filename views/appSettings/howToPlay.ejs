@@ -1,0 +1,163 @@
+<% layout('../layout') %>
+<style>
+    .how_to_play_row{
+        border: 1px solid #ccc;
+        padding:3px;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box">
+                <h4 class="m-t-0 header-title">Update How To Play</h4>
+                <form id="how_to_play">
+
+                <input type="hidden" name="id" id="id" value="<%= data[0]._id %>">
+
+                <% for(row of data[0].howtoplay) { %>
+                <div class="row how_to_play_row">
+                    <div class="col-12">
+                        <div class="p-2 form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="simpleinput">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="title" class="form-control" value="<%= row.title %>">
+                                    
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="example-textarea">Description</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" name="description" rows="5"><%= row.description %></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="simpleinput">Video URL</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="url" class="form-control" value="<%= row.videoUrl %>">
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </form>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group text-right mb-0">
+                            <button class="btn btn-primary waves-effect waves-light mr-1" id="submit" type="submit">
+                                Submit
+                            </button>
+                            <button class="btn btn-secondary waves-effect waves-light" id="addRow" type="button">
+                                Add Row
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+<script>
+    $(document).ready(function () {
+        $("#addRow").click(function () {
+            // Clone the form fields and clear their values
+            var newRow = `<div class="row how_to_play_row"><div class="col-12">
+                        <div class="p-2 form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="simpleinput">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="example-textarea">Description</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" name="description" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label" for="simpleinput">Video URL</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="url" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row  float-right">
+                                <button class="btn btn-danger waves-effect waves-light" id="removeRow" type="button">Delete Row</button>
+                            </div>
+                        </div>
+                    </div></div>`;
+           
+            
+            // Append the cloned fields to the form
+            $("#how_to_play").append(newRow);
+        });
+        // Delete Row functionality
+        $(document).on("click", "#removeRow", function () {
+                $(this).closest('.how_to_play_row').remove();
+        });
+    });
+</script>
+<script>
+    $("#submit").click(function(){
+
+        const formDataArray =$('#how_to_play').serializeArray();
+
+        // Assuming you have the serialized form data as formDataArray
+        var groupedFormData = [];
+        var rowData = {};
+
+        formDataArray.forEach((item, index) => {
+            if (item.name === "title") {
+                // Start a new row of data
+                rowData = {};
+                rowData.title = item.value;
+            } else if (item.name === "description") {
+                rowData.description = item.value;
+            } else if (item.name === "url") {
+                rowData.videoUrl = item.value;
+            }
+
+            // If the next item is the start of a new row, add the current row to the groupedFormData array
+            if (index === formDataArray.length - 1 || formDataArray[index + 1].name === "title") {
+                groupedFormData.push(rowData);
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "/appSettings/update",
+            data: { id: $('#id').val(),data: groupedFormData },
+            success: function(data)
+            {
+                // $('#title').val(data.title);
+                // $('#description').val(data.Description);
+                // $('#url').val(data.videoUrl);
+                // $('#id').val(data._id);
+                toastr["info"]("Description Updated Successfully", "Bhau777 Games");
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "linear",
+                    "hideEasing": "linear",
+                    "showMethod": "slideDown",
+                    "hideMethod": "fadeOut"
+                }
+            }
+        });
+    });
+</script>

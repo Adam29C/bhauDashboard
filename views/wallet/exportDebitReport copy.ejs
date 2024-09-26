@@ -1,0 +1,1313 @@
+<% layout('../layout') %>
+<style>
+  .selectAll {
+    background-color: #5bbf18;
+    color: white;
+  }
+  .wrongBal {
+    background-color: #f50000f8;
+    color: white;
+  }
+  .alignRow {
+    margin-left: 13px;
+  }
+  .alingBadge {
+    float: right;
+  }
+</style>
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box pt-0 pb-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/">Home</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Withdraw Report
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-12">
+    <div class="card-box">
+      <h4 class="header-title mt-0 mb-3" style="font-size: 16px">
+        Withdraw Report
+      </h4>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="col-form-label">Search Type</label>
+            <div class="input-group">
+              <select
+                name="req_status"
+                class="form-control"
+                id="req_status"
+                required=""
+              >
+                <option value="Pending">Pending Debit Requests</option>
+                <option value="Approved">Approved Debit Requests</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="col-form-label">Report Type</label>
+            <div class="input-group">
+              <select
+                name="report_type"
+                class="form-control"
+                id="report_type"
+                required
+              >
+                <option value="0">Kotk XLS</option>
+                <option value="6">Cash free</option>
+                <option value="7">Rbl.xls</option>
+
+                <!-- <option value="0">Dhanlaxmi Kotk XLS</option>
+								<option value="1">Tirupatie Kotk XLS</option>
+								<option value="2">Mahalaxmi Kotk XLS</option>
+								<option value="3">R-TRADERS Report</option>
+								<option value="4">Trak Pay</option>
+								<option value="5">Trak Pay.txt</option>
+								<option value="6">Cash free</option>
+								 -->
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label class="col-form-label">Report Date</label>
+          <div class="form-group">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control datepicker eDate"
+                placeholder="mm/dd/yyyy"
+                id="datepicker-autoclose"
+                autocomplete="off"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text"
+                  ><i class="ti-calendar"></i
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="col-xl-12">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Submit</label>
+                  <div class="input-group mt-1">
+                    <button
+                      class="btn button-color waves-effect waves-light btn-sm"
+                      onclick="GenerateReportNEW()"
+                    >
+                      <span>Get Report&nbsp;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Today App Reports</label>
+                  <div class="input-group mt-1">
+                    <button
+                      data-toggle="modal"
+                      data-target=".bs-example-modal-xl"
+                      class="btn button-color waves-effect waves-light btn-sm"
+                      onclick="todayAppReport()"
+                    >
+                      <span>See Report</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-12 col-md-12">
+      <div class="card-box">
+        <div class="table-responsive" data-pattern="priority-columns">
+          <div class="row">
+            <div class="col-xl-8 col-md-8">
+              <a
+                href="#custom-modal"
+                class="btn button-color width-md waves-effect waves-light alignRow"
+                data-animation="slide"
+                id="confirmPayemt"
+                data-plugin="custommodal"
+                data-overlaycolor="#36404a"
+              >
+                Approve All
+              </a>
+            </div>
+            <div class="col-xl-4 col-md-4 mb-1">
+              <div class="alingBadge">
+                <span
+                  class="badge badge-success badge-pill float-left mt-3 selectAll badge-custom"
+                  >Valid Req.
+                </span>
+                <span
+                  class="badge badge-success badge-pill float-left mt-3 wrongBal badge-custom"
+                >
+                  Invalid Req Amt.</span
+                >
+              </div>
+            </div>
+          </div>
+          <table
+            id="datatableExport"
+            class="table table-bordered nowrap text-center text-dark"
+          >
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th style="display: none">Id's</th>
+                <th>User</th>
+                <th>Mobile No.</th>
+                <th>Mode</th>
+                <th>Acc Holder</th>
+                <th>Bank</th>
+                <th>IFSC</th>
+                <th>A/C NO</th>
+                <th>Current Bal</th>
+                <th>Amt</th>
+                <th>Date</th>
+                <th>Address</th>
+                <th>City</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% let total = 0; for (var key in data) { let className =
+              'selectAll'; let walletBal = parseInt(data[key].walletBal); let
+              reqAmt = parseInt(data[key].reqAmount); total = total + reqAmt;
+              let acc_no = data[key].account_no; if((walletBal < reqAmt) ||
+              !acc_no) { className = 'wrongBal'} let dataUser = data[key].rowId
+              +"|"+data[key].userId +"|"+ data[key].walletBal +"|"+
+              data[key].reqAmount +"|"+data[key].username+"|"+
+              data[key].mobile+"|"+data[key].name +"|"+ data[key].account_no
+              +"|"+ data[key].ifsc +"|"+ data[key].bank_name %>
+              <tr class="<%= className %>" id="<%= data[key].rowId %>abcd">
+                <td class="text-center">
+                  <% if(className != 'selectAll'){ %>
+                  <button
+                    type="button"
+                    data-rowId="<%=data[key].rowId %>"
+                    data-userId="<%= data[key].userId %>"
+                    data-firebase="<%= data[key].firebaseId %>"
+                    data-amount="<%= data[key].reqAmount %>"
+                    data-toggle="modal"
+                    data-target=".bs-example-modal-sm"
+                    class="btn waves-effect waves-light btn-danger btn-xs"
+                    id="creditDecline"
+                    onclick="decline(this)"
+                    title="Decline Request"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                  <% } %>
+                </td>
+                <td style="display: none"><%= dataUser %></td>
+                <td><%= data[key].username %></td>
+                <td><%= data[key].mobile %></td>
+                <td><%= data[key].withdrawalMode %></td>
+                <td><%= data[key].name %></td>
+                <td><%= data[key].bank_name %></td>
+                <td><%= data[key].ifsc %></td>
+                <td><%= data[key].account_no %></td>
+                <td><%= data[key].walletBal %></td>
+                <td><%= data[key].reqAmount %></td>
+                <td><%= data[key].reqDate %></td>
+                <td><%= data[key].address %></td>
+                <td><%= data[key].city %></td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+          <br />
+          <h3>Total Amount : <%= total %>/-</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade bs-example-modal-sm show"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="mySmallModalLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content" style="margin-top: 50%">
+      <div class="modal-header">
+        <h4 class="modal-title" id="mySmallModalLabel">Decline User Request</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="inputParticular" class="col-form-label"
+            >Select Reason</label
+          >
+          <select id="inputParticular" class="form-control" required>
+            <option value="Insufficient Balance">Insufficient Balance</option>
+            <option value="In Valid Bank Details">In Valid Bank Details</option>
+          </select>
+          <input type="hidden" name="userId" id="userId" value="" />
+          <input type="hidden" name="firebaseId" id="firebaseId" value="" />
+          <input type="hidden" name="rowId" id="rowId" value="" />
+          <input
+            type="hidden"
+            name="amountDecline"
+            id="amountDecline"
+            value=""
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn btn-dark waves-effect waves-light"
+          data-dismiss="modal"
+          onclick="deleteReq(this)"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="custom-modal" class="modal-demo modal-margin" style="display: none">
+  <div class="custom-modal-text mr-2 ml-2 custom-css-modal">
+    <h1 style="font-size: medium; color: #3e6a6b">
+      Are You Sure Want To Confirm Payment ?
+    </h1>
+    <div class="row">
+      <div class="col-xl-2" style="display: none" id="loaderProg">
+        <img src="../../assets/images/loader.gif" style="width: 80px" />
+      </div>
+      <div class="col-xl-10">
+        <button
+          type="button"
+          class="btn btn-dark"
+          style="float: right; margin-top: 10%"
+          onclick="Custombox.modal.close();"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-dark mr-2"
+          style="float: right; margin-top: 10%"
+          onclick="approve()"
+          id="hideIt"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade bs-example-modal-xl show"
+  id="exampleModalScrollable"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myExtraLargeModalLabel"
+  aria-modal="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myExtraLargeModalLabel">
+          Today Approved Report
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="col-form-label">Report Type</label>
+          <div class="input-group">
+            <select
+              name="report_type_daily"
+              class="form-control"
+              id="report_type_daily"
+              required
+            >
+              <option value="0">Kotk XLS</option>
+              <option value="6">Cash free</option>
+              <option value="7">Rbl.xls</option>
+
+              <!-- <option value="0">Dhanlaxmi Kotk XLS</option>
+              <option value="1">Tirupatie Kotk XLS</option>
+              <option value="2">Mahalaxmi Kotk XLS</option> -->
+              <!-- <option value="3">ICICI Debit Report</option> -->
+              <!-- <option value="3">R-TRADERS Report</option>
+              <option value="4">Trak Pay Report</option> -->
+            </select>
+          </div>
+        </div>
+        <div class="table-responsive" data-pattern="priority-columns">
+          <table
+            id="TodayReportTable"
+            class="table table-bordered dt-responsive nowrap text-center"
+          >
+            <thead>
+              <tr>
+                <th>sno</th>
+                <th>Report Name</th>
+                <th>Report Time</th>
+                <th>Report Approved By</th>
+                <th>Download Report(Bank Format)</th>
+                <th>Download Report(Excel Format)</th>
+                <th>Download Report(TrakPay Format)</th>
+              </tr>
+            </thead>
+            <tbody id="TodayReportData"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../../assets/xlsJs/FileSaver.js"></script>
+<script src="../../assets/xlsJs/jszip.js"></script>
+<script src="../../assets/xlsJs/myexcel.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $("#datatableExport").dataTable({
+      paging: false,
+    });
+  });
+
+  function approve() {
+    $("#hideIt").attr("disabled", true);
+    let ids = [];
+    let userData = [];
+    let userplusIds = {};
+    let table = $("#datatableExport").DataTable();
+    $("#datatableExport tbody tr").each(function () {
+      if ($(this).hasClass("selectAll")) {
+        let str = table.row(this).data()[1];
+        let splitData = str.split("|");
+        let updatedWallet = parseInt(splitData[2]) - parseInt(splitData[3]);
+        let userArray = {
+          userId: splitData[1],
+          updateWallet: updatedWallet,
+          walletBal: parseInt(splitData[2]),
+          req_amt: parseInt(splitData[3]),
+          username: splitData[4],
+          mobile: splitData[5],
+        };
+        userplusIds[splitData[1]] = {
+          userid: splitData[1],
+          rowId: splitData[0],
+        };
+        ids.push(splitData[0]);
+        userData.push(userArray);
+      }
+    });
+    document.getElementById("loaderProg").style.display = "block";
+    fetch("/debitReport/approveReq", {
+      method: "POST",
+      body: JSON.stringify({
+        ids: ids,
+        userData: userData,
+        userplusIds: userplusIds,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        document.getElementById("loaderProg").style.display = "none";
+        Custombox.modal.close();
+        !(function (t) {
+          var e = function () {};
+          (e.prototype.init = function () {
+            Swal.fire({
+              title: "Debit Request Processed Successfully",
+              type: "success",
+              confirmButtonClass: "btn btn-confirm mt-2",
+            });
+          }),
+            (t.SweetAlert = new e()),
+            (t.SweetAlert.Constructor = e);
+        })(window.jQuery),
+          (function (t) {
+            window.jQuery.SweetAlert.init();
+            var audio = new Audio("../../assets/sound/eventually.mp3");
+            audio.play();
+            $(".swal2-confirm").click(function () {
+              table.clear().draw();
+            });
+          })();
+      });
+  }
+
+  function decline(obj) {
+    const table = $("#datatableExport").DataTable();
+    const rowId = $(obj).attr("data-rowId");
+    const userId = $(obj).attr("data-userId");
+    const firebaseId = $(obj).attr("data-firebase");
+    const amount = $(obj).attr("data-amount");
+
+    $("#rowId").val(rowId);
+    $("#firebaseId").val(firebaseId);
+    $("#userId").val(userId);
+    $("#amountDecline").val(amount);
+  }
+
+  function deleteReq() {
+    const rowId = $("#rowId").val();
+    const firebaseId = $("#firebaseId").val();
+    const userId = $("#userId").val();
+    const reason = $("#inputParticular").val();
+    const amountDecline = $("#amountDecline").val();
+    fetch("/debitReport/decline", {
+      method: "POST",
+      body: JSON.stringify({
+        rowId: rowId,
+        userId: userId,
+        firebaseId: firebaseId,
+        gameId: 5,
+        reason: reason,
+        amountDecline: amountDecline,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        const tr_id = body.data + "abcd";
+        $("#datatableExport")
+          .DataTable()
+          .row("#" + tr_id)
+          .remove()
+          .draw();
+      });
+  }
+
+  $("#datatableExport")
+    .on("click", "tr", function (event) {})
+    .on("dblclick", "tr", function (event) {
+      let classValid = $(this).hasClass("selectAll");
+      if (!classValid) {
+        $(this).addClass("selectAll");
+      } else {
+        $(this).removeClass("selectAll");
+      }
+    });
+
+  function GenerateReportNEW() {
+    const searchType = $("#req_status").val();
+    const reportType = $("#report_type").val();
+    const reportDate = $("#datepicker-autoclose").val();
+
+    if (reportType === 7 || reportType === "7") {
+      const req = {
+        reportDate: reportDate,
+        searchType: searchType,
+      };
+
+      fetch("/debitReport/rblxls", {
+        method: "POST",
+        body: JSON.stringify(req),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      })
+        .then((res) => res.json())
+        .then((json) => {
+
+
+
+          const xlsData = json.Profile;
+          const reportDate = json.date;
+          var excel = $JExcel.new("Calibri light 10 #333333");
+          var headers = [
+            "Payment Type",
+            "Cust Ref Number",
+            "Source Account Number",
+            "Source Narration",
+            "Destination Account Number",
+            "Currency",
+            "Destination Narration",
+            "Destination Bank",
+            "Destination Bank IFS Code",
+            "Beneficiary Name",
+            "Email ",
+          ];
+
+          console.log("xlsData " ,xlsData);
+
+          var formatHeader = excel.addStyle({
+            border: "none,none,none,thin #333333",
+            font: "Calibri 12 #ffff B",
+          });
+
+          for (var i = 0; i < headers.length; i++) {
+            excel.set(0, i, 0, headers[i], formatHeader);
+            excel.set(0, i, undefined, "auto");
+          }
+
+
+
+          let a = 1;
+          let j = 0;
+          $.each(xlsData, function (key, e) {
+            excel.set(0, 0, a, e.paymentType);
+            j++;
+            excel.set(0, j, a, a);
+            j++;
+            excel.set(0, j, a, e.sourceAccountNumber);
+            j++;
+            excel.set(0, j, a, e.sourceNarration);
+            j++;
+            excel.set(0, j, a, e.destinationAcNumber);
+            j++;
+            excel.set(0, j, a, e.currency);
+            j++;
+            excel.set(0, j, a, e.destinationNarration);
+            j++;
+            excel.set(0, j, a, e.destinationBankName);
+            j++;
+            excel.set(0, j, a, e.destinationIfscCode);
+            j++;
+            excel.set(0, j, a, e.destinationAccName);
+            j++;
+            excel.set(0, j, a, e.email);
+            j++;
+            a++;
+          });
+          excel.generate("payout" + reportDate + "_Batch.xlsx");
+        });
+    } else {
+      if (parseInt(reportType) === 4) {
+        return generateAllTrakPay(reportDate, searchType);
+      }
+
+      if (parseInt(reportType) === 5) {
+        return trakPaytxt(reportDate, searchType);
+      }
+
+      if (parseInt(reportType) === 6) {
+        return cashfree(reportDate, searchType);
+      }
+
+      let Product_Code = "RPAY";
+      let Bank_Code_Indicator = "M";
+      let Client_Code = "";
+      let Dr_Ac_No = "";
+
+      switch (reportType) {
+        case "0":
+          Client_Code = "DHANLAX";
+          Dr_Ac_No = "7812280361";
+          break;
+        case "1":
+          Client_Code = "TIRUPATIE";
+          Dr_Ac_No = "7812280194";
+          break;
+        case "2":
+          Client_Code = "MAHATR";
+          Dr_Ac_No = "7812280217";
+          break;
+        case "3":
+          Client_Code = "RTRADERS";
+          Dr_Ac_No = "6812971446";
+          break;
+      }
+
+      let jsonData = {
+        searchType: searchType,
+        reportType: reportType,
+        reportDate: reportDate,
+        Product_Code: "RPAY",
+        Bank_Code_Indicator: "M",
+        Client_Code: Client_Code,
+        Dr_Ac_No: Dr_Ac_No,
+      };
+
+      fetch("/debitReport/xlsDataNew", {
+        method: "POST",
+        body: JSON.stringify(jsonData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          const filename = json.filename;
+          const text = json.writeString;
+          var element = document.createElement("a");
+          element.setAttribute(
+            "href",
+            "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+          );
+          element.setAttribute("download", filename);
+          element.style.display = "none";
+          document.body.appendChild(element);
+          element.click();
+          document.body.removeChild(element);
+        });
+    }
+
+    // ----------------- ganpat code ----------------
+
+    // ----------------- ganpat code ----------------
+  }
+
+  function todayAppReport() {
+    $("#TodayReportTable").DataTable().destroy();
+    const reportDate = $("#datepicker-autoclose").val();
+    fetch("/debitReport/todayApproved", {
+      method: "POST",
+      body: JSON.stringify({ date: reportDate }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((body) => {
+        const reprotData = body.data;
+        let i = 1;
+        let html = "";
+
+        reprotData.forEach((e) => {
+          let id = "'" + e._id + "'";
+          html +=
+            "<tr><td>" +
+            i +
+            "</td>\
+                    <td>" +
+            e.ReportName +
+            "</td>\
+                    <td>" +
+            e.ReportTime +
+            "</td>\
+                    <td>" +
+            e.adminName +
+            '</td>\
+                    <td><button class="btn btn-dark  waves-effect waves-light btn-xs" onclick="getReport(' +
+            id +
+            ')">Download Report</button></td>\
+                    <td><button class="btn btn-dark  waves-effect waves-light btn-xs" onclick="GenerateReport(' +
+            id +
+            ')">Download Report</button></td>\
+                        <td><button class="btn btn-dark  waves-effect waves-light btn-xs" onclick="GenerateReportTrak(' +
+            id +
+            ')">Download Report</button></td>\
+                    </tr>';
+          i++;
+        });
+
+        $("#TodayReportData").html(html);
+        $("#TodayReportTable").dataTable();
+      });
+  }
+
+  function getReport(id) {
+    const reportID = id;
+    const reportType = $("#report_type_daily").val();
+    let Product_Code = "RPAY";
+    let Bank_Code_Indicator = "M";
+    let Client_Code = "";
+    let Dr_Ac_No = "";
+
+    switch (reportType) {
+      case "0":
+        Client_Code = "DHANLAX";
+        Dr_Ac_No = "7812280361";
+        break;
+      case "1":
+        Client_Code = "TIRUPATIE";
+        Dr_Ac_No = "7812280194";
+        break;
+      case "2":
+        Client_Code = "MAHATR";
+        Dr_Ac_No = "7812280217";
+        break;
+      case "3":
+        Client_Code = "RTRADERS";
+        Dr_Ac_No = "6812971446";
+        break;
+    }
+
+    let jsonData = {
+      reportID: reportID,
+      reportType: reportType,
+      Product_Code: "RPAY",
+      Bank_Code_Indicator: "M",
+      Client_Code: Client_Code,
+      Dr_Ac_No: Dr_Ac_No,
+      type: 0,
+    };
+
+    fetch("/debitReport/xlsDataDaily", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const filename = json.filename;
+        const text = json.writeString;
+        var element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+        );
+        element.setAttribute("download", filename);
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      });
+  }
+
+  function GenerateReport(id) {
+    const reportID = id;
+    const reportType = $("#report_type_daily").val();
+    let Product_Code = "RPAY";
+    let Bank_Code_Indicator = "M";
+    let Client_Code = "";
+    let Dr_Ac_No = "";
+
+    switch (reportType) {
+      case "0":
+        Client_Code = "DHANLAX";
+        Dr_Ac_No = "7812280361";
+        break;
+      case "1":
+        Client_Code = "TIRUPATIE";
+        Dr_Ac_No = "7812280194";
+        break;
+      case "2":
+        Client_Code = "MAHATR";
+        Dr_Ac_No = "7812280217";
+        break;
+      case "3":
+        Client_Code = "RTRADERS";
+        Dr_Ac_No = "6812971446";
+        break;
+    }
+
+    let jsonData = {
+      reportID: reportID,
+      reportType: reportType,
+      Product_Code: "RPAY",
+      Bank_Code_Indicator: "M",
+      Client_Code: Client_Code,
+      Dr_Ac_No: Dr_Ac_No,
+      type: 1,
+    };
+
+    fetch("/debitReport/xlsDataDaily", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const xlsData = json.Profile;
+        const reportDate = json.date;
+        var excel = $JExcel.new("Calibri light 10 #333333");
+        var headers = [
+          "Client_Code",
+          "Product_Code",
+          "Payment_Type",
+          "Payment_Ref_No",
+          "Payment_Date",
+          "Instrument Date",
+          "Dr_Ac_No",
+          "Amount",
+          "Bank_Code_Indicator",
+          "Beneficiary_Code",
+          "Beneficiary_Name",
+          "Beneficiary_Bank",
+          "Beneficiary_Branch / IFSC Code",
+          "Beneficiary_Acc_No",
+          "Location",
+          "Print_Location",
+          "Instrument_Number",
+          "Ben_Add1",
+          "Ben_Add2",
+          "Ben_Add3",
+          "Ben_Add4",
+          "Beneficiary_Email",
+          "Beneficiary_Mobile",
+          "Debit_Narration",
+          "Credit_Narration",
+          "Payment Details 1",
+          "Payment Details 2",
+          "Payment Details 3",
+          "Payment Details 4",
+          "Enrichment_1",
+          "Enrichment_2",
+          "Enrichment_3",
+          "Enrichment_4",
+          "Enrichment_5",
+          "Enrichment_6",
+          "Enrichment_7",
+          "Enrichment_8",
+          "Enrichment_9",
+          "Enrichment_10",
+          "Enrichment_11",
+          "Enrichment_12",
+          "Enrichment_13",
+          "Enrichment_14",
+          "Enrichment_15",
+          "Enrichment_16",
+          "Enrichment_17",
+          "Enrichment_18",
+          "Enrichment_19",
+          "Enrichment_20",
+        ];
+
+        var formatHeader = excel.addStyle({
+          border: "none,none,none,thin #333333",
+          font: "Calibri 12 #ffff B",
+        });
+
+        for (var i = 0; i < headers.length; i++) {
+          excel.set(0, i, 0, headers[i], formatHeader);
+          excel.set(0, i, undefined, "auto");
+        }
+
+        let a = 1;
+        $.each(xlsData, function (key, e) {
+          let j = 0;
+          excel.set(0, 0, a, Client_Code);
+          j++;
+          excel.set(0, j, a, Product_Code);
+          j++;
+          excel.set(0, j, a, "NEFT");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, reportDate);
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, Dr_Ac_No);
+          j++;
+          excel.set(0, j, a, e.reqAmount);
+          j++;
+          excel.set(0, j, a, Bank_Code_Indicator);
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, e.toAccount.accName);
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, e.toAccount.ifscCode);
+          j++;
+          excel.set(0, j, a, '="' + e.toAccount.accNumber + '"');
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, e.toAccount.accName);
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          j++;
+          excel.set(0, j, a, "");
+          a++;
+        });
+        excel.generate(Client_Code + "(" + reportDate + ")" + ".xlsx");
+      });
+  }
+
+  function GenerateReportTrak(id) {
+    const reportID = id;
+    const reportType = $("#report_type_daily").val();
+    let Product_Code = "RPAY";
+    let Bank_Code_Indicator = "M";
+    let Client_Code = "";
+    let Dr_Ac_No = "";
+
+    switch (reportType) {
+      case "0":
+        Client_Code = "DHANLAX";
+        Dr_Ac_No = "7812280361";
+        break;
+      case "1":
+        Client_Code = "TIRUPATIE";
+        Dr_Ac_No = "7812280194";
+        break;
+      case "2":
+        Client_Code = "MAHATR";
+        Dr_Ac_No = "7812280217";
+        break;
+      case "3":
+        Client_Code = "RTRADERS";
+        Dr_Ac_No = "6812971446";
+        break;
+    }
+
+    let jsonData = {
+      reportID: reportID,
+      reportType: reportType,
+      Product_Code: "RPAY",
+      Bank_Code_Indicator: "M",
+      Client_Code: Client_Code,
+      Dr_Ac_No: Dr_Ac_No,
+      type: 1,
+    };
+
+    fetch("/debitReport/xlsDataDaily", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const xlsData = json.Profile;
+        const reportDate = json.date;
+        var excel = $JExcel.new("Calibri light 10 #333333");
+        var headers = [
+          "Merchant Id",
+          "Beneficiary Name",
+          "Beneficiary Bank",
+          "Beneficiary a/c No",
+          "Beneficiary Bank Branch",
+          "Beneficiary IFSC Code",
+          "Amount",
+        ];
+
+        var formatHeader = excel.addStyle({
+          border: "none,none,none,thin #333333",
+          font: "Calibri 12 #ffff B",
+        });
+
+        for (var i = 0; i < headers.length; i++) {
+          excel.set(0, i, 0, headers[i], formatHeader);
+          excel.set(0, i, undefined, "auto");
+        }
+
+        let a = 1;
+        $.each(xlsData, function (key, e) {
+          let j = 0;
+          excel.set(0, 0, a, "63877");
+          j++;
+          excel.set(0, j, a, e.toAccount.accName);
+          j++;
+          excel.set(0, j, a, e.toAccount.bankName);
+          j++;
+          excel.set(0, j, a, '="' + e.toAccount.accNumber + '"');
+          j++;
+          excel.set(0, j, a, e.toAccount.bankName);
+          j++;
+          excel.set(0, j, a, e.toAccount.ifscCode);
+          j++;
+          excel.set(0, j, a, e.reqAmount);
+          j++;
+          a++;
+        });
+        excel.generate("payout" + reportDate + "_Batch.xlsx");
+      });
+  }
+
+  function generateAllTrakPay(reportDate, searchType) {
+    let jsonData = {
+      reportDate: reportDate,
+      searchType: searchType,
+    };
+
+    fetch("/debitReport/xlsDataDailyTrak", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const xlsData = json.Profile;
+        const reportDate = json.date;
+        var excel = $JExcel.new("Calibri light 10 #333333");
+        var headers = [
+          "Merchant Id",
+          "Beneficiary Name",
+          "Beneficiary Bank",
+          "Beneficiary a/c No",
+          "Beneficiary Bank Branch",
+          "Beneficiary IFSC Code",
+          "Amount",
+        ];
+
+        var formatHeader = excel.addStyle({
+          border: "none,none,none,thin #333333",
+          font: "Calibri 12 #ffff B",
+        });
+
+        for (var i = 0; i < headers.length; i++) {
+          excel.set(0, i, 0, headers[i], formatHeader);
+          excel.set(0, i, undefined, "auto");
+        }
+
+        let a = 1;
+        $.each(xlsData, function (key, e) {
+          let accNum = e.toAccount.accNumber;
+          let j = 0;
+          excel.set(0, 0, a, "111291");
+          j++;
+          excel.set(0, j, a, e.toAccount.accName);
+          j++;
+          excel.set(0, j, a, e.toAccount.bankName);
+          j++;
+          excel.set(0, j, a, '="' + accNum + '"');
+          j++;
+          excel.set(0, j, a, e.toAccount.bankName);
+          j++;
+          excel.set(0, j, a, e.toAccount.ifscCode);
+          j++;
+          excel.set(0, j, a, e.reqAmount);
+          j++;
+          a++;
+        });
+        excel.generate("payout" + reportDate + "_Batch.xlsx");
+      });
+  }
+
+  function trakPaytxt(reportDate, searchType) {
+    let jsonData = {
+      reportDate: reportDate,
+      searchType: searchType,
+    };
+
+    fetch("/debitReport/xlsDataDailyTrak", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const xlsData = json.Profile;
+        const reportDate = json.date;
+        let finalReport = "";
+        $.each(xlsData, function (key, e) {
+          finalReport += `111291,${e.toAccount.accName},${e.toAccount.bankName},${e.toAccount.accNumber},${e.toAccount.bankName},${e.toAccount.ifscCode},${e.reqAmount}\n`;
+        });
+
+        var element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          "data:text/plain;charset=utf-8," + encodeURIComponent(finalReport)
+        );
+        element.setAttribute("download", `trak_${reportDate}`);
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      });
+  }
+
+  function cashfree(reportDate, searchType) {
+    let jsonData = {
+      reportDate: reportDate,
+      searchType: searchType,
+    };
+
+    fetch("/debitReport/xlsDataDailyTrak", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        const xlsData = json.Profile;
+        const reportDate = json.date;
+        var excel = $JExcel.new("Calibri light 10 #333333");
+        var headers = [
+          "Transfer id",
+          "Bank account number",
+          "Ifsc",
+          "Name",
+          "Email",
+          "Phone number",
+          "Amount",
+          "Remarks",
+        ];
+
+        var formatHeader = excel.addStyle({
+          border: "none,none,none,thin #333333",
+          font: "Calibri 12 #ffff B",
+        });
+
+        for (var i = 0; i < headers.length; i++) {
+          excel.set(0, i, 0, headers[i], formatHeader);
+          excel.set(0, i, undefined, "auto");
+        }
+
+        let a = 1;
+        let arr = [];
+        $.each(xlsData, function (key, e) {
+          let accInfo = e.toAccount;
+          if (accInfo) {
+            let accNum = e.toAccount.accNumber;
+            let mobile = e.mobile;
+            let number = mobile.replace("+91", "");
+            let j = 0;
+            excel.set(0, 0, a, reportDate + a);
+            j++;
+            excel.set(0, j, a, '="' + accNum + '"');
+            j++;
+            excel.set(0, j, a, e.toAccount.ifscCode);
+            j++;
+            excel.set(0, j, a, e.toAccount.accName);
+            j++;
+            excel.set(0, j, a, "example@gmail.com" + a);
+            j++;
+            excel.set(0, j, a, number);
+            j++;
+            excel.set(0, j, a, e.reqAmount);
+            j++;
+            excel.set(0, j, a, "dg Traders");
+            j++;
+            a++;
+          } else {
+            arr.push(e._id);
+          }
+        });
+        console.log(arr);
+        excel.generate("cashfree" + reportDate + "_Batch.xlsx");
+      });
+  }
+
+  const pusher = new Pusher("c5324b557c7f3a56788a", {
+    cluster: "ap2",
+    forceTLS: true,
+  });
+
+  const channel = pusher.subscribe("my-channel");
+  channel.bind("my-event", function (data) {
+    if (data.type === 5205 || data.type === 5206 || data.type === 5207) {
+      location.reload();
+    }
+  });
+
+  // ----------------- ganpat code ----------------
+
+  // ----------------- ganpat code ----------------
+</script>

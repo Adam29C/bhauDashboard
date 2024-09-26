@@ -1,0 +1,138 @@
+<% layout('../layout') %>
+<style>
+    .th{width: 15%;}
+</style>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item" aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Revert Game Result Payment</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box ">
+                <h4 class="mt-0 mb-0 header-title text-center">Revert Game Result Payment</h4> </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box">
+                <div class="table-responsive">
+                    <div id="gif_img" style="display: none;" >
+                       <h1 style="text-align: center;margin-top: -12px;margin-bottom: 5px;">  <img src="../../276.gif" alt="user-img" ></h1>
+                    </div>
+                    <table class="table text-center table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th>Game Name</th>
+                                <th>Session</th>
+                                <th>Result Date</th>
+                                <th>Winning Digits</th>
+                                <th>Revert Result/Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableresult">
+                            <% for (index in result){ %>
+                                <tr id="mb<%=result[index]._id %>">
+                                    <td>
+                                        <%=result[index].providerName %>
+                                    </td>
+                                    <td>
+                                        <%=result[index].session %>
+                                    </td>
+                                    <td>
+                                        <%=result[index].resultDate %>
+                                    </td>
+                                    <td>
+                                        <%=result[index].winningDigit %>
+                                    </td>
+                                    <td class="th">
+                                        <p class="text-center mb-0">
+                                            <a href="#custom-modal" data-plugin="custommodal" data-overlaycolor="#36404a" data-date="<%= result[index].resultDate%>" data-digit="<%=result[index].winningDigit %>" data-family="<%= result[index].winningDigitFamily %>" data-id="<%=result[index]._id %>" data-provider="<%=result[index].providerId %>" data-session="<%=result[index].session %>" onclick="details(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs"><i class="mdi mdi-square-edit-outline mr-1"></i><span>Revert Payment</span></a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="custom-modal" class="modal-demo" style="display: none;margin-left: 18%;">
+    <div class="custom-modal-text mr-2 ml-2" style="width: 75%;height: auto;background-color: #f3efe9ed;">
+        <h1 style="font-size: medium;color: #3e6a6b;"> Are You Sure Want To Revert Payment ?</h1>
+        <div class="row">
+            <div class="col-xl-2" style="display: none;" id="loaderProg">
+                <img src="../../assets/images/loader.gif" style="width: 80px;"/>
+            </div>
+            <div class="col-xl-10" style="margin-left: auto;">
+                <input type="hidden" value="" id="id">
+                <input type="hidden" value="" id="providerId">
+                <input type="hidden" value="" id="session">
+                <input type="hidden" value="" id="digit">
+                <input type="hidden" value="" id="family">
+                <input type="hidden" value="" id="date">
+                <button type="button" class="btn btn-dark mx-2 " style="float: right;margin-top: 10%;" onclick="Custombox.modal.close();">  Close </button>
+                <button type="button" class="btn btn-dark mx-2" style="float: right;margin-top: 10%;" onclick="revert(this)"> Confirm </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    function details(obj){
+        const id = $(obj).attr('data-id');
+        const providerId = $(obj).attr('data-provider');
+        const session = $(obj).attr('data-session')
+        const digit = $(obj).attr('data-digit');
+        const family  = $(obj).attr('data-family');
+        const date = $(obj).attr('data-date');
+        $("#id").val(id);
+        $("#providerId").val(providerId);
+        $("#session").val(session);
+        $("#digit").val(digit);
+        $("#family").val(family);
+        $("#date").val(date);
+    }
+
+    function revert()
+    {
+        $("#gif_img").css("display", "block");
+        const id = $("#id").val();
+        const providerId = $("#providerId").val();
+        const session = $("#session").val();
+        const digit = $("#digit").val();
+        const family = $("#family").val();
+        const date = $("#date").val();
+
+        let data = { resultId : id , providerId : providerId, session : session, digit: digit, family: family, date: date};
+
+        console.log(data);
+
+        $.ajax({
+            type: "post",
+            url: "/gameResult/paymentRevert",
+            data: { resultId : id , providerId : providerId, session : session, digit: digit, family: family, date: date},
+            success: function(data) 
+            {
+               location.reload();
+            }
+        });
+    }
+</script>

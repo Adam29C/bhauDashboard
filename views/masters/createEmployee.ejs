@@ -1,0 +1,855 @@
+<% layout('../layout') %>
+<style>
+  #main {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+  }
+</style>
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box pt-0 pb-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/"> Home </a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Create Employee
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid animated fadeIn">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box">
+          <h4 class="mt-0 header-title">Register New Employee</h4>
+          <form
+            role="form"
+            id="setData"
+            method="post"
+            action="javascript:void(0)"
+          >
+            <div class="" id="divRegister1">
+              <div class="form-group">
+                <label for="gamename">Employee Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="e_name"
+                  id="e_name"
+                  placeholder="Enter Employee Name"
+                  autocomplete="off"
+                />
+                <span class="mt-1" id="error1" style="color: red"></span>
+              </div>
+              <div class="form-group">
+                <label for="gamename">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="e_Username"
+                  id="e_Username"
+                  placeholder="Enter Username"
+                  autocomplete="off"
+                />
+                <span class="mt-1" id="error2" style="color: red"></span>
+              </div>
+              <div class="form-group">
+                <label for="gamename">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  name="e_password"
+                  id="e_password"
+                  placeholder="Enter Password"
+                  autocomplete="off"
+                />
+                <span class="mt-1" id="error3" style="color: red"></span>
+              </div>
+              <div class="form-group">
+                <label for="gamename">Select Login Permission</label>
+                <select
+                  class="form-control"
+                  name="loginFor"
+                  id="loginFor"
+                  required="required"
+                >
+                  <option value="0">Both</option>
+                  <option value="1">Dashboard</option>
+                  <option value="2">Chat Panel</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="gamename">Designation</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="e_desi"
+                  id="e_desi"
+                  value="Bhau777 Employee"
+                  autocomplete="off"
+                />
+              </div>
+              <p id="errorSubmit" style="font-weight: bolder"><bold></bold></p>
+              <div class="form-group text-center">
+                <a
+                  href="#"
+                  class="btn btn-dark btn-rounded button-color width-md waves-effect waves-light"
+                  id="next"
+                  >Next</a
+                >
+              </div>
+            </div>
+            <div class="card-box" id="divRegister2" style="display: none">
+              <div class="row">
+                <div class="col-md-4">
+                  <div
+                    class="checkbox checkbox-purple"
+                    style="margin: 0px 0px 0 16px"
+                  >
+                    <input name="main" id="main" type="checkbox" value="main" />
+                    <label class="parentClass" for="main">Dashboard</label>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="users"
+                      name="users"
+                      type="checkbox"
+                      value="users"
+                    />
+                    <label class="parentClass" for="users">Users</label>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="games"
+                      name="games"
+                      type="checkbox"
+                      value="games"
+                    />
+                    <label class="parentClass" for="games">Games</label>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="gamesProvider"
+                        name="gamesProvider"
+                        type="checkbox"
+                        value="gamesProvider"
+                      />
+                      <label for="gamesProvider">Games Provider</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="gamesSetting"
+                        name="gamesSetting"
+                        type="checkbox"
+                        value="gamesSetting"
+                      />
+                      <label for="gamesSetting">Games Setting</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="gamesRates"
+                        name="gamesRates"
+                        type="checkbox"
+                        value="gamesRates"
+                      />
+                      <label for="gamesRates">Games Rates</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="gamesResult"
+                        name="gamesResult"
+                        type="checkbox"
+                        value="gamesResult"
+                      />
+                      <label for="gamesResult">Games Result</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="gamesRevert"
+                        name="gamesRevert"
+                        type="checkbox"
+                        value="gamesRevert"
+                      />
+                      <label for="gamesRevert">Games Revert</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="gamesRefund"
+                        name="gamesRefund"
+                        type="checkbox"
+                        value="gamesRefund"
+                      />
+                      <label for="gamesRefund">Games Refund</label>
+                    </div>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="starline"
+                      name="starline"
+                      type="checkbox"
+                      value="starline"
+                    />
+                    <label class="parentClass" for="starline">Starline</label>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="starlineProvider"
+                        name="starlineProvider"
+                        type="checkbox"
+                        value="starlineProvider"
+                      />
+                      <label for="starlineProvider">Starline Provider</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="starlineSetting"
+                        name="starlineSetting"
+                        type="checkbox"
+                        value="starlineSetting"
+                      />
+                      <label for="starlineSetting">Starline Setting</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="starlineRates"
+                        name="starlineRates"
+                        type="checkbox"
+                        value="starlineRates"
+                      />
+                      <label for="starlineRates">Starline Rates</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="starlineProfit"
+                        name="starlineProfit"
+                        type="checkbox"
+                        value="starlineProfit"
+                      />
+                      <label for="starlineProfit">Starline Profit Loss</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="starlineResult"
+                        name="starlineResult"
+                        type="checkbox"
+                        value="starlineResult"
+                      />
+                      <label for="starlineResult">Starline Result</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="starlineRevert"
+                        name="starlineRevert"
+                        type="checkbox"
+                        value="starlineRevert"
+                      />
+                      <label for="starlineRevert">Starline Revert</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="starlineRefund" name="starlineRefund"
+                      type="checkbox" value="starlineRefund" <%
+                      if(permission['starlineRefund']){ %> checked <% } %> >
+                      <label for="starlineRefund">Starline Refund</label>
+                    </div>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input id="ab" name="ab" type="checkbox" value="ab" />
+                    <label class="parentClass" for="ab">Andar Bahar</label>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abProvider"
+                        name="abProvider"
+                        type="checkbox"
+                        value="abProvider"
+                      />
+                      <label for="abProvider">AB Provider</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abSetting"
+                        name="abSetting"
+                        type="checkbox"
+                        value="abSetting"
+                      />
+                      <label for="abSetting">AB Setting</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abRates"
+                        name="abRates"
+                        type="checkbox"
+                        value="abRates"
+                      />
+                      <label for="abRates">AB Rates</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abProftLoss"
+                        name="abProftLoss"
+                        type="checkbox"
+                        value="abProftLoss"
+                      />
+                      <label for="abProftLoss">AB Profit Loss</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abResult"
+                        name="abResult"
+                        type="checkbox"
+                        value="abResult"
+                      />
+                      <label for="abResult">AB Result</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abRevert"
+                        name="abRevert"
+                        type="checkbox"
+                        value="abRevert"
+                      />
+                      <label for="abRevert">AB Revert</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="abRefund" name="abRefund" type="checkbox"
+                      value="abRefund"<% if(permission['abRefund']){ %> checked
+                      <% } %> >
+                      <label for="abRefund">AB Refund</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="checkbox checkbox-purple">
+                    <input id="cg" name="cg" type="checkbox" value="cg" />
+                    <label class="parentClass" for="cg">Cutting Group</label>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="bookie"
+                      name="bookie"
+                      type="checkbox"
+                      value="bookie"
+                    />
+                    <label class="parentClass" for="bookie"
+                      >Bookie Corner</label
+                    >
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="ocCutting"
+                        name="ocCutting"
+                        type="checkbox"
+                        value="ocCutting"
+                      />
+                      <label for="ocCutting">OC Cutting Group</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="fcg" name="fcg" type="checkbox" value="fcg" />
+                      <label for="fcg">Final Cutting Group</label>
+                    </div>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="wallet"
+                      name="wallet"
+                      type="checkbox"
+                      value="wallet"
+                    />
+                    <label class="parentClass" for="wallet">Wallet</label>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="fundRequest"
+                        name="fundRequest"
+                        type="checkbox"
+                        value="fundRequest"
+                      />
+                      <label for="fundRequest">Fund Request</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="exportDebit"
+                        name="exportDebit"
+                        type="checkbox"
+                        value="exportDebit"
+                      />
+                      <label for="exportDebit">ExportDebitReport</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="invoices"
+                        name="invoices"
+                        type="checkbox"
+                        value="invoices"
+                      />
+                      <label for="invoices">Invoices</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="viewWallet"
+                        name="viewWallet"
+                        type="checkbox"
+                        value="viewWallet"
+                      />
+                      <label for="viewWallet">View Wallet</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="reqONOFF"
+                        name="reqONOFF"
+                        type="checkbox"
+                        value="reqONOFF"
+                      />
+                      <label for="reqONOFF">Request ON/OFF</label>
+                    </div>
+                    <div class="checkbox checkbox-purple">
+                      <input id="creditrequest" name="creditrequest"
+                      type="checkbox" value="creditrequest" <%
+                      if(permission['creditrequest']){ %> checked <% } %> >
+                      <label class="parentClass" for="creditrequest"
+                        >creditrequest</label
+                      >
+                    </div>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="appDebit"
+                      name="appDebit"
+                      type="checkbox"
+                      value="appDebit"
+                    />
+                    <label class="parentClass" for="appDebit"
+                      >Approved Debit Page</label
+                    >
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="paytmReq"
+                        name="paytmReq"
+                        type="checkbox"
+                        value="paytmReq"
+                      />
+                      <label for="paytmReq">Paytm Request</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="bankReq"
+                        name="bankReq"
+                        type="checkbox"
+                        value="bankReq"
+                      />
+                      <label for="bankReq">Bank Account Request</label>
+                    </div>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input id="pendingDebitReq" name="pendingDebitReq"
+                    type="checkbox" value="pendingDebitReq" <%
+                    if(permission['pendingDebitReq']){ %> checked <% } %> >
+                    <label class="parentClass" for="pendingDebitReq"
+                      >Pending Debit Request</label
+                    >
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="pendingBankReq" name="pendingBankReq"
+                      type="checkbox" value="pendingBankReq" <%
+                      if(permission['pendingBankReq']){ %> checked <% } %> >
+                      <label for="pendingBankReq">Pending Bank Request</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="pendingPaytmReq" name="pendingPaytmReq"
+                      type="checkbox" value="pendingPaytmReq" <%
+                      if(permission['pendingPaytmReq']){ %> checked <% } %> >
+                      <label for="pendingPaytmReq">Pending Paytm Request</label>
+                    </div>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="decDebit"
+                      name="decDebit"
+                      type="checkbox"
+                      value="decDebit"
+                    />
+                    <label class="parentClass" for="decDebit"
+                      >Declined Request</label
+                    >
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="noti"
+                      name="noti"
+                      type="checkbox"
+                      value="notification"
+                    />
+                    <label class="parentClass" for="noti">Notification</label>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input id="news" name="news" type="checkbox" value="news" />
+                    <label class="parentClass" for="news">News</label>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input id="deleteUser" name="deleteUser" type="checkbox"
+                    value="deleteUser" <% if(permission['deleteUser']){ %>
+                    checked <% } %> >
+                    <label class="parentClass" for="deleteUser"
+                      >Delete User</label
+                    >
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="appSetting"
+                      name="appSetting"
+                      type="checkbox"
+                      value="app_settings"
+                    />
+                    <label class="parentClass" for="appSetting"
+                      >App Settings</label
+                    >
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="howToPlay"
+                        name="howToPlay"
+                        type="checkbox"
+                        value="howToPlay"
+                      />
+                      <label for="howToPlay">How To Play</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="withdrawScreen" name="withdrawScreen"
+                      type="checkbox" value="withdrawScreen" <%
+                      if(permission['withdrawScreen']){ %> checked <% } %> >
+                      <label for="withdrawScreen">Withdraw Screen</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="noticeBoard"
+                        name="noticeBoard"
+                        type="checkbox"
+                        value="noticeBoard"
+                      />
+                      <label for="noticeBoard">Notice Board</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="profileNote"
+                        name="profileNote"
+                        type="checkbox"
+                        value="profileNote"
+                      />
+                      <label for="profileNote">Profile Note</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="walletContact"
+                        name="walletContact"
+                        type="checkbox"
+                        value="walletContact"
+                      />
+                      <label for="walletContact">Wallet Contact</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="appVersion" name="appVersion" type="checkbox"
+                      value="appVersion" <% if(permission['appVersion']){ %>
+                      checked <% } %> >
+                      <label for="appVersion">App Version</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="checkbox checkbox-purple">
+                    <input id="masters" name="masters" type="checkbox"
+                    value="masters" <% if(permission['masters']){ %> checked <%
+                    } %> >
+                    <label class="parentClass" for="masters">Masters</label>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="upiId" name="upiId" type="checkbox"
+                      value="upiId" <% if(permission['upiId']){ %> checked <% }
+                      %> >
+                      <label for="upiId">Upi Id</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="addFoundMode" name="addFoundMode"
+                      type="checkbox" value="addFoundMode" <%
+                      if(permission['addFoundMode']){ %> checked <% } %> >
+                      <label for="addFoundMode">Add Fund Mode</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="manageEmp" name="manageEmp" type="checkbox"
+                      value="manageEmp" <% if(permission['manageEmp']){ %>
+                      checked <% } %> >
+                      <label for="manageEmp">Manage Employee</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input id="createEmployee" name="createEmployee"
+                      type="checkbox" value="createEmployee" <%
+                      if(permission['createEmployee']){ %> checked <% } %> >
+                      <label for="createEmployee">Create Employee</label>
+                    </div>
+                  </div>
+                  <div class="checkbox checkbox-purple">
+                    <input
+                      id="reports"
+                      name="reports"
+                      type="checkbox"
+                      value="reports"
+                    />
+                    <label class="parentClass" for="reports">Reports</label>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="jodiAll"
+                        name="jodiAll"
+                        type="checkbox"
+                        value="jodiAll"
+                      />
+                      <label for="jodiAll">Jodi All</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="salesReport"
+                        name="salesReport"
+                        type="checkbox"
+                        value="salesReport"
+                      />
+                      <label for="salesReport">Sales Report</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="starLineSaleReport"
+                        name="starLineSaleReport"
+                        type="checkbox"
+                        value="starLineSaleReport"
+                      />
+                      <label for="starLineSaleReport"
+                        >Starline Sales Report</label
+                      >
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abSalesReport"
+                        name="abSalesReport"
+                        type="checkbox"
+                        value="abSalesReport"
+                      />
+                      <label for="abSalesReport"
+                        >Andar Bahar Sales Report</label
+                      >
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="abTotalBids"
+                        name="abTotalBids"
+                        type="checkbox"
+                        value="abTotalBids"
+                      />
+                      <label for="abTotalBids">Andar Bahar Total Bids</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="fundReport"
+                        name="fundReport"
+                        type="checkbox"
+                        value="fundReport"
+                      />
+                      <label for="fundReport">Fund Report</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="totalBids"
+                        name="totalBids"
+                        type="checkbox"
+                        value="totalBids"
+                      />
+                      <label for="totalBids">Total Bids</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="ajaySir"
+                        name="ajaySir"
+                        type="checkbox"
+                        value="ajaySir"
+                      />
+                      <label for="ajaySir">Sir Report</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="credDebReport"
+                        name="credDebReport"
+                        type="checkbox"
+                        value="credDebReport"
+                      />
+                      <label for="credDebReport">Credit Debit Report</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="dailyReport"
+                        name="dailyReport"
+                        type="checkbox"
+                        value="dailyReport"
+                      />
+                      <label for="dailyReport">Daily Report</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="biddingReport"
+                        name="biddingReport"
+                        type="checkbox"
+                        value="biddingReport"
+                      />
+                      <label for="biddingReport">Bidding Report</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="customerBal"
+                        name="customerBal"
+                        type="checkbox"
+                        value="customerBal"
+                      />
+                      <label for="customerBal">Customer Balance</label>
+                    </div>
+                    <div class="checkbox checkbox-purple childClass">
+                      <input
+                        id="allUserBIds"
+                        name="allUserBIds"
+                        type="checkbox"
+                        value="allUserBIds"
+                      />
+                      <label for="allUserBIds">All User Bids</label>
+                    </div>
+
+                    <!-- <div class="checkbox checkbox-purple childClass">
+                                        <input id="userBidsRatio" name="userBidsRatio" type="checkbox" value="userBidsRatio">
+                                        <label for="userBidsRatio">User Bids Ratio</label>
+                                    </div>
+                                    <div class="checkbox checkbox-purple childClass">
+                                        <input id="starlineBidsRatio" name="starlineBidsRatio" type="checkbox" value="starlineBidsRatio">
+                                        <label for="starlineBidsRatio">User Starline Bids Ratio</label>
+                                    </div> -->
+                  </div>
+                  <div class="checkbox checkbox-purple childClass">
+                    <input
+                      id="delete"
+                      name="delete"
+                      type="checkbox"
+                      value="delete"
+                    />
+                    <label for="delete">Deleted Users</label>
+                  </div>
+                  <div class="checkbox checkbox-purple childClass">
+                    <input
+                      id="upiReport"
+                      name="upiReport"
+                      type="checkbox"
+                      value="upiReport"
+                    />
+                    <label for="upiReport">Upi Fund Report</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group text-center mt-3">
+                  <a
+                    href="#"
+                    class="btn btn-dark btn-rounded   button-color width-md waves-effect waves-light"
+                    id="previous"
+                    >Previous</a
+                  >
+                  <button
+                    type="submit"
+                    class="btn btn-success btn-rounded width-md waves-effect waves-light"
+                    id="register"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+            <input type="reset" id="resetForm" style="display: none" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#next").click(function () {
+    $("#divRegister1").css("display", "none");
+    $("#divRegister2").css("display", "block");
+    $("#divRegister2").addClass("animated bounceInLeft");
+  });
+
+  $("#previous").click(function () {
+    $("#divRegister2").css("display", "none");
+    $("#divRegister1").css("display", "block");
+    $("#divRegister1").addClass("animated bounceInRight");
+  });
+
+  $("#register").click(function (event) {
+    var formData = $("form").serializeArray();
+    if ($("#e_name").val() === "") {
+      $("#error1").html("This Field Cannot be Empty");
+      $("#divRegister2").css("display", "none");
+      $("#divRegister1").css("display", "block");
+    }
+    if ($("#e_Username").val() === "") {
+      $("#error2").html("This Field Cannot be Empty");
+      $("#divRegister2").css("display", "none");
+      $("#divRegister1").css("display", "block");
+    }
+    if ($("#e_password").val() === "") {
+      $("#error3").html("This Field Cannot be Empty");
+      $("#divRegister2").css("display", "none");
+      $("#divRegister1").css("display", "block");
+    }
+    if ($("#e_number").val() == "") {
+      $("#error4").html("This Field Cannot be Empty");
+      $("#divRegister2").css("display", "none");
+      $("#divRegister1").css("display", "block");
+    } else {
+
+// console.log("formData" ,formData);
+
+
+    // return
+      $.ajax({
+        type: "POST",
+        url: "/employee/createEmployee",
+        data: formData,
+        success: function (result) {
+          if (result.status == 1) {
+            $("#resetForm").trigger("click");
+            !(function (t) {
+              var e = function () {};
+              (e.prototype.init = function () {
+                Swal.fire({
+                  title: "User Created Successfully",
+                  type: "success",
+                  confirmButtonClass: "btn btn-confirm mt-2",
+                });
+              }),
+                (t.SweetAlert = new e()),
+                (t.SweetAlert.Constructor = e);
+            })(window.jQuery),
+              (function (t) {
+                window.jQuery.SweetAlert.init();
+                $("#divRegister2").css("display", "none");
+                $("#divRegister1").css("display", "block");
+              })();
+          } else {
+            if (result.status == 2) {
+              $("#divRegister2").css("display", "none");
+              $("#divRegister1").css("display", "block");
+              $("#errorSubmit").html(
+                "* Validation Error Username Already Exist"
+              );
+            } else {
+              $("#divRegister2").css("display", "none");
+              $("#divRegister1").css("display", "block");
+              $("#errorSubmit").html("* " + result.message);
+            }
+          }
+        },
+      });
+    }
+  });
+</script>

@@ -1,0 +1,105 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Games Provider</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box">
+                <h4 class="mt-0 header-title">Add Settings</h4>
+                <p>Enter Your Game Settings</p>
+                <div class="col-xl-6 offset-xl-3" >
+                        <div class="form-group">
+                            <label for="gamename">Game Name</label>
+                            <select class="form-control" name="gameid" id="gameid">
+                                <%  for(index in data){  %>
+                                <option value="<%=data[index]._id %>"><%=data[index].providerName %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="result">Game Day</label>
+                            <select class="form-control" name="gameDay"  id="gameDay">
+                                <option value="All">All</option>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                                <option value="Sunday">Sunday</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="result">OBT</label>
+                            <input id="timepicker" type="text" name="game1" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="result">CBT</label>
+                            <input id="timepicker5"  type="text" name="game2" class="form-control timepicker1">
+                        </div>
+                        <div class="form-group">
+                            <label for="result">OBRT</label>
+                            <input id="timepicker3"  type="text" name="game3" class="form-control timepicker1">
+                        </div>
+                        <div class="form-group">
+                            <label for="result">CBRT</label>
+                            <input id="timepicker4"  type="text" name="game4" class="form-control timepicker1">
+                        </div>
+                        <div class="form-group">
+                            <label for="isClosed">Is Closed</label>
+                            <select class="form-control" name="isClosed" id="isClosed">
+                                <option value="1">Open</option>
+                                <option value="0">Closed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" onclick="addSettings()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addSettings()
+    {
+        const status = $("#isClosed").val();
+        const game4 = $("#timepicker4").val();
+        const game3 = $("#timepicker3").val();
+        const game2 = $("#timepicker5").val();
+        const game1 = $("#timepicker").val();
+        const gameDay = $("#gameDay").val();
+        const gameid= $("#gameid").val();
+
+        console.log(game1, game4, game3, game4);
+
+        fetch('/gamesSetting/insertSettings',{
+            method: 'POST', 
+            body: JSON.stringify({ status: status, game4: game4, game3: game3,game2: game2, game1: game1, gameDay : gameDay, gameid: gameid }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'same-origin',
+        })
+        .then(res => res.json())
+        .then(
+            body =>{
+                if(body.status === 1){
+                    toastr["info"](body.message, "Bhau777 Games");
+                    toastr.options = {  "closeButton": true, "progressBar": true }
+                }
+            }
+        )
+    }
+</script>

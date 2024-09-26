@@ -1,0 +1,459 @@
+<% layout('../layout') %>
+<style>
+  .table {
+    width: 57%;
+    margin-bottom: 1.5rem;
+    color: #2b2c2d;
+  }
+</style>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box pt-0 pb-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/"> Home </a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Banks</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- - By Ganpat -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box">
+          <h4 class="mt-0 mb-0 header-title text-center">All Fund Mode List</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card-box">
+          <div class="table-responsive">
+            <table
+              class="table table-centered table-bordered mb-0 text-center"
+              id="UpiTable"
+            >
+              <thead>
+                <tr>
+                  <th>Name11</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- - By Ganpat -->
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box">
+          <h4 class="mt-0 mb-0 header-title text-center">UPI ID List</h4>
+          <a
+            href="#custom-modal"
+            class="btn btn-primary btn-sm waves-effect"
+            data-animation="slit"
+            data-plugin="custommodal"
+            data-overlaycolor="#36404a"
+            style="float: right; margin-top: -28px"
+            ><span> Add New UPI </span> <i class="fa fa-plus ml-1"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card-box">
+          <div class="table-responsive">
+            <table
+              class="table table-centered table-bordered mb-0 text-center"
+              id="btn-editable"
+            >
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                  <!-- <th>Chat Panel on/off</th> -->
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody id="bankTable">
+                <% for(index in data) { %>
+                <tr id="mb<%= data[index]._id %>">
+                  <td><%=data[index].UPI_ID%></td>
+                  <td>
+                    <% if (data[index].is_Active == false ){ %> Disabled <% }
+                    else { %> Active <% }%>
+                  </td>
+                  <td>
+                    <% if ( data[index].is_Active == false ){ %>
+                    <button
+                      class="btn btn-purple waves-effect waves-light btn-xs"
+                      onclick="blockUnblock('<%= data[index]._id %>', 'true',1)"
+                    >
+                      <i class="fas fa-user mr-1"></i> <span>Un-Block</span>
+                    </button>
+                    <% } else { %>
+                    <button
+                      class="btn btn-danger waves-effect waves-light btn-xs"
+                      onclick="blockUnblock('<%= data[index]._id %>', 'false',1)"
+                    >
+                      <i class="fas fa-user-alt-slash mr-1"></i>
+                      <span>Block</span>
+                    </button>
+                    <% }%>
+                  </td>
+                  <!-- Ganpat Code -->
+
+                  <!-- <td>
+                    <% if ( data[index].is_Active_chat == false ){ %>
+
+                    <button
+                      class="btn btn-purple waves-effect waves-light btn-xs"
+                      onclick="blockUnblock('<%= data[index]._id %>', 'true',2)"
+                    >
+                      <i class="fas fa-user mr-1"></i> <span>Un-Block</span>
+                    </button>
+
+
+                    <% } else { %>
+                    <button
+                      class="btn btn-danger waves-effect waves-light btn-xs"
+                      onclick="blockUnblock('<%= data[index]._id %>', 'false',2)"
+                    >
+                      <i class="fas fa-user-alt-slash mr-1"></i>
+                      <span>Block</span>
+                    </button>
+                    <% }%>
+                  </td> -->
+                  <!-- Ganpat Code -->
+
+                  <td>
+                    <button
+                      class="btn btn-danger waves-effect waves-light btn-xs"
+                      onclick="RemoveUsers('<%= data[index]._id %>', 'false',2)"
+                    >
+                      <i class="fas fa-trash mr-1"></i>
+                      <span>Delete</span>
+                    </button>
+                  </td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.modal.close();">
+      <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Add New UPI</h4>
+    <div class="custom-modal-text">
+      <div class="card-box" id="upiDiv">
+        <div class="form-group">
+          <label for="userName">UPI Id</label>
+          <input
+            type="text"
+            name="upiName"
+            parsley-trigger="change"
+            class="form-control"
+            id="upiName"
+          />
+          <p id="errorText"></p>
+        </div>
+        <div class="form-group">
+          <label for="userName">Status</label>
+          <select class="form-control" name="status" id="status143">
+            <option value="true">Active</option>
+            <option value="false">Disabled</option>
+          </select>
+        </div>
+        <div class="form-group text-right mb-0">
+          <button
+            class="btn btn-primary waves-effect waves-light mr-1"
+            onclick="insertdata();"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+      <!-- <div class="card-box" id="OTPdiv" style="display: none">
+        <div class="form-group">
+          <p style="color: chocolate; text-align: center">
+            OTP SUCCESSFULLY SENT TO THE REGISTERED MOBILE NUMBER!!!
+          </p>
+          <label for="userName">Enter OTP</label>
+          <input
+            type="text"
+            id="otp"
+            name="otp"
+            parsley-trigger="change"
+            class="form-control"
+          />
+          <br />
+          <button
+            class="btn btn-primary waves-effect waves-light mr-1"
+            onclick="insertdata();"
+          >
+            Verify OTP
+          </button>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</div>
+<script>
+  function sendOTP() {
+    const name = document.getElementById("upiName").value;
+    if (name != "") {
+      $("#upiDiv").css("display", "none");
+      $("#OTPdiv").css("display", "block");
+      $.ajax({
+        type: "POST",
+        url: "/masters/OTPsend",
+        success: function (result) {
+          $("#upiDiv").css("display", "none");
+          $("#OTPdiv").css("display", "block");
+        },
+      });
+    } else {
+      $("#errorText").html("UPI ID Cannot be Empty");
+    }
+  }
+
+  function insertdata() {
+    const name = document.getElementById("upiName").value;
+    const status = document.getElementById("status143").value;
+    // const otpNum = document.getElementById("otp").value;
+    $.ajax({
+      type: "POST",
+      url: "/masters/upiAdd",
+      data: { bankName: name, status: status },
+      success: function (result) {
+        let message = result.message;
+
+        if (result.status === 1) {
+          Custombox.modal.close();
+          let data = result.data;
+
+          let id = "mb" + data._id;
+          let activeStatuss = data.is_Active;
+          let dispText = "Active";
+          let bankId = "'" + data._id + "'";
+          let button =
+            '<button class="btn btn-danger waves-effect waves-light btn-xs" onclick="blockUnblock(' +
+            bankId +
+            "," +
+            activeStatuss +
+            ')"><i class="fas fa-user-alt-slash mr-1"></i><span>Block</span></button>';
+
+          if (activeStatuss === false) {
+            dispText = "Disabled";
+            button =
+              '<button class="btn btn-purple waves-effect waves-light btn-xs" onclick="blockUnblock(' +
+              bankId +
+              "," +
+              activeStatuss +
+              ')"><i class="fas fa-user-alt-slash mr-1"></i><span>Un-Block</span></button>';
+          }
+
+          let html =
+            '<tr id="' +
+            id +
+            '"><td>' +
+            data.UPI_ID +
+            "</td>\
+                                <td>" +
+            dispText +
+            "</td>\
+                                <td>" +
+            button +
+            '</td>\            <td><button class="btn btn-danger  waves-effect waves-light btn-xs" onclick="RemoveUsers(' +
+            data._id +
+            ')"><i class="fas fa-trash"></i>&nbsp;&nbsp;<span>Delete</span></button></td>           </tr>';
+
+          $("#bankTable").append(html);
+          window.location.reload();
+          toastr["success"](message, "Bhau777 Bets Games");
+        } else {
+          toastr["success"](message, "Bhau777 Bets Games");
+        }
+      },
+    });
+  }
+
+  function blockUnblock(bankId, blockStatus, stat) {
+    const id = bankId;
+    const status = blockStatus;
+    $.ajax({
+      type: "POST",
+      url: "/masters/disable_upi",
+      data: { id: id, status: status, stat: stat },
+      success: function (result) {
+        let message = result.message;
+        if (result.status === 1) {
+          window.location.reload();
+        } else {
+          toastr["warning"](message, "Bhau777 Bets Games");
+        }
+      },
+    });
+  }
+
+  //  by ganpat
+  function GetUPIData() {
+    $.ajax({
+      type: "GET",
+      url: "/paymentMode/listGateways",
+      data: {},
+      success: function (result) {
+        // console.log("result", result);
+
+        let message = result.message;
+        if (result.status) {
+          // console.log("result", result.data);
+          let data = result.data;
+
+          const tableBody = document.querySelector("#UpiTable tbody");
+          data.forEach((item) => {
+            let id = "mb" + item._id;
+            let activeStatus = item.status;
+            let dispText = activeStatus ? "Active" : "Disabled";
+            let bankId = "'" + item._id + "'";
+
+            let button = `
+    <select className="form-select form-select-sm" aria-label=".form-select-sm example" id="managestatus" value="${activeStatus}"
+    onchange="UpdateStatus('${item._id}' ,);"
+    >
+      <option disabled>Select Actions</option>
+      <option value="active" ${
+        activeStatus === "active" ? "selected" : ""
+      }>Active</option>
+      <option value="disable" ${
+        activeStatus === "disable" ? "selected" : ""
+      }>Disable</option>
+    </select>
+  `;
+
+            let html =
+              '<tr id="' +
+              id +
+              '">' +
+              "<td>" +
+              item.paymentMode +
+              "</td>" +
+              "<td>" +
+              dispText +
+              "</td>" +
+              "<td>" +
+              button +
+              "</td>";
+            ("</tr>");
+
+            tableBody.insertAdjacentHTML("beforeend", html);
+          });
+        }
+      },
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", GetUPIData);
+
+  function UpdateStatus(bankId) {
+    const status1 = document.getElementById("managestatus").value;
+
+    // return;
+    const id = bankId;
+    const status = status1;
+    $.ajax({
+      type: "PATCH",
+      url: "/paymentMode/updatePaymentMode",
+      data: { id: id, status: status },
+      success: function (result) {
+        let message = result.message;
+        if (result.status === 1) {
+          window.location.reload();
+        } else {
+          toastr["warning"](message, "Bhau777 Bets Games");
+        }
+      },
+    });
+  }
+
+  function RemoveUsers(bankId) {
+    // $.ajax({
+    //   type: "delete",
+    //   url: `/paymentMode/deleteUpi`,
+    //   data: { id: bankId },
+    //   success: function (result) {
+
+    //     console.log("resultresult" ,result);
+
+    //     let message = result.message;
+    //     if (result.status === 1) {
+    //       window.location.reload();
+    //     } else {
+    //       toastr["warning"](message, "Bhau777 Games");
+    //     }
+    //   },
+    //   error: function (xhr, status, error) {
+    //     console.error("AJAX error:", status, error);
+    //     toastr["error"](
+    //       "An error occurred while processing your request.",
+    //       "Bhau777 Games"
+    //     );
+    //   },
+    // });
+
+    if (confirm("Are you sure you want to delete this payment method?")) {
+      $.ajax({
+        type: "delete",
+        url: `/paymentMode/deleteUpi`,
+        data: { id: bankId },
+        success: function (result) {
+          let message = result.message;
+          if (result.status === 1) {
+            toastr["success"](message, "Bhau777 Bets Games");
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            toastr["warning"](message, "Bhau777 Bets Games");
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("AJAX error:", status, error);
+          toastr["error"](
+            "An error occurred while processing your request.",
+            "Bhau777 Bets Games"
+          );
+        },
+      });
+    }
+  }
+</script>
