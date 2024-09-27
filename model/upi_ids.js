@@ -24,7 +24,7 @@ const UPI_Schema = new mongoose.Schema({
         merchantName:{
             type: String,
             required: false
-        }
+        },
     },
     {
         versionKey : false
