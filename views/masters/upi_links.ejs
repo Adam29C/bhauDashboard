@@ -632,14 +632,12 @@
   function insertdata123() {
     const name = document.getElementById("upiName123").value;
     const status = document.getElementById("status123").value;
-
     $.ajax({
       type: "POST",
       url: "/payModeStatus/addPaymentModeStatus",
       data: { modeName: name, status: status },
       success: function (result) {
         let message = result.message;
-
         if (result.status) {
           window.location.reload();
           Custombox.modal.close();
@@ -653,7 +651,7 @@
         toastr["error"](
           xhr.responseJSON.msg ,
           "Bhau777 Bets Games"
-        ); // Display failure message
+        ); 
       },
     });
   }
