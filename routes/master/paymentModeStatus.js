@@ -85,6 +85,7 @@ router.get("/getPaymentModeStatus", async (req, res) => {
             statusCode: 200,
             status: "Success",
             data: modeUodateList,
+
         });
     } catch (error) {
         return res.status(500).send({
