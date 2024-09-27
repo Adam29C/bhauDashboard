@@ -11,6 +11,9 @@ const walletContactSchema = new mongoose.Schema({
         upiId:{
             type:String,
         },
+        upiBarCode:{
+           type:String,
+        },
         modified:{
             type: Date,
             default: Date.now()
