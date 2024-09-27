@@ -9,34 +9,6 @@ const dateTime = require("node-datetime");
 const SendOtp = require("sendotp");
 // const sendOtp = new SendOtp("290393AuGCyi6j5d5bfd26");
 const sendOtp = new SendOtp("1207171791436302472");
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-// const { S3Client } = require('@aws-sdk/client-s3');
-const { S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
-
-
-const s3 = new S3Client({
-	region: process.env.AWS_BUCKET_REGION,
-	credentials: {
-		accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-	}
-});
-const s3Storage = multerS3({
-	s3: s3,
-	bucket: "bhau777bucket", // change it as per your project requirement
-	acl: "public-read", // storage access type
-	metadata: (req, file, cb) => {
-		cb(null, { fieldname: file.fieldname });
-	},
-	key: (req, file, cb) => {
-		const fileName = `uploads/upi_barcode/${Date.now()}_${file.originalname}`;
-		cb(null, fileName);
-	},
-});
-const multerInstanceForUpload = multer({
-	storage: s3Storage,
-});
 
 router.post("/OTPsend", async (req, res) => {
 	const userInfo = req.session.details;
@@ -164,15 +136,11 @@ router.post("/blockUnblock", session, async (req, res) => {
 	}
 });
 
-router.post("/upiAdd", session, multerInstanceForUpload.single('upibarCode'), async (req, res) => {
+router.post("/upiAdd", session, async (req, res) => {
 	try {
 		const userInfo = req.session.details;
 		let mobile = userInfo.mobile;
 		let { bankName, status, merchantName } = req.body
-		let images = ""
-		if (req.file) {
-			images = req?.file?.location
-		}
 		if (status == "true") {
 			const findActiveUpi = await UPI_ID.findOne({ is_Active: true });
 			if (findActiveUpi) {
@@ -188,8 +156,7 @@ router.post("/upiAdd", session, multerInstanceForUpload.single('upibarCode'), as
 			UPI_ID: bankName,
 			is_Active: status,
 			updated_at: reqDate,
-			merchantName: merchantName,
-			upiBarCode: images
+			merchantName: merchantName
 		});
 		const updatedData = await upiDetails.save();
 		res.json({
@@ -290,14 +257,6 @@ router.post("/dlt_upi", async (req, res) => {
 				message: "given upi details is not found",
 			});
 		}
-		let barCodeUrl = upiDetails.upiBarCode
-		let objectKey = barCodeUrl.split('com/')[1];
-		const params = {
-			Bucket: "bhau777bucket",
-			Key: objectKey
-		};
-		const command = new DeleteObjectCommand(params);
-		const data = await s3.send(command);
 		const bank = await UPI_ID.deleteOne({ _id: id });
 		res.json({
 			status: 1,
