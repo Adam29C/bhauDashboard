@@ -1,0 +1,484 @@
+<% layout('../layout') %>
+<style>
+    .header-title {
+        font-size: 15px;
+        margin: 0 0 25px 0;
+    }
+
+    .Grid{
+        height: 40px;
+    }
+
+    .Grid .Likes .goUp{
+        display: inline-flex;
+        opacity: 0;
+        transform: translate3d(0, -20px, 0);
+        transition: 0.1s ease-in-out;
+    }
+    .Grid .Likes .waitDown{
+        display: inline-flex;
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+    }
+    .Grid .Likes .initial{
+        display: inline-flex;
+        opacity: 1;
+        transform: translate3d(0, 0px, 0);
+        transition: 0.1s ease-in-out;
+    }
+
+</style>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Active Users</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-blue badge-pill float-left mt-3">
+                                <i class="fas fa-user-clock"></i> 
+                            </span>
+                            <h2 class="font-weight-normal mb-1" id="allUser"><%= data.active_count %> </h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-blue progress-sm">
+                            <div class="progress-bar bg-blue" role="progressbar"
+                                 aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                 style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">All Users</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-blue badge-pill float-left mt-3">
+                                <i class="fas fa-user-clock"></i> 
+                            </span>
+                            <h2 class="font-weight-normal mb-1" id="allUser"><%= data.total_user %> </h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-blue progress-sm">
+                            <div class="progress-bar bg-blue" role="progressbar"
+                                 aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                 style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Total Bids Amount</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-blue badge-pill float-left mt-3">
+                                <i class="mdi mdi-trending-up"></i> 
+                            </span>
+                            <!-- <h2 class="font-weight-normal mb-1" id="total_bids" data-amount = "<%= data.totol_bids %>"><%= data.totol_bids %></h2> -->
+                            <div class = 'Grid'>
+                                <div class='Likes'>
+                            <h2 class="font-weight-normal mb-1" id="total_bids"><%= data.totol_bids %></h2>
+                                </div></div>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-blue progress-sm">
+                            <div class="progress-bar bg-blue" role="progressbar"
+                                 aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                 style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Wallet Amount</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-dark badge-pill float-left mt-3">
+                                <i class="mdi mdi-trending-up"></i> 
+                            </span>
+                            <h2 class="font-weight-normal mb-1" id="balanceToday"><%= data.total_wallet_balance %> </h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-dark progress-sm">
+                            <div class="progress-bar bg-dark" role="progressbar"
+                                 aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                 style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Amount Paid</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-danger badge-pill float-left mt-3"><i class="mdi mdi-trending-up"></i> </span>
+                            <h2 class="font-weight-normal mb-1" id="totalPaid"><%= data.total_paid_today %></h2>
+                            <p class="text-muted mb-3">From App</p>
+                        </div>
+                        <div class="progress progress-bar-alt-danger progress-sm">
+                            <div class="progress-bar bg-danger" role="progressbar"
+                                 aria-valuenow="77" aria-valuemin="0" aria-valuemax="100"
+                                 style="width: 100%;">
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">LoggedIn Users</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-purple badge-pill float-left mt-3"><i class=" fas fa-user-alt-slash"></i>  </span>
+                            <h2 class="font-weight-normal mb-1" id="loggedIn"><%= data.Active_users %></h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-purple progress-sm">
+                            <div class="progress-bar bg-purple" role="progressbar"
+                                aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                style="width: 100%;">
+                                <span class="sr-only">77% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Total Zero Balance User</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-purple badge-pill float-left mt-3"><i class=" fas fa-user-alt-slash"></i>  </span>
+                            <h2 class="font-weight-normal mb-1"><%= data.total_zero_bal_users %> </h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-purple progress-sm">
+                            <div class="progress-bar bg-purple" role="progressbar"
+                                aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                style="width: 100%;">
+                                <span class="sr-only">77% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Today Zero Balance</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-purple badge-pill float-left mt-3"><i class=" fas fa-user-alt-slash"></i>  </span>
+                            <h2 class="font-weight-normal mb-1"><%= data.today_total_zero_bal_users %></h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-purple progress-sm">
+                            <div class="progress-bar bg-purple" role="progressbar"
+                                aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                style="width: 100%;">
+                                <span class="sr-only">77% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Banned Users</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-purple badge-pill float-left mt-3"><i class=" fas fa-user-alt-slash"></i>  </span>
+                            <h2 class="font-weight-normal mb-1" id="banned"><%= data.banned_Users %> </h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-purple progress-sm">
+                            <div class="progress-bar bg-purple" role="progressbar"
+                                aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                style="width: 100%;">
+                                <span class="sr-only">77% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Total Deposits</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-purple badge-pill float-left mt-3"><i class=" fas fa-user-alt-slash"></i>  </span>
+                            <h2 class="font-weight-normal mb-1" id="deposit"><%= data.total_deposit_amount %> </h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-purple progress-sm">
+                            <div class="progress-bar bg-purple" role="progressbar"
+                                aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                style="width: 100%;">
+                                <span class="sr-only">77% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Total Withdraw</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-purple badge-pill float-left mt-3"><i class=" fas fa-user-alt-slash"></i>  </span>
+                            <h2 class="font-weight-normal mb-1" id="withdraw"><%= data.total_withdraw_amount %> </h2>
+                            <p class="text-muted mb-3">Till Now</p>
+                        </div>
+                        <div class="progress progress-bar-alt-purple progress-sm">
+                            <div class="progress-bar bg-purple" role="progressbar"
+                                aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                style="width: 100%;">
+                                <span class="sr-only">77% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3 text-center">Yesterday Wallet Balance</h4>
+                    <div class="widget-box-2">
+                        <div class="widget-detail-2 text-right">
+                            <span class="badge badge-blue badge-pill float-left mt-3">
+                                <i class="mdi mdi-trending-up"></i> 
+                            </span>
+                              <h2 class="font-weight-normal"> <%= yesTerday ? yesTerday.walletBal_12oClock : 0 %> </h2>
+                            <p class="text-muted mb-1"><%= yesTerday ? yesTerday.createdAt : '' %> </p>
+                        </div>
+                        <div class="progress progress-bar-alt-blue progress-sm">
+                            <div class="progress-bar bg-blue" role="progressbar"
+                                 aria-valuenow="" aria-valuemin="" aria-valuemax=""
+                                 style="width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card-box">    
+                    <button type="button" class="btn mb-2 btn-block btn-xs btn-warning waves-effect waves-light" data-toggle="modal" data-target="#market-ratio" onclick="getRegisUser(2)"><h5 style="color: white;">Today Register With Balance</h5></button>            
+                    <button type="button" class="btn mb-2 btn-block btn-xs btn-purple waves-effect waves-light" data-toggle="modal" data-target="#market-ratio" onclick="getRegisUser(1)"><h5 style="color: white;">Today Register With Zero Balance</h5></button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-md-12">
+                <div class="card-box">   
+                    <div class="table-responsive">
+                        <table class="table mb-0 text-center">
+                            <thead>
+                                <tr>
+                                    <th colspan="2"> Registered User Log </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Today Registered</th>
+                                    <th><%= data.todayRegistered %></th>
+                                </tr>
+                                <tr class="bg-dark text-white">
+                                    <td>Yesterday Registered</td>
+                                    <td><%= data.yesterdayRegistered %></td>
+                                </tr>
+                                <tr>
+                                    <td>This Week</td>
+                                    <td><%= data.current_Week_regis_user %></td>
+                                </tr>
+                                <tr class="bg-success text-white">
+                                    <td>Last Week</td>
+                                    <td><%= data.lastweekRegistered %></td>
+                                </tr>
+                                <tr>
+                                    <td>This Month</td>
+                                    <td><%= data.current_month_Registered %></td>
+                                </tr>
+                                <tr class="bg-info text-white">
+                                    <td>Last Month</td>
+                                    <td><%= data.lastmonthRegistered %></td>
+                                </tr>
+                                <tr>
+                                    <td>Deleted Users</td>
+                                    <td><%= countDlt%></td>
+                                </tr>
+                                <tr class="bg-warning text-white">
+                                    <td>Total Active Users</td>
+                                    <td><%= data.Active_users %></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-12">
+                <div class="card-box">
+                    <div class="table-responsive">
+                        <table class="table mb-0 table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th colspan="2"> Today Deposit Log </th>
+                                </tr>
+                            </thead>
+                            <tbody id="depositBriefReport">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="market-ratio" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalScrollableTitle" style="margin-left: 34%;">User Registered Today</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card-box">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="datatable2" class="table table-bordered dt-responsive nowrap text-center text-dark">
+                            <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Amount Credit</th>
+                            </tr>
+                            </thead>
+                            <tbody id="completedata">
+                            </tbody>
+                            <tfoot id="footerTable">
+
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/libs/morris-js/morris.min.js"></script>
+<script src="../assets/libs/raphael/raphael.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+            getBriefDeposit()
+        });
+
+    const pusher = new Pusher('c5324b557c7f3a56788a', {
+        cluster: 'ap2',
+        forceTLS: true
+    });
+    const channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+        let finalData = data.message;
+        var newAmt= parseInt(finalData.totol_bids);
+        handleLikes(newAmt)
+        $("#allUser").html(finalData.total_user);
+        $("#balanceToday").html(finalData.total_wallet_balance);
+        $("#totalPaid").html(finalData.total_paid_today);
+        $("#deposit").html(finalData.total_deposit_amount);
+        $("#withdraw").html(finalData.total_withdraw_amount);
+        $("#banned").html(finalData.banned_Users);
+        $("#loggedIn").html(finalData.Active_users);
+    });
+
+    function handleLikes(x){
+        // 1. Old number goes up
+        setTimeout( () => $("#total_bids").addClass("goUp"), 0  );
+        // 2. Incrementing the counter  
+        setTimeout( () => $("#total_bids").html(x ), 100 );
+        // 3. New number waits down  
+        setTimeout( () => $("#total_bids").addClass("waitDown"), 100 );
+        // 4. New number stays in the middle
+        setTimeout( () =>  $("#total_bids").addClass("initial"), 200 );
+        removeClass()
+    }
+
+    function removeClass(){
+        $("#total_bids").removeClass("goUp")
+        $("#total_bids").removeClass("waitDown")
+        $("#total_bids").removeClass("initial")
+    }
+
+    function getRegisUser(type){
+        let rqTy = type;
+        $('#datatable2').DataTable().destroy();
+        fetch("/getRegisteredUser/"+rqTy, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'same-origin',
+        })
+        .then(res => res.json())
+        .then(body => {
+            var todayRegistered = body;
+            if(type == 2){
+                todayRegistered = body.todayRegistered;
+            }
+            let html = '';
+            let  i = 1;
+            let amt = 0;
+            todayRegistered.forEach(e => {
+                if(type == 2){
+                    wallet_balance = body.userFundArr[e._id];
+                }else{
+                    wallet_balance = e.wallet_balance;
+                }
+                html += '<tr><td>'+ i +'</td><td>'+ e.username +'</td><td>'+ e.mobile +'</td><td>'+ wallet_balance+'</td></tr>';
+                amt = amt + wallet_balance;
+                i++;
+            });
+            $("#completedata").html(html);
+            $("#footerTable").html('<tr><td colspan="4">Total Registered Balance : '+ amt +'</td></tr>');
+            $("#datatable2").dataTable();
+        });
+    }
+
+    function getBriefDeposit(){
+        let totalDeposit = "<%= data.total_deposit_amount %>"
+        $.ajax({
+            type: "post",
+            url: "/fundReport/getBriefDeposit",
+            success: function (body) {
+                let total = 0;
+                let html;
+                for(index in body){
+                    let name = body[index].upiName;
+                    if(name == "Credit"){
+                        name = "GATEWAY AMOUNT"
+                    }
+                    let amt = body[index].totalAmount;
+                    total += amt
+                    html += `<tr><td>${name}</td><td>${amt.toFixed()}/-</td></tr>`
+                   
+                }
+                const manualAdd = parseInt(totalDeposit) - total;
+                html += `<tr><td>MANUAL ADD AMOUNT</td><td>${manualAdd.toFixed()}/-</td></tr>`
+                html += `<tr><td>GRAND TOTAL</td><td>${totalDeposit}/-</td></tr>`
+                $("#depositBriefReport").html(html)
+            },
+        });
+    }
+</script>

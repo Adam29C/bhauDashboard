@@ -1,0 +1,109 @@
+<% layout('../layout') -%>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Settings
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+
+        <% const m = data[0].gameDetails[0];  if (m) {   %>
+
+        <div class="col-xl-6 col-md-6">
+            <div class="card-box">
+                <p>Multiple Days Timings Edit : <b> <%=  data[0].providerName   %></b>
+                </p>
+                <form action="/gamesSetting/updateAll" method="post" role="form">
+                        <div class="form-group">
+                            <label for="result">Open End Time</label>
+                            <input type="hidden" name="providerId" value="<%= data[0].gameDetails[0].providerId %>">
+                            <input type="text" class="form-control timepicker" name="obtTime" value="<%= data[0].gameDetails[0].OBT %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="result">Close End Time</label>
+                            <input type="text" class="form-control timepicker" name="cbtTime" value="<%= data[0].gameDetails[0].CBT %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="result">Open Result Time</label>
+                            <input type="text" class="form-control timepicker" name="obrtTime" value="<%= data[0].gameDetails[0].OBRT %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="result">Close Result Time</label>
+                            <input type="text" class="form-control timepicker" name="cbrtTime" value="<%= data[0].gameDetails[0].CBRT %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="result">Is Closed</label>
+                            <select class="form-control" name="openClose">
+                                <option value="1" <% if(data[0].gameDetails[0].isClosed == 1){ %>
+                                     Selected                                   
+                                    <% } %>
+                                    >Open</option>
+                                <option value="0"  <% if(data[0].gameDetails[0].isClosed == 0){ %>
+                                    Selected                                   
+                                   <% } %>
+                                >Closed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+        <% } else{ %>
+
+            <div class="col-xl-6 col-md-6">
+                <div class="card-box pt-4 pb-4">
+                    <p class="text-center" style="font-size: 20px;"> No Record Found For <b> <%=  data[0].providerName %> </b> </p>
+                    <p class="text-center">
+                        <a href="/gamesSetting" class="btn btn-warning waves-effect waves-light"> <i class="fa fa-rocket mr-1"></i> <span>Go Back & Add</span> </a>
+                    </p>
+                </div>
+            </div>
+
+        <%}%>
+
+        <div class="col-xl-6 col-md-6">
+            <div class="card-box">
+                <p>Hints / Assumptions </p>
+
+                <div class="table-responsive">
+                    <table class="table table-dark mb-0">
+                        <thead>
+                            <tr>
+                                <th>GAME</th>
+                                <th>DAYS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>MORNING</td>
+                                <td> MONDAY TO SUNDAY</td>
+
+                            </tr>
+                            <tr>
+                                <td>TIME BAZAR, MILAN DAY, RAJDHANI DAY, KALYAN, MILAN NIGHT</td>
+                                <td> MONDAY TO SATURDAY</td>
+                            </tr>
+                            <tr>
+                                <td>RAJDHANI NIGHT, MAIN MUMBAI</td>
+                                <td> MONDAY TO FRIDAY</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

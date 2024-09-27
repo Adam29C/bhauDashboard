@@ -1,0 +1,133 @@
+<% layout('../layout') %>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Declined Report</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="card-box">
+            <h4 class="header-title mt-0 mb-3">Search By Approve Date</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="mm/dd/yyyy" id="datepicker-autoclose" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn  button-color btn-dark waves-effect waves-light btn-md" id="getData"> <span>Search</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h3 class="header-title mt-0 mb-3">Credit Requests : UPI</h3>
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="datatable" class="table table-bordered text-center dt-responsive nowrap">
+                            <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                                <th>Mode</th>
+                                <th>Amount</th>
+                                <!-- <th>Action</th> -->
+                            </tr>
+                            </thead>
+                            <tbody id="paytm">
+                            <%
+                            let total = 0;
+                                if(data){
+                                for(index in data)
+                                {
+                                    total = total + data[index].reqAmount;
+                            %>
+                            <tr id="dlt<%= data[index]._id %>"</tr>
+                                
+                                <td><%= data[index].username %></td>
+                                <td><%= data[index].fullname %></td>
+                                <td><%= data[index].mobile %></td>
+                                <td><%= data[index].reqStatus %></td>
+                                <td><%= data[index].reqDate %> <%= data[index].reqTime %></td>
+                                <td><p class="badge badge-success"><%= data[index].paymentMode %></p></td>
+                                <td><p class="badge badge-purple"><%= data[index].reqAmount %></p></td>
+                                <!-- <td>
+                                    <button data-rowId = '<%= data[index]._id %>' type="button" class="btn btn-dark waves-effect waves-light btn-xs " data-toggle="modal" data-target=".bs-example-modal-sm"  onclick="getCurrentBal(this)" title="Change Status"><i class="fas fa-check-circle" ></i></button> </td> -->
+                            </tr>
+                            <% }}  %>
+                            </tbody>
+                        </table>
+                        <br>
+                        <h3 class="header-title mt-0 mb-3" id="totAmount">Total Amount Approved : <%= total %>/-
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $("#getData").click(function(){
+        $('#datatable').DataTable().destroy();
+        const date = $('#datepicker-autoclose').val();
+        $.ajax({
+            type: "get",
+            url: "/approvedReports/creditUPI_ajax",
+            data: { date_cust : date},
+            success: function(data) {
+               if (Object.keys(data.approvedData).length === 0)
+               {
+                   toastr["info"]("Sorry, No Records Found", "Bhau777 Games");
+                   $('#datepicker-autoclose').val('');
+               }
+                let Html;
+                // <td><button data-rowId = '+ e._id +' type="button" class="btn btn-dark waves-effect waves-light btn-xs " data-toggle="modal" data-target=".bs-example-modal-sm"  onclick="getCurrentBal(this)" title="Change Status"><i class="fas fa-check-circle" ></i></button></td>
+                let total = 0 ;
+                data.approvedData.forEach(function(e) {
+                    total += e.reqAmount;
+                    Html += '<tr id="dlt'+e._id +'"><td>' + e.username + '</td><td>' + e.fullname +'</td><td>' + e.mobile + '</td><td>'+e.reqStatus+'</td><td>'+ e.reqDate +' ' + e.reqTime + '</td><td><p class="badge badge-success">' + e.paymentMode+ '</p></td><td><p class="badge badge-purple">'+ e.reqAmount +'</p></td></tr>';
+                }); 
+                
+                $("#paytm").html(Html);
+                $('#datatable').DataTable({
+                        "pageLength": 50
+                });
+                document.getElementById("totAmount").innerHTML = "Total Amount Approved : " + total + "/-";
+                $('#datepicker-autoclose').val('');
+            }
+        });
+    });
+
+    function getCurrentBal(obj){
+
+        const rowId = $(obj).attr('data-rowId');
+        $.ajax({
+            type: "POST",
+            url: "/approvedReports/updateUpi",
+            data: { rowId : rowId},
+            success: function(data) {
+                const id = 'dlt'+rowId
+                $('#datatable').DataTable().row("#"+id).remove().draw();
+            }
+        });
+    }
+</script>

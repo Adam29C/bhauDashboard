@@ -1,0 +1,242 @@
+<% layout('../layout') %>
+ <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css">
+<div class="content">
+    <div class="container-fluid animated fadeIn">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                 <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                          <li class="breadcrumb-item active" aria-current="page">All User</li>
+                         </ol>
+                    </nav>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid animated fadeIn">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h4 class="mt-0 header-title">View All Users</h4>
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="dataTable" class="table text-center table-bordered dt-responsive nowrap" >
+                            <thead>
+                                <tr>
+                                    <th>Sno</th>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Mobile</th>
+                                    <th>deviceName</th>
+                                    <th>DeviceId</th>
+                                    <th>CreatedAt</th>
+                                    <th>Block</th>
+                                    <th>Profile</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none; padding-right: 17px;" aria-modal="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive" data-pattern="priority-columns">
+                    <table id="dataTable" class="table text-center table-bordered dt-responsive nowrap" >
+                        <tbody id="profile"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Update Bal Modal-->
+<div class="modal fade bs-example-modal-sm show" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySmallModalLabel">Reason For Blocking The User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-3">
+                    <h5>Block Reason</h5>
+                    <textarea class="form-control" rows="5" id="reason" placeholder="Enter Message"></textarea>
+                    <span class="error" id="err_reason"></span>
+                    <input type="hidden" id="userid">
+                    <input type="hidden" id="status">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-dark waves-effect waves-light" onclick="blockUser()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade deleteModalConfirm show" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel1" aria-modal="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySmallModalLabel1">Reason For Deleting The User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-3">
+                    <h5>Delete Reason</h5>
+                    <textarea class="form-control" rows="5" id="reason1" placeholder="Enter Message"></textarea>
+                    <span class="error" id="err_reason"></span>
+                    <input type="hidden" id="userid1">
+                    <input type="hidden" id="status1">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-dark waves-effect waves-light" onclick="deleteUserByAdmin()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    
+    $('#dataTable').dataTable({
+      ajax: {
+        url: '/userList/userAjax',
+        type: 'POST'
+      },
+      serverSide: true,
+      "pageLength": 50,
+      columns: [
+        {'data': 'sno'},
+        {'data': 'name'},
+        {'data': 'username'},
+        {'data' : 'mobile'},
+        {'data': 'deviceName'},
+        {'data': 'deviceId'},
+        {'data': 'CreatedAt'},
+        {'data': 'block'},
+        {'data' : 'profile'},
+        {'data' : 'delete'}
+      ]
+    });   
+
+    function deleteUserByAdmin(){
+        const id = $("#userid1").val();
+        const reason1 = $("#reason1").val();
+
+        
+        console.log(id, reason1)
+        fetch('/userList/deleteUserByAdmin', {
+                method: 'POST', 
+                body: JSON.stringify({ id: id, reason:reason1 }),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'same-origin',
+                })
+                .then(res => res.json())
+                .then(body => {
+                    location.reload();
+                });
+    }
+
+    function blockUser(){
+
+        const reason = $("#reason").val();
+        if(reason == ''){
+            $("#err_reason").html("Reason Cannot Be Empty")
+        }
+        else{
+            $("#err_reason").html("")
+            const id = $("#userid").val();
+            const blockStatus = $("#status").val();
+            fetch('/userList/blockUser', {
+                method: 'POST', 
+                body: JSON.stringify({ id: id, blockStatus: blockStatus, blockReason: reason }),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'same-origin',
+                })
+                .then(res => res.json())
+                .then(body => {
+                    location.reload();
+                });
+        } 
+    }
+
+    function profile(id){
+        fetch('/userList/getProfile', {
+            method: 'POST', 
+            body: JSON.stringify({ id: id}),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'same-origin',
+            })
+            .then(res => res.json())
+            .then(body => {
+                let userDetails = body.userData;
+                if(userDetails === null){
+                    $("#profile").html('Profile Not Filled By User');
+                    $("#myModalLabel").html('User Profile : ');
+                    toastr["info"]("User Profile Not Found", "Bhau777 Games");
+                }
+                else{
+                    
+                    const address = userDetails.address;
+                    const city = userDetails.city;
+                    const username = userDetails.username;
+                    const pincode = userDetails.pincode;
+                    const accNo = userDetails.account_no;
+                    const bankName = userDetails.bank_name;
+                    const ifsc = userDetails.ifsc_code;
+                    const account_holder_name = userDetails.account_holder_name;
+                    const paytm_number = userDetails.paytm_number;
+                    let html = '<tr><td>Address</td><td>'+ address +'</td></tr>\
+                                <tr><td>City</td><td>'+ city +'</td></tr>\
+                                <tr><td>Acc Holder Name</td><td>'+ account_holder_name +'</td></tr>\
+                                <tr><td>Account Number</td><td>'+ accNo +'</td></tr>\
+                                <tr><td>Bank Name</td><td>'+ bankName +'</td></tr>\
+                                <tr><td>Pincode</td><td>'+ pincode +'</td></tr>\
+                                <tr><td>IFSC</td><td>'+ ifsc +'</td></tr>\
+                                <tr><td>Paytm Number</td><td>'+ paytm_number+'</td></tr>';
+                    $("#profile").html(html);
+                    $("#myModalLabel").html('User Profile : '+ username);
+                }
+            });
+    }
+
+    function reasonPop(id , status){
+        $("#status").val(status);
+        $("#userid").val(id)
+        $("#status1").val(status);
+        $("#userid1").val(id)
+    }
+
+    function blockUserNew(id,blockStatus )
+    {
+        
+        fetch('/userList/blockUser', {
+            method: 'POST', 
+            body: JSON.stringify({ id: id, blockStatus: blockStatus, blockReason: "Un Blocked" }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'same-origin',
+            })
+            .then(res => res.json())
+            .then(body => {
+                location.reload();
+            });
+    }
+</script>

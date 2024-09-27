@@ -1,0 +1,127 @@
+<% layout('../layout') %>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Starline Users Bid Ratio</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Content-->
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h4 class="mt-0 header-title">Starline Users Bid Ratio(ON HOLD)</h4>
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="datatable" class="table table-bordered dt-responsive nowrap text-center">
+                            <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>User name</th>
+                                <th>Total Bids</th>
+                                <th>Win</th>
+                                <th>Lose</th>
+                                <th>Pending</th>
+                                <th>Play Total</th>
+                                <th>Win Total</th>
+                                <th>Profit / Loss</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="market-ratio" class="modal fade" tabindex="-1" role="dialog"     aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalScrollableTitle">User Market Bid Ratio</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                 <div class="card-box">
+                    <h4 class="header-title mt-0 mb-3">User Main Market Bid Ratio</h4>
+                    <div id="morris-donut-example" class="morris-chart" style="height: 300px;width: 710px;" dir="ltr"></></div>
+                    <div class="text-center">
+                        <ul class="list-inline chart-detail-list">
+                            <li class="list-inline-item">
+                                <h5 style="color: #5b69bc;"><i class="fa fa-circle mr-1"></i>In-Store Sales</h5>
+                            </li>
+                            <li class="list-inline-item">
+                                <h5 style="color: #35b8e0;"><i class="fa fa-circle mr-1"></i>Mail-Order Sales</h5>
+                            </li>
+                            <li class="list-inline-item">
+                                <h5 style="color: #ff8acc;"><i class="fa fa-circle mr-1"></i>Download Sales</h5>
+                            </li>
+                            <li class="list-inline-item">
+                                <h5 style="color: #ff8acc;"><i class="fa fa-circle mr-1"></i>Upload Sales</h5>
+                            </li>
+                            <li class="list-inline-item">
+                                <h5 style="color: #ff8acc;"><i class="fa fa-circle mr-1"></i>Fake Sales</h5>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            type : 'POST',
+            url: '/analysys/gameAnalysysStar',
+            dataType: 'JSON',
+            success: function (data) {
+                    if (Object.keys(data).length === 0)
+                    {
+
+                        $('#datatable').dataTable().fnDeleteRow();
+                        toastr["info"]("No Recorde Found","Bhau777 Games")
+                    }
+                    else
+                    {
+                    $("#datatable").DataTable().clear();
+                    let i=1;
+                    data.forEach(function(e) {
+                        $('#datatable').dataTable().fnAddData( [
+                            i,
+                            e.username,
+                            e.countBids,
+                            e.winCount,
+                            e.loseCount,
+                            e.pendingCount,
+                            e.sumbiddingPoints,
+                            e.sumWinPoint,
+                            e.pf,
+                            '<button type="button" class="btn btn-dark waves-effect waves-light btn-xs" data-toggle="modal" onclick="getRatio('+e._id+')" data-target="#market-ratio"><i class="fas fa-chart-line mr-1"></i> <span>Market Ratio</span></button>'
+                    ]);
+                    i++
+                    });
+                    }
+                }, 
+                error: function (e) {
+                    alert("Contact Support Patner: " + JSON.stringify(e));
+                }
+        });
+    });
+</script>

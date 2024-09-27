@@ -1,0 +1,1145 @@
+<% layout('../layout') %>
+<style>
+    a {
+        cursor: pointer;
+    }
+    .user-content {
+        padding-top: 50px;
+        text-align: center;
+        padding: 50px 20px 0 20px;
+    }
+    .walletbalance {
+        font-weight: 500;
+        color: #888888;
+        margin-bottom: 0;
+    }
+    .user-content h1 {
+        font-size: 18px;
+        text-align: left;
+        font-weight: 600;
+        color: #3C4858;
+        margin-bottom: 0;
+        line-height: 1.5;
+    }
+    .user-content p {
+        text-align: left;
+        font-weight: 500;
+        color: #888888;
+    }
+    .profile-page .page-header {
+        height: 380px;
+        background-position:center;
+    }
+    
+    .page-header {
+        height: 100px;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .avatar {
+        margin: -60px 30px 0;
+    }
+    .header-filter::before {
+        background: rgba(0,0,0,.5);
+    }
+    
+    .main-raised {
+        margin: 0;
+        border-radius: 6px;
+        box-shadow: 0 16px 13px 2px rgba(0,0,0,.14), 0 0px 8px 1px rgba(0,0,0,.12), 0 0px 3px 1px rgba(0,0,0,.2);
+    }
+    .main {
+        background: #FFF;
+        position: relative;
+        z-index: 3;
+        text-align: center;
+    }
+    
+    .profile-page .profile {
+        text-align: center;
+    }
+    
+    .profile-page .profile img {
+        max-width: 160px;
+        width: 100%;
+        margin: 0 auto;
+        -webkit-transform: translate3d(0,-50%,0);
+        -moz-transform: translate3d(0,-50%,0);
+        -o-transform: translate3d(0,-50%,0);
+        -ms-transform: translate3d(0,-50%,0);
+        transform: translate3d(0,-50%,0);
+    }
+    
+    .img-raised {
+        box-shadow: 0 5px 15px -8px rgba(0,0,0,.24), 0 8px 10px -5px rgba(0,0,0,.2);
+    }
+    
+    .rounded-circle {
+        border-radius: 50%!important;
+    }
+    
+    .img-fluid, .img-thumbnail {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .title {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #3C4858;
+        font-weight: 700;
+        font-family: "Roboto Slab","Times New Roman",serif;
+        font-size: 20px;
+    }
+    
+    .profile-page .description {
+        margin: 1.071rem auto 0;
+        max-width: 600px;
+        color: #999;
+        font-weight: 300;
+    }
+    .profile-page .profile-tabs {
+        margin-top: 4.284rem;
+    }
+    .profile-page .gallery {
+        margin-top: 3.213rem;
+        padding-bottom: 50px;
+    }
+    
+    .profile-page .gallery img {
+        width: 100%;
+        margin-bottom: 2.142rem;
+    }
+    
+    .profile-page .profile .name{
+        margin-top: -80px;
+    }
+    
+    .rounded {
+      border-radius: 6px!important;
+    }
+    .user-data .table td {
+        font-weight: 500;
+    }
+    .user-data {
+        padding-top: 40px;
+    }
+    </style>
+
+
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ul class="nav nav-tabs nav-justified">
+                        <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Manual Payment Request</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xl-12">
+    <div class="card-box">
+        <h5 class="mb-3">Manual Payment Request</h5>
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item">
+                <a href="#ManualdebitReq" data-toggle="tab" aria-expanded="false" class="nav-link active" 
+                > 
+                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                    <span class="d-none d-sm-block" style="font-size: 12px;">Pending  Request</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#appManualDebitReq" data-toggle="tab" aria-expanded="false" class="nav-link"
+                onclick="CompleteManualDebit()"
+                >
+                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                    <span class="d-none d-sm-block" style="font-size: 12px;">Approved Request</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#decManualDebitReq" data-toggle="tab" aria-expanded="false" class="nav-link"
+                onclick="DeclinedManualDebit()"
+                
+                >
+                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                    <span class="d-none d-sm-block" style="font-size: 12px;">Declined  Request</span>
+                </a>
+            </li>
+          
+        </ul>
+        
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade show active" id="ManualdebitReq">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12">
+                            <h4 class="mt-0 header-title"></h4>
+                            <div class="table-responsive" data-pattern="priority-columns">
+                                <table id="ManualdebitReqdatatable" class="table table-bordered dt-responsive nowrap creditReq text-center">
+                                    <thead>
+                                        <tr class="text-danger">
+                                            <th>Sr.</th>
+                                            <th>User Name</th>
+                                            <th>Contact No.</th>
+                                            <th>UPI Name</th>
+                                            <th>UTR No.</th>
+                                            <th>ScreenShoot</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Date & Time</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ManualdebitReq_datatable_body" class="text-dark">
+                                    </tbody >
+                                </table>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="header-title mt-0 mb-3" id="totAmount_for_manaul"></h3>
+                </div>
+            </div>
+
+
+
+
+            <div role="tabpanel" class="tab-pane fade" id="appManualDebitReq">
+                 <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-xl-12 col-md-12">
+                                <h4 class="mt-0 header-title"></h4>
+                                <div class="table-responsive" data-pattern="priority-columns">
+                                    <table id="ManualcompleteTable" class="datatable text-center table table-bordered dt-responsive nowrap">
+                                        <thead>
+                                        <tr class="text-danger">
+                                            <th>Sr.</th>
+                                            <th>User Name</th>
+                                            <th>Contact No.</th>
+                                            <th>UPI Name</th>
+                                            <th>UTR No.</th>
+                                            <th>ScreenShoot</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Date & Time</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="ManualcompleteBody" class="text-dark">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="header-title mt-0 mb-3" id="totAmount_for_manaul_approve"></h3>
+                        
+                    </div>
+                    
+
+            <div role="tabpanel" class="tab-pane fade" id="decManualDebitReq">
+                <div class="container-fluid">
+                    <div class="row ">
+                        <div class="col-xl-12 col-md-12">
+                            <h4 class="mt-0 header-title"></h4>
+                            <div class="table-responsive" data-pattern="priority-columns">
+                                <table id="ManualDeclinedTable" class="datatable text-center table table-bordered dt-responsive nowrap">
+                                    <thead>
+                                    <tr class="text-danger">
+                                        <th>Sr.</th>
+                                        <th>User Name</th>
+                                        <th>Contact No.</th>
+                                        <th>UPI Name</th>
+                                        <th>UTR No.</th>
+                                        <th>ScreenShoot</th>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                        <th>Date & Time</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="ManualDeclinedBody" class="text-dark">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="header-title mt-0 mb-3" id="totAmount_for_manaul_decline"></h3>
+            </div>
+
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Fund Request</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12">
+        <div class="card-box">
+            <h5 class="mb-3">Fund Request</h5>
+            <ul class="nav nav-tabs nav-justified">
+                <!-- <li class="nav-item">
+                    <a href="#creditReq" data-toggle="tab" aria-expanded="false" class="nav-link active" onclick="pendingCredit()">
+                        <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                        <span class="d-none d-sm-block" style="font-size: 12px;">Credit Request</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#appCreditReq" data-toggle="tab" aria-expanded="true" class="nav-link" onclick="appCreditReq()">
+                        <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                        <span class="d-none d-sm-block" style="font-size: 12px;">Approved Credit Request</span>
+                    </a>
+                </li> -->
+                <li class="nav-item">
+                    <a href="#debitReq" data-toggle="tab" aria-expanded="false" class="nav-link active" onclick="pendingDebit()">
+                        <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                        <span class="d-none d-sm-block" style="font-size: 12px;">Debit Request</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#appDebitReq" data-toggle="tab" aria-expanded="false" class="nav-link" onclick="appDebitReq()">
+                        <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                        <span class="d-none d-sm-block" style="font-size: 12px;">Approved Debit Request</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#decDebitReq" data-toggle="tab" aria-expanded="false" class="nav-link" onclick="declinedDebit()">
+                        <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                        <span class="d-none d-sm-block" style="font-size: 12px;">Declined Debit Request</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#compReq" data-toggle="tab" aria-expanded="false" class="nav-link" onclick="completed()">
+                        <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                        <span class="d-none d-sm-block" style="font-size: 12px;">Completed Request</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade show active" id="debitReq">
+                    <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-xl-12 col-md-12" >
+                                <h4 class="mt-0 header-title"></h4>
+                                <div class="table-responsive" data-pattern="priority-columns">
+                                    <table id="datatable" class="table table-bordered dt-responsive nowrap creditReq text-center">
+                                        <thead>
+                                            <tr class="text-danger">
+                                                <th>Sr.</th>
+                                                <th>Name</th>
+                                                <th>Username</th>
+                                                <th>Mobile</th>
+                                                <th>Amount</th>
+                                                <th>Type</th>
+                                                <th>Mode</th>
+                                                <th>Status</th>
+                                                <th>Created</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="debitBody" class="text-dark">
+                                        <% var i =1; let total = 0; for(var index in data)
+                                            { 
+                                                total = total + data[index].reqAmount
+                                        %>
+
+                                        <tr id="dhan<%= data[index].userId %>">
+                                            <td><%= i %></td>
+                                            <td><%=data[index].fullname %></td>
+                                            <td><%=data[index].username %></td>
+                                            <td><%=data[index].mobile %></td>
+                                            <td><%=data[index].reqAmount %></td>
+                                            <td><p class="badge badge-purple"><%=data[index].reqType %></p> </td>
+                                            <td><p class="badge badge-purple"><%=data[index].withdrawalMode %></p> </td>
+                                            <td><p class="badge badge-success"><%=data[index].reqStatus %> </p></td>
+                                            <td><%=data[index].reqDate%>&nbsp;<%= data[index].reqTime %></td>
+                                            <td class="text-center">
+                                                <button data-userId="<%= data[index].userId %>" 
+                                                    data-rowId="<%= data[index]._id %>" data-amount="<%=data[index].reqAmount %>" type="button" class="btn btn-dark waves-effect waves-light btn-xs " data-toggle="modal" data-target=".bs-example-modal-sm"  onclick="getCurrentBal(this)" title="Approve Request"><i class="fas fa-check-circle" ></i></button>
+                                                    
+                                                <button data-username="<%=data[index].username %>" data-userId="<%= data[index].userId %>" data-rowId="<%= data[index]._id %>" type="button" class="btn waves-effect waves-light btn-danger btn-xs " id="creditDecline" onclick="decline(this)" title="Decline Request"><i class="fas fa-trash"></i></button>
+
+                                                <button data-username="<%=data[index].username %>" data-userId="<%= data[index].userId %>"  type="button" class="btn waves-effect waves-light btn-purple btn-xs" data-toggle="modal" data-target="#custom-modal-edit"  id="userProfile" onclick="getProfile(this)" title="User Profile"><i class="fas fa-user"></i></button>
+                                            </td>
+                                        </tr>
+                                        <% i++ } %>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <h3 class="header-title mt-0 mb-3" id="totAmount">Total Amount : <%= total %>/-
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="appDebitReq">
+                    <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-xl-12 col-md-12">
+                                <h4 class="mt-0 header-title"></h4>
+                                <div class="table-responsive" data-pattern="priority-columns">
+                                    <table id="appDebitTable" class="datatable table table-bordered text-center dt-responsive nowrap">
+                                        <thead>
+                                        <tr class="text-danger">
+                                            <th>Sr.</th>
+                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th>Mobile</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Mode</th>
+                                            <th>Approved at</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="appDebitBody" class="text-dark">
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <h3 class="header-title mt-0 mb-3" id="appTotAmount">Total Amount : <%= total %>/-
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="decDebitReq">
+                    <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-xl-12 col-md-12">
+                                <h4 class="mt-0 header-title"></h4>
+                                <div class="table-responsive" data-pattern="priority-columns">
+                                    <table id="declinetable" class="datatable text-center table table-bordered dt-responsive nowrap">
+                                        <thead>
+                                        <tr class="text-danger">
+                                            <th>Sr.</th>
+                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th>Mobile</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Created At</th>
+                                            <th>Updated At</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="declineBody" class="text-dark">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="compReq">
+                    <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-xl-12 col-md-12">
+                                <h4 class="mt-0 header-title"></h4>
+                                <div class="table-responsive" data-pattern="priority-columns">
+                                    <table id="completeTable" class="datatable text-center table table-bordered dt-responsive nowrap">
+                                        <thead>
+                                        <tr class="text-danger">
+                                            <th>Sr.</th>
+                                            <th>Firstname</th>
+                                            <th>Username</th>
+                                            <th>Mobile</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="completeBody" class="text-dark">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- view upi image  -->
+
+<div id="Custome-modal-for-show-image"  class="modal fade bs-example-modal-center show" tabindex="-1" role="dialog" aria-labelledby="myCenterModalLabel"  aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="myCenterModalLabel">UTR Image</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class=" card-box p-0 m-0">
+                   
+                        <img src="" class="" alt="transaction-Image" id="transactionImage" height="500" width="100%">
+                        <div class="clearfix"></div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="custom-modal-edit"  class="modal fade bs-example-modal-center show" tabindex="-1" role="dialog" aria-labelledby="myCenterModalLabel"  aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="myCenterModalLabel">User Profile</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="bg-picture card-box">
+                    <div class="profile-info-name">
+                        <img src="../assets/images/users/user-1.jpg" class="rounded-circle avatar-xl img-thumbnail float-left mr-3" alt="profile-image">
+                        <h1 id="notFound"></h1>
+                        <div class="profile-info-detail overflow-hidden">
+                            <h4 class="m-0 font-20" id="username"></h4>
+                            <p class="font-14 text-muted" id="balance"><i></i></p>
+                            <p class="text-black-50 font-16" id="address"></p>
+                            <p class="font-16 text-black-50" id="city"></p>
+                            <p class="font-16 text-black-50" id="pincode"></p>
+                            <p class="font-16 text-black-50" id="accNo"></p>
+                            <p class="font-16 text-black-50" id="bankName"></p>
+                            <p class="font-16 text-black-50" id="ifsc"></p>
+                            <p class="font-16 text-black-50" id="accHolder"></p>
+                            <p class="font-16 text-black-50" id="paytm"></p>
+                            <p class="font-16 text-black-50" id="phonepe"></p>
+                            <p class="font-16 text-black-50" id="tez"></p>
+                            <p class="font-16 text-black-50" id="regular"></p>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm show" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="mySmallModalLabel"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <h4 class="modal-title text-center" id="balancecURRENT"></h4>
+                <div class="mt-3">
+                    <h5 class="text-center">Request Amount</h5>
+                    <input type="text" class="form-control" id="amount" required>
+                    <input type="hidden" id="userid">
+                    <input type="hidden" id="rowId">
+                    <input type="hidden" id="username">
+
+                </div>
+                <button type="submit" class="btn btn-dark  mt-2 waves-effect waves-light" data-dismiss="modal" onclick="approveDebit()" style="float: right;">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   
+    function  getCurrentBal(obj)
+    {
+        const rowId = $(obj).attr('data-rowId');
+        const id = $(obj).attr('data-userId');
+        const amt = $(obj).attr('data-amount');
+
+        $.ajax({
+            type: "POST",
+            url: "/fundRequest/getBal",
+            data: {id : id},
+            success: function(data) 
+            { 
+                $("#mySmallModalLabel").html(data.data.username);
+                $("#balancecURRENT").html('Current Bal : '+ data.data.wallet_balance+'/-');
+                $("#userid").val(id);
+                $("#rowId").val(rowId);
+                $("#amount").val(amt);
+                $("#username").val(data.username);
+            }
+        });
+    }
+
+    function pendingDebit()
+    {
+        $("#datatable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/fundRequest/other",
+            data: { data : "pendingDebit"},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                if (Object.keys(data).length === 0)
+                {
+                    $('#datatable').DataTable().clear().draw();
+                    toastr["warning"]("No Pending Debit Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+                    let html = '';
+                    let i = 1;
+                    let total = 0;
+                    data.forEach(function(e) {
+                        total += e.reqAmount;
+                        html += '<tr id="dhan'+ e.userId +'"><td>'+i +'</td><td>'+ e.fullname +'</td>\
+                                <td>'+ e.username +'</td>\
+                                <td>'+ e.mobile +'</td>\
+                                <td><p class="badge badge-purple">' + e.reqAmount + '</p></td>\
+                                <td><p class="badge badge-purple">' + e.reqType + '</p></td>\
+                                <td><p class="badge badge-purple">' + e.withdrawalMode + '</p></td>\
+                                <td>'+ e.reqStatus +'</td>\
+                                <td>'+ e.reqDate +" " + e.reqTime +'</td>\
+                                <td><button data-username="' + e.username + '" data-userId="'+ e.userId +'" data-rowId="'+ e._id +'" data-amount="'+ e.reqAmount +'" type="button" class="btn btn-dark waves-effect waves-light btn-xs mr-1"   data-toggle="modal" data-target=".bs-example-modal-sm" onclick="getCurrentBal(this)" title="Approve Debit Request"><i class="fas fa-check-circle"></i></button><button data-username="' + e.username + '" data-userId="'+ e.userId +'" data-rowId="'+ e._id +'" data-stat="2" type="button" class="btn waves-effect waves-light btn-danger btn-xs mr-1" id="creditDecline" onclick="decline(this)" title="Decline Request"><i class="fas fa-trash"></i></button><button data-username="' + e.username + '" data-userId="'+ e.userId +'" type="button" class="btn waves-effect waves-light btn-purple btn-xs mr-1" id="userProfile" data-toggle="modal" data-target="#custom-modal-edit" onclick="getProfile(this)" title="User Profile"><i class="fas fa-user"></i></button></td></tr>';
+                                i++
+                    });
+                    $("#debitBody").html(html);
+                    $("#datatable").dataTable();
+                    document.getElementById("totAmount").innerHTML = "Total Amount : " + total + "/-";
+                    $('#datatable5').DataTable();
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function appCreditReq(){
+        $("#approvedCreditMain").DataTable().destroy();
+        $.ajax({
+            type: 'GET',
+            url: "/fundRequest/other",
+            data: { data : "approvedReq"},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                if (Object.keys(data).length === 0)
+                {
+                    $('#approvedCreditMain').DataTable().clear().draw();
+                    toastr["warning"]("No Approved Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+                    let i=1;
+                    let html='';
+                    data.forEach(function(e) {
+                        html +='<tr><td>'+ i +'</td>\
+                            <td>'+ e.fullname +'</td>\
+                            <td>'+ e.username +'</td>\
+                            <td>'+ e.mobile +'</td>\
+                            <td><p class="badge badge-purple">' + e.reqAmount + '</p></td>\
+                            <td><p class="badge badge-success">' + e.reqType+ '</p></td>\
+                            <td>'+ e.reqStatus +'</td>\
+                            <td>'+ e.reqDate +'</td>\
+                            <td>'+ e.reqUpdatedAt +'</td></tr>';
+                        i++
+                    });
+                    $("#approvedCredit").html(html);
+                    $('#approvedCreditMain').dataTable();
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function appDebitReq(){
+        $("#appDebitTable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/fundRequest/other",
+            data: { data : "approvedDebit"},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                if (Object.keys(data).length === 0)
+                {
+                    $('#appDebitTable').DataTable().clear().draw();
+                   // toastr["warning"]("No Approved Debit Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+                    let i=1;
+                    let html='';
+                    let total = 0;
+                    data.forEach(function(e) {
+                        total += e.reqAmount;
+                        html +='<tr><td>'+ i +'</td>\
+                            <td>'+ e.fullname +'</td>\
+                            <td>'+ e.username +'</td>\
+                            <td>'+ e.mobile +'</td>\
+                            <td><p class="badge badge-purple">' + e.reqAmount + '</p></td>\
+                            <td><p class="badge badge-success">' + e.reqType+ '</p></td>\
+                            <td>'+ e.reqStatus +'</td>\
+                            <td>'+ e.reqDate +'</td>\
+                            <td><p class="badge badge-purple">' + e.withdrawalMode + '</p></td>\
+                            <td>'+ e.reqUpdatedAt +'</td></tr>';
+                        i++
+                    });
+                    $("#appDebitBody").html(html);
+                    $('#appDebitTable').dataTable();
+                    $("#appTotAmount").html("Total Amount : " + total + "/-")
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function declinedDebit(){
+        $("#declinetable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/fundRequest/other",
+            data: { data : "declinedDebit"},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                 if (Object.keys(data).length === 0)
+                {
+                    $('#declinetable').DataTable().clear().draw();
+                    toastr["warning"]("No Declined Debit Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+                    let i=1;
+                    let html='';
+                    data.forEach(function(e) {
+                        html +='<tr><td>'+ i +'</td>\
+                            <td>'+ e.fullname +'</td>\
+                            <td>'+ e.username +'</td>\
+                            <td>'+ e.mobile +'</td>\
+                            <td><p class="badge badge-purple">' + e.reqAmount + '</p></td>\
+                            <td><p class="badge badge-success">' + e.reqType+ '</p></td>\
+                            <td>'+ e.reqStatus +'</td>\
+                            <td>'+ e.reqDate +'</td>\
+                            <td>'+ e.reqUpdatedAt +'</td></tr>';
+                        i++
+                    });
+                    $("#declineBody").html(html);
+                    $('#declinetable').dataTable();
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function completed(){
+        $("#completeTable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/fundRequest/other",
+            data: { data : "completed"},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                if (Object.keys(data).length === 0)
+                {
+                    $('#completeTable').DataTable().clear().draw();
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+                    let i=1;
+                    let html='';
+                    data.forEach(function(e) {
+                        html +='<tr><td>'+ i +'</td>\
+                            <td>'+ e.fullname +'</td>\
+                            <td>'+ e.username +'</td>\
+                            <td>'+ e.mobile +'</td>\
+                            <td><p class="badge badge-purple">' + e.reqAmount + '</p></td>\
+                            <td><p class="badge badge-success">' + e.reqType+ '</p></td>\
+                            <td>'+ e.reqStatus +'</td>\
+                            <td>'+ e.reqDate +'</td>\
+                            <td>'+ e.reqUpdatedAt +'</td></tr>';
+                        i++
+                    });
+                    $("#completeBody").html(html);
+                    $('#completeTable').dataTable();
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+    function approve(obj){
+        const id = $("#userid").val();
+        const rowId = $("#rowId").val();
+        const amount = $("#amount").val();
+        const particular = $("#inputParticular").val();
+        $.ajax({    
+            type: "patch",
+            url: "/fundRequest/updateWallet/1",
+            data: { userId : id, rowId : rowId, amount: amount,particular: particular },
+            success: function(data) {
+                getCount();
+                const tr_id = 'dhan'+ id;
+                $('#datatable').DataTable().row("#"+tr_id).remove().draw();
+                toastr["success"]("Request Approved Successfully","Bhau777 Bets Games");
+            }
+        });
+    }
+
+    function decline(obj)
+    {
+        const rowId = $(obj).attr('data-rowId');
+        const id = $(obj).attr('data-userId');
+        const status = $(obj).attr('data-stat');
+        $.ajax({
+            type: "patch",
+            url: "/fundRequest/decline",
+            data: {rowId : rowId},
+            success: function(data) 
+            { 
+                let id = data.userId;
+                const tr_id = 'dhan'+ id;
+                $('#datatable').DataTable().row("#"+tr_id).remove().draw();
+                toastr["success"]("Request Declined Successfully","Bhau777 Bets Games");
+            }
+        });
+    }
+
+    function approveDebit() {
+        
+        const id = $('#userid').val();
+        const rowId = $('#rowId').val();
+        const amount = $('#amount').val();
+        const username = $('#username').val();
+
+        $.ajax({
+            type: "POST",
+            url: "/fundRequest/updateWallet/2",
+            data: { userId : id, rowId : rowId, amount: amount,username: username },
+            success: function(data) 
+            {
+                const tr_id = 'dhan'+id ;
+                $('#datatable').DataTable().row("#"+tr_id).remove().draw();
+                toastr["success"]("Request Approved Successfully","Bhau777 Bets Games");
+            }
+        });
+    }
+
+    function getProfile(obj) {
+        const id = $(obj).attr('data-userId');  
+        $.ajax({
+            type: "get",
+            url: "/fundRequest/getProfile",
+            data: { userId : id },
+            success: function(response) {
+                let status = response.status;
+                if(status === 1){
+                    let data = response.data;
+
+                    document.getElementById("username").innerHTML = data.userData1.name;
+                    document.getElementById("balance").innerHTML = "Wallet Balance : " + data.userData1.wallet_balance+"/-";
+                    document.getElementById("accNo").innerHTML =  data.userData2.account_no;
+                    document.getElementById("bankName").innerHTML = data.userData2.bank_name;
+                    document.getElementById("ifsc").innerHTML =  data.userData2.ifsc_code;
+                    document.getElementById("accHolder").innerHTML =  data.userData2.account_holder_name;
+                    document.getElementById("paytm").innerHTML =  data.userData2.paytm_number;
+                    document.getElementById("regular").innerHTML =  data.userData1.mobile;
+                }
+                else{
+                    document.getElementById("username").innerHTML= "NULL";
+                    document.getElementById("balance").innerHTML= "NULL";
+                    document.getElementById("accNo").innerHTML="NULL";
+                    document.getElementById("bankName").innerHTML="NULL";
+                    document.getElementById("ifsc").innerHTML="NULL";
+                    document.getElementById("accHolder").innerHTML="NULL";
+                    document.getElementById("paytm").innerHTML="NULL";
+                    document.getElementById("regular").innerHTML="NULL";
+                }
+           }
+        });
+    }
+
+    function updateBal(obj) {
+        const id = $(obj).attr('data-userId');
+        const rowId =  $(obj).attr('data-rowId');
+        const amount = $(obj).attr('data-amount');
+        document.getElementById("userid").value = id;
+        document.getElementById("rowId").value = rowId;
+        document.getElementById("amount").value = amount;        
+    }
+
+
+// ----------------  for manual payment --------------
+
+function pendingManualDebit() {
+    $("#ManualdebitReqdatatable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/manual/getManualPaymentList?status=pending",
+            data: {},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                if (data.data.length === 0)
+                {
+                    $('#ManualdebitReqdatatable').DataTable().clear().draw();
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+
+                    
+                    let i=1;
+                    let html='';
+                    let total = 0
+                    data.data.forEach(function(e) {
+                        console.log("e" , e._id);
+                        total += e.amount === undefined || null ? 0 : parseFloat(e.amount)
+                        html += `<tr>
+            <td>${i}</td>
+            <td>${e.userName}</td>
+            <td>${e.mobileNumber}</td>
+            <td>${e.upiId}</td>
+            <td>${e.utrNumber}</td>
+            <td>${e.imageUrl ? `<img src="${e.imageUrl}" onclick="ShowImage('${e.imageUrl}')"   alt="Image" style="width: 100px; height: 50px;"/>` : '-'}</td>
+            <td><p class="badge badge-purple">${e.amount}</p></td>
+            <td>
+                <select id="GetStatus" class="form-select" aria-label="Default select example" onchange="UpdatePaymentRequest('${e._id}', event)">
+  <option selected disabled value='pending'>Pending</option>
+  <option value="approve">Approve</option>
+  <option value="decline">Decline</option>
+</select>
+                
+                </td>
+            <td>${e.createdAt}</td>
+        </tr>`;
+
+                        i++
+                    });
+                    $("#ManualdebitReq_datatable_body").html(html);
+                    $('#ManualdebitReqdatatable').dataTable();
+    
+                    $("#totAmount_for_manaul").html("Total Amount :- " +total+"/-");
+                }
+
+
+
+
+                // document.getElementById("totAmount_for_manaul").innerHTML = "Total Amount : " + total + "/-";
+
+
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+}
+document.addEventListener("DOMContentLoaded", pendingManualDebit);
+
+
+function CompleteManualDebit(){
+        $("#ManualcompleteTable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/manual/getManualPaymentList?status=approve",
+            data: {},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                if (data.data.length === 0)
+                {
+                    $('#ManualcompleteTable').DataTable().clear().draw();
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+
+          
+                    let i=1;
+                    let html='';
+                    let total= 0;
+                    data.data.forEach(function(e) {
+                        total += e.amount === undefined || null ? 0 : parseFloat(e.amount)
+
+                        html += `<tr>
+            <td>${i}</td>
+             <td>${e.userName}</td>
+            <td>${e.mobileNumber}</td>
+            <td>${e.upiId}</td>
+            <td>${e.utrNumber}</td>
+            <td>${e.imageUrl ? `<img src="${e.imageUrl}" alt="Image" onclick="ShowImage('${e.imageUrl}')"  style="width: 100px; height: 50px;"/>` : '-'}</td>
+            <td><p class="badge badge-purple">${e.amount}</p></td>
+            <td><p class="badge badge-success">${e.status}</p></td>
+            <td>${e.createdAt}</td>
+        </tr>`;
+
+                        i++
+                    });
+                    $("#ManualcompleteBody").html(html);
+                    $('#ManualcompleteTable').dataTable();
+                    $("#totAmount_for_manaul_approve").html("Total Amount :- " +total+"/-");
+
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+    
+function DeclinedManualDebit(){
+        $("#ManualDeclinedTable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/manual/getManualPaymentList?status=decline",
+            data: {},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                console.log("data.data" ,data);
+
+                if (data.data.length === 0)
+                {
+                    $('#ManualDeclinedTable').DataTable().clear().draw();
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+
+                    let i=1;
+                    let html='';
+                    let total = 0
+                    data.data.forEach(function(e) {
+                        total += e.amount === undefined || null ? 0 : parseFloat(e.amount)
+
+                        html += `<tr>
+            <td>${i}</td>
+             <td>${e.userName}</td>
+            <td>${e.mobileNumber}</td>
+            <td>${e.upiId}</td>
+            <td>${e.utrNumber}</td>
+            <td>${e.imageUrl ? `<img src="${e.imageUrl}" alt="Image" onclick="ShowImage('${e.imageUrl}')"  style="width: 100px; height: 50px;"/>` : '-'}</td>
+            <td><p class="badge badge-purple">${e.amount}</p></td>
+            <td><p class="badge badge-danger">${e.status}</p></td>
+            <td>${e.createdAt}</td>
+        </tr>`;
+
+                        i++
+                    });
+                    $("#ManualDeclinedBody").html(html);
+                    $('#ManualDeclinedTable').dataTable();
+
+                    $("#totAmount_for_manaul_decline").html("Total Amount :- " +total+"/-");
+
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+        
+function UpdatePaymentRequest(id , event){
+    let status = $(event.target).val();
+
+if (window.confirm(`Do You Really Want to ${status.toUpperCase()}  This Request `)){
+
+
+    // let status = $(`#GetStatus`).val();
+let abc = ""
+    let URl = `/manual/${status === 'approve' ? 'approveManualPayment' : 'declineManualPayment'}`;
+
+        $("#ManualDeclinedTable").DataTable().destroy();
+        $.ajax({
+            type: "patch",
+            url: URl,
+            data: JSON.stringify({ id: id }),
+               contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+               if( data.statusCode === 200) {
+                toastr["success"](data.message);
+                location.reload()
+                // setTimeout(() => {
+                    
+                // }, 1000);
+                }else{
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+            },
+            error: function (e) {
+                toastr["warning"](e);
+
+            }
+        });
+    }else{
+    console.log("");
+}
+
+}
+
+
+function ShowImage(image){
+
+$('#Custome-modal-for-show-image').modal('show');
+$('#transactionImage').attr('src', image);
+
+console.log("image" ,image);
+}
+
+    
+
+
+</script>`

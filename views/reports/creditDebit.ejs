@@ -1,0 +1,133 @@
+<% layout('../layout') %>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Credit/Debit Report</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12">
+        <div class="card-box">
+            <h4 class="header-title mt-0 mb-3">Credit/Debit Report</h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="col-form-label" >Select Date</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" placeholder="mm/dd/yyyy" id="datepicker-autoclose" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="col-form-label" >Select Credit/Debit</label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control reqType">
+                            <option value="">Select Type</option>
+                            <option selected="selected" value="Credit">Credit</option>
+                            <option value="Debit">Debit</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="col-form-label">Select Admin </label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control adminName">
+                            <option value="0">All</option>
+                            <%  adminDetail.forEach(function(e){ %>
+                                <option value="<%= e._id %>"><%= e.username %></option>
+                            <% }) %>                           
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3" style="margin-top: 38px;">
+                    <button class="btn btn-danger waves-effect waves-light btn-sm"> <span>Cancel&nbsp;</span></button>
+                    <button class="btn btn-dark waves-effect waves-light  button-color  btn-sm" id="submitInfo"> <span>Submit&nbsp;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="creditDebitTab" class="table text-center table-bordered dt-responsive nowrap">
+                            <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Name</th>
+                                <th>Time</th>
+                                <th>Amount</th>
+                                <th>Added By</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            </tbody>
+                            <tfoot id="footer">
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#submitInfo").click(function(){
+        const date = $("#datepicker-autoclose").val();
+        const reqType = $(".reqType").val();
+        const adminName = $(".adminName").val();
+        $("#creditDebitTab").DataTable().destroy();
+        $.ajax({
+            type: 'POST',
+            url: "/creditDebit/report",
+            data: { date : date, reqType : reqType, adminName : adminName },
+            dataType: 'json',
+            success: function (data) {
+
+                if (Object.keys(data).length === 0)
+                {
+                    toastr["info"]("No Records Found","Bhau777 Games");
+                    let html = '<tr><td colspan="3" style="text-align: end;font-weight: bolder;font-size: medium">Total :</td><td style="font-weight: bolder;font-size: medium">0</td><td></td></tr>';
+                    $("#footer").html(html);
+                    $('#creditDebitTab').DataTable().clear().draw();
+                }
+                else
+                {
+                    let i=1;
+                    let total = 0;
+                    let tableData = '';
+                    data.forEach(function(e) 
+                    {
+                        tableData += '<tr><td>'+ i +'</td>\
+                                <td>'+ e.fullname +'</td>\
+                                <td>'+ e.reqTime +'</td>\
+                                <td>'+ e.reqAmount +'</td>\
+                                <td>'+ e.UpdatedBy +'</td></tr>';
+                        total = total + e.reqAmount;
+                        i++
+                    });
+                    $("#tbody").html(tableData);
+                    let html = '<tr><td colspan="3" style="text-align: end;font-weight: bolder;font-size: medium">Total :</td><td style="font-weight: bolder;font-size: medium">'+ total +'</td><td></td></tr>';
+                    $("#footer").html(html);
+                    $("#creditDebitTab").dataTable();
+                }
+            }, 
+            error: function (e) {
+               alert("Contact Support Patner: " + JSON.stringify(e));
+            }
+        });
+    });
+</script>

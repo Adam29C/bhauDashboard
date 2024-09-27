@@ -1,0 +1,16 @@
+node_modules
+package-lock.json
+.env
+.env.example
+.idea/
+.dockerignore
+.project
+.vs/
+.vscode/
+276.gif
+Dockerfile
+libssl1.1
+lib/
+bhau777-e81f3-firebase-adminsdk-j30d2-76cb86e34e.json
+public/apk
+global-bundle.pem

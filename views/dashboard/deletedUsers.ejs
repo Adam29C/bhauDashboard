@@ -1,0 +1,228 @@
+<% layout('../layout') %>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css"
+/>
+<div class="content">
+  <div class="container-fluid animated fadeIn">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box pt-0 pb-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/"> Home </a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                All User
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid animated fadeIn">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box">
+          <h4 class="mt-0 header-title">View All Users</h4>
+          <div class="table-responsive" data-pattern="priority-columns">
+            <table
+              id="dataTable"
+              class="table text-center table-bordered dt-responsive nowrap"
+            >
+              <thead>
+                <tr>
+                  <th>Sno</th>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th>Mobile</th>
+                  <!-- <th>Device Name</th>
+                  <th>Device Id</th>
+                  <th>Delete Reson</th> -->
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+    <div class="card-box">
+      <h4 class="header-title mt-0 mb-3">Delete All Users Data</h4>
+    <div class="form-group text-right mb-0">
+      <button
+        class="btn btn-primary waves-effect waves-light mr-1"
+        type="submit"
+        id="submit_Delete"
+      >
+        Submit
+      </button>
+    </div>
+    <table
+      id="dataTable"
+      class="table text-center table-bordered dt-responsive nowrap"
+    >
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>deleteTime</th>
+          <th>isActive</th>
+        </tr>
+      </thead>
+      <tbody id="changeData"></tbody>
+    </table>
+  </div>
+</div>
+
+<div
+  id="myModal"
+  class="modal fade show"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  style="display: none; padding-right: 17px"
+  aria-modal="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel"></h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive" data-pattern="priority-columns">
+          <table
+            id="dataTable"
+            class="table text-center table-bordered dt-responsive nowrap"
+          >
+            <tbody id="profile"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"
+></script>
+<script type="text/javascript">
+  $("#dataTable").dataTable({
+    ajax: {
+      url: "/userList/deleteduserAjax",
+      type: "POST",
+    },
+    serverSide: true,
+    pageLength: 50,
+    columns: [
+      { data: "sno" },
+      { data: "name" },
+      { data: "username" },
+      { data: "mobile" },
+      // { data: "deviceName" },
+      // { data: "deviceId" },
+      // { data: "deleteRsn" },
+    ],
+  });
+
+  // ----------------------------   Deelte All Data  ------------------
+
+  function GetDeleteData() {
+    $.ajax({
+      type: "GET",
+      url: "/common/getTimeHistory",
+      data: {},
+      success: function (result) {
+        console.log("trest", result);
+        if (result.statusCode == 200) {
+          function isBoolean(value) {
+            return value === true || value === false;
+          }
+
+          let html = "";
+          result.data.forEach(function (e) {
+            html += `<tr>
+    <td><span name="title">
+        ${e.name}
+      </span>
+     
+      <input type="hidden" class="form-control" name="_id" id="_id" value=${
+        e._id
+      } >
+        </td>
+        <td><input type="text" class="form-control" name="deleteTime" id="deleteTime" value=${
+          e.deleteTime
+        }></td>
+    <td>
+      <select id="GetStatus"  name="GetStatus" class="form-select" aria-label="Default select example">
+        <option value="true" ${e.isActive ? "selected" : ""}>True</option>
+        <option value="false" ${!e.isActive ? "selected" : ""}>False</option>
+      </select>
+    </td>
+  </tr>`;
+          });
+
+          $("#changeData").html(html);
+        }
+      },
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", GetDeleteData);
+
+  $("#submit_Delete").click(function () {
+    let timeList = [];
+
+    // Iterate over each table row
+    $("#changeData tr").each(function () {
+      let _id = $(this).find('input[name="_id"]').val();
+      let deleteTime = $(this).find('input[name="deleteTime"]').val();
+      let isActive = $(this).find('select[name="GetStatus"]').val() === "true";
+      let title = $(this).find('span[name="title"]').text();
+
+      if (parseInt(deleteTime) < 0) {
+        alert("enter");
+
+        return;
+      }
+      timeList.push({
+        _id: _id,
+        deleteTime: parseInt(deleteTime),
+        isActive: isActive,
+        name: title.replace(/\s+/g, ""),
+      });
+    });
+
+    // Prepare data to send
+    let requestData = { timeList: timeList };
+
+
+    $.ajax({
+      type: "post",
+      url: "/common/timeHistory",
+      data: requestData,
+      success: function (data) {
+        toastr["info"](data.message, "Bhau777 Bets Games");
+        setTimeout(() => {
+          location.reload();
+        }, 1000);
+      },
+    });
+  });
+
+  // ----------------------------   Deelte All Data  ------------------
+</script>

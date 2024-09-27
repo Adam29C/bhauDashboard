@@ -1,0 +1,258 @@
+<% layout('../layout') %>
+<style>
+  .th {
+    width: 15%;
+  }
+</style>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-12 col-md-12">
+      <div class="card-box pt-0 pb-0">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page">
+              <a href="/"> Home </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+              Game Refund
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-12 col-md-12">
+      <div class="card-box">
+        <h4 class="mt-0 mb-0 header-title text-center">Game Refund</h4>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-8 col-md-12">
+      <div class="card-box">
+        <div class="form-row d-flex align-items-center">
+          <div class="form-group col-xl-3">
+            <label for="gamename">Provider Name</label>
+            <select
+              class="form-control"
+              name="providerId"
+              id="providerId"
+              required="required"
+            >
+              <% for(index in data){%>
+              <option
+                value="<%= data[index]._id %>||<%=data[index].providerName %>"
+              >
+                <%=data[index].providerName %>
+              </option>
+              <%}%>
+            </select>
+          </div>
+          <div class="form-group col-xl-3">
+            <label for="gamename">Result Date</label>
+            <input
+              required="required"
+              type="text"
+              name="resultDate"
+              id="resultDate"
+              class="datepicker form-control"
+              placeholder="Select Date"
+              autocomplete="off"
+            />
+          </div>
+          <p class="text-center mb-0">
+            <button onclick="insertdata()" class="btn button-color btn-sm mt-2">
+              Submit
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-12 col-md-12">
+      <div class="card-box">
+        <div class="table-responsive">
+          <table id="refundTable" class="table text-center table-bordered mb-0">
+            <thead>
+              <tr>
+                <th>sno</th>
+                <th>User Name</th>
+                <th>Game Session</th>
+                <th>Game Date</th>
+                <th>Bid Digits</th>
+                <th>Bid Points</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableresult">
+              <tr>
+                <td colspan="6">No Data</td>
+              </tr>
+            </tbody>
+          </table>
+          <h2 id="totalAmt"></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  function refund(obj, type) {
+    const str = document.getElementById("providerId").value;
+    const resultDate = document.getElementById("resultDate").value;
+    const id = str.split("||");
+
+    const providerId = id[0];
+    const providerName = id[1];
+    $("#btnHide").attr("disabled", true);
+    $("#refundsingle").attr("disabled", true);
+
+    var postData = {
+      providerId: providerId,
+      resultDate: resultDate,
+      type: type,
+      providerName: providerName,
+    };
+
+    if (type == 1) {
+      const userid = $(obj).attr("data-userid");
+      const biddingPoints = $(obj).attr("data-biddingPoints");
+      var postData = {
+        userid: userid,
+        biddingPoints: biddingPoints,
+        providerId: providerId,
+        resultDate: resultDate,
+        type: type,
+        providerName: providerName,
+      };
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "/andarbahargameresult/refundAll",
+      data: postData,
+      success: function (data) {
+        if (data.status == 1) {
+          toastr["success"](data.message, "Bhau777 Games");
+          if (type == 1) {
+            const bidId = $(obj).attr("data-bidId");
+            $("#rs" + bidId).remove();
+          } else {
+            setTimeout(location.reload(true), 1000);
+          }
+        } else {
+          toastr["warning"](data.message, "Bhau777 Games");
+        }
+      },
+    });
+  }
+
+  function insertdata() {
+    const str = document.getElementById("providerId").value;
+    const id = str.split("||");
+    const providerId = id[0];
+    const resultDate = document.getElementById("resultDate").value;
+    $.ajax({
+      type: "POST",
+      url: "/andarbahargameresult/refundList",
+      data: { providerId: providerId, resultDate: resultDate },
+      success: function (arrayResult) {
+        if (Object.keys(arrayResult).length > 0) {
+          let result = arrayResult.data;
+          let html = "";
+          let total = 0;
+          let i = 1;
+          result.forEach(function (e) {
+            let winStatus = e.winStatus;
+            if (winStatus == 0) {
+              total += e.biddingPoints;
+              refBtn =
+                '<p class="text-center mb-0"><button type="button" data-bidId="' +
+                e._id +
+                '" data-userid="' +
+                e.userId +
+                '" data-biddingPoints="' +
+                e.biddingPoints +
+                '" data-pastCurrent="1"  onclick="refund(this,1)" class="btn btn-bordred-dark waves-effect waves-light btn-xs"><i class="mdi mdi-square-edit-outline mr-1"></i><span>Refund</span></button></p>';
+              html +=
+                '<tr id="rs' +
+                e._id +
+                '">\
+								<td>' +
+                i +
+                " </td>\
+                                <td>" +
+                e.userName +
+                " </td>\
+                                <td>" +
+                e.gameSession +
+                "</td>\
+                                <td>" +
+                e.gameDate +
+                "</td>\
+                                <td>" +
+                e.bidDigit +
+                "</td>\
+                                <td>" +
+                e.biddingPoints +
+                '</td>\
+                                <td class="th">' +
+                refBtn +
+                "</td>\
+							</tr>";
+              i++;
+            }
+          });
+          if (html == "") {
+            toastr["info"]("Oopss!!! No Data Found", "Bhau777 Games");
+            $("#refundAllBtn").remove();
+            html = '<tr><td colspan="6">No Data Found</td></tr>';
+          } else {
+            let refAllBtn =
+              '<p id="refundAllBtn" class="text-center mb-0"><br><button type="button" id="refundsingle"  data-providerId="' +
+              providerId +
+              '" data-resultDate="' +
+              resultDate +
+              '" data-pastCurrent="1"  onclick="refund(this,2)" id="btnHide" class="btn btn-bordred-dark waves-effect waves-light btn-xs"><i class="mdi mdi-square-edit-outline mr-1"></i><span>Refund</span></button></p>';
+            $("#refundAllBtn").remove();
+            $("#refundTable").after(refAllBtn);
+            $("#totalAmt").html("Total Bid Amount : " + total + "/-");
+          }
+          $("#tableresult").html(html);
+          $("#totalAmt").html("Total Bid Amount : " + total + "/-");
+        } else {
+          toastr["info"]("Oopss!!! No Data Found", "Bhau777 Games");
+        }
+      },
+      error: function (data) {
+        console.log(data);
+        console.log("Something Occurred Please Contact The Developer");
+      },
+    });
+  }
+
+
+  
+
+  function updateClass() {
+    const div = document.getElementById("refundTable");
+    
+
+    if (window.innerWidth < 620) {
+      div.classList.add("table-responsive");
+    } else {
+      div.classList.remove("table-responsive");
+    }
+  }
+
+  // Add event listener for window resize
+  window.addEventListener("resize", updateClass);
+
+  // Call the function on page load
+  updateClass();
+</script>

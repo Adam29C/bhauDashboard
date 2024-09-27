@@ -1,0 +1,70 @@
+<% layout('../layout') %>
+<link
+	rel="stylesheet"
+	type="text/css"
+	href="https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css"
+/>
+< class="content">
+<div class="container-fluid animated fadeIn">
+	<div class="row">
+		<div class="col-xl-12 col-md-12">
+			<div class="card-box pt-0 pb-0">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item" aria-current="page">
+							<a href="/"> Home </a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">
+							All User
+						</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid animated fadeIn">
+	<div class="row">
+		<div class="col-xl-12 col-md-12">
+			<div class="card-box">
+				<h4 class="mt-0 header-title">View All Users</h4>
+				<div class="table-responsive" data-pattern="priority-columns">
+					<table
+						id="dataTable"
+						class="table text-center table-bordered dt-responsive nowrap"
+					>
+						<thead>
+							<tr>
+								<th>Sno</th>
+								<th>Username</th>
+								<th>Mobile</th>
+								<th>wallet balance</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script
+	type="text/javascript"
+	src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"
+></script>
+<script type="text/javascript">
+	$("#dataTable").dataTable({
+		ajax: {
+			url: "/userList/userAjaxKSDG",
+			type: "POST",
+		},
+		serverSide: true,
+		pageLength: 50,
+		columns: [
+			{ data: "sno" },
+			{ data: "username" },
+			{ data: "mobile" },
+			{ data: "wallet_balance" },
+		],
+	});
+</script>

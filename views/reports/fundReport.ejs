@@ -1,0 +1,161 @@
+<% layout('../layout') %>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Fund Report</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12">
+        <div class="card-box">
+            <h4 class="header-title mt-0 mb-3">Fund Report</h4>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="col-form-label" >Date</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control sDate datepicker" placeholder="mm/dd/yyyy" id="datepicker-autoclose" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="col-form-label" >Date</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control eDate datepicker" placeholder="mm/dd/yyyy" id="datepicker-autoclose" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label">Select Credit/Debit </label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control reqType">
+                            <option value="Credit">Credit</option>
+                            <option value="Debit">Debit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label">Perticular </label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control bankName">
+                            <option value="1">Select Bank</option>
+                            <% for(index in data){%>
+                            <option value="<%= data[index].bankName %>"><%= data[index].name %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="col-form-label">Select Admin</label>
+                    <div class="form-group">
+                        <select id="inputState" class="form-control adminid">
+                            <option value="1">Select Admin</option>
+                            <% adminName.forEach(e=> { %>
+                                <option value="<%= e.username %>"><%= e.username %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-danger waves-effect waves-light btn-sm"> <span>Cancel&nbsp;</span></button>
+                    <button class="btn btn-dark  button-color  waves-effect waves-light btn-sm" id="sbmitInfo"> <span>Submit&nbsp;</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="fundTable" class="table table-bordered text-center dt-responsive nowrap">
+                            <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Username</th>
+                                <th>Mobile</th>
+                                <th>Time</th>
+                                <th>Perticular</th>
+                                <th>Amount</th>
+                                <th>Added By</th>
+                            </tr>
+                            </thead>
+                            <tbody id="fundData">
+                            </tbody>
+                            <tfoot id="totalAmt"></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    $("#sbmitInfo").click(function()
+    {
+
+        $("#sbmitInfo").attr("disabled", true);
+
+        const StartDate = $(".sDate").val();
+        const EndDate = $(".eDate").val();
+        const reqType = $(".reqType").val();
+        const bankName = $(".bankName").val();
+        const adminid = $(".adminid").val();
+        $('#fundTable').DataTable().destroy();
+        if(!StartDate || !EndDate)
+        {
+            toastr["info"]('Starting Date And End Date Cannot Be Empty', "Bhau777 Games");
+        }
+        else
+        {
+            $.ajax({
+            type: "post",
+            url: "/fundReport",
+            data: { sdate : StartDate, edate : EndDate, bankName: bankName, reqType: reqType, admin_id: adminid},
+            success: function(body) {
+                    
+                    let data = body.data;
+                    if(Object.keys(data).length === 0){
+                        $("#sbmitInfo").attr("disabled", false);
+                        toastr["info"]('No Data Found', "Bhau777 Games");
+                        $('#fundTable').DataTable().clear().draw();
+                        $("#totalAmt").html('<tr><td colspan="7" ><h3>Total Amount : 0/-</h3></td></tr>');
+                    }
+                    else{
+                        let Html;
+                        var i = 1;
+                        let total_amt  = 0;
+                        
+                        data.forEach(function(e) {
+                            total_amt += e.reqAmount;
+                            Html += '<tr><td>' + i + '</td><td>' + e.username + '</td><td>' + e.mobile + '</td><td><p class="badge badge-purple">' + e.reqUpdatedAt + '</p></td><td><p class="badge badge-success">' + e.withdrawalMode+ '</p></td><td>'+ e.reqAmount +'</td><td>'+ e.UpdatedBy +'</td></tr>';
+                            i++
+                        });
+                        $("#fundData").html(Html);
+                        $("#totalAmt").html('<tr><td colspan="7" ><h3>Total Amount : '+total_amt+'/-</h3></td></tr>');
+                        $('#fundTable').dataTable({
+                            "pageLength": 50,
+                            aLengthMenu: [
+                                [25, 50, 100, 200, -1],
+                                [25, 50, 100, 200, "All"]
+                            ],
+                            iDisplayLength: -1
+                        });
+                        $("#sbmitInfo").attr("disabled", false);
+                    }                 
+                }
+            });
+        }   
+    });
+</script>

@@ -1,0 +1,552 @@
+<% layout('../layout') %>
+<style>
+    a {
+        cursor: pointer;
+    }
+    .user-content {
+        padding-top: 50px;
+        text-align: center;
+        padding: 50px 20px 0 20px;
+    }
+    .walletbalance {
+        font-weight: 500;
+        color: #888888;
+        margin-bottom: 0;
+    }
+    .user-content h1 {
+        font-size: 18px;
+        text-align: left;
+        font-weight: 600;
+        color: #3C4858;
+        margin-bottom: 0;
+        line-height: 1.5;
+    }
+    .user-content p {
+        text-align: left;
+        font-weight: 500;
+        color: #888888;
+    }
+    .profile-page .page-header {
+        height: 380px;
+        background-position:center;
+    }
+    
+    .page-header {
+        height: 100px;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .avatar {
+        margin: -60px 30px 0;
+    }
+    .header-filter::before {
+        background: rgba(0,0,0,.5);
+    }
+    
+    .main-raised {
+        margin: 0;
+        border-radius: 6px;
+        box-shadow: 0 16px 13px 2px rgba(0,0,0,.14), 0 0px 8px 1px rgba(0,0,0,.12), 0 0px 3px 1px rgba(0,0,0,.2);
+    }
+    .main {
+        background: #FFF;
+        position: relative;
+        z-index: 3;
+        text-align: center;
+    }
+    
+    .profile-page .profile {
+        text-align: center;
+    }
+    
+    .profile-page .profile img {
+        max-width: 160px;
+        width: 100%;
+        margin: 0 auto;
+        -webkit-transform: translate3d(0,-50%,0);
+        -moz-transform: translate3d(0,-50%,0);
+        -o-transform: translate3d(0,-50%,0);
+        -ms-transform: translate3d(0,-50%,0);
+        transform: translate3d(0,-50%,0);
+    }
+    
+    .img-raised {
+        box-shadow: 0 5px 15px -8px rgba(0,0,0,.24), 0 8px 10px -5px rgba(0,0,0,.2);
+    }
+    
+    .rounded-circle {
+        border-radius: 50%!important;
+    }
+    
+    .img-fluid, .img-thumbnail {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .title {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        color: #3C4858;
+        font-weight: 700;
+        font-family: "Roboto Slab","Times New Roman",serif;
+        font-size: 20px;
+    }
+    
+    .profile-page .description {
+        margin: 1.071rem auto 0;
+        max-width: 600px;
+        color: #999;
+        font-weight: 300;
+    }
+    .profile-page .profile-tabs {
+        margin-top: 4.284rem;
+    }
+    .profile-page .gallery {
+        margin-top: 3.213rem;
+        padding-bottom: 50px;
+    }
+    
+    .profile-page .gallery img {
+        width: 100%;
+        margin-bottom: 2.142rem;
+    }
+    
+    .profile-page .profile .name{
+        margin-top: -80px;
+    }
+    
+    .rounded {
+      border-radius: 6px!important;
+    }
+    .user-data .table td {
+        font-weight: 500;
+    }
+    .user-data {
+        padding-top: 40px;
+    }
+    </style>
+
+
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ul class="nav nav-tabs nav-justified">
+                        <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Manual Payment Request</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xl-12">
+    <div class="card-box">
+        <h5 class="mb-3">Manual Payment Request</h5>
+        <ul class="nav nav-tabs nav-justified">
+            <li class="nav-item">
+                <a href="#ManualdebitReq" data-toggle="tab" aria-expanded="false" class="nav-link active" 
+                > 
+                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                    <span class="d-none d-sm-block" style="font-size: 12px;">Pending  Request</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#appManualDebitReq" data-toggle="tab" aria-expanded="false" class="nav-link"
+                onclick="CompleteManualDebit()"
+                >
+                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                    <span class="d-none d-sm-block" style="font-size: 12px;">Approved Request</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#decManualDebitReq" data-toggle="tab" aria-expanded="false" class="nav-link"
+                onclick="DeclinedManualDebit()"
+                
+                >
+                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                    <span class="d-none d-sm-block" style="font-size: 12px;">Declined  Request</span>
+                </a>
+            </li>
+          
+        </ul>
+        
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade show active" id="ManualdebitReq">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-12">
+                            <h4 class="mt-0 header-title"></h4>
+                            <div class="table-responsive" data-pattern="priority-columns">
+                                <table id="ManualdebitReqdatatable" class="table table-bordered dt-responsive nowrap creditReq text-center">
+                                    <thead>
+                                        <tr class="text-danger">
+                                            <th>Sr.</th>
+                                            <th>User Name</th>
+                                            <th>Contact No.</th>
+                                            <th>UPI Name</th>
+                                            <th>UTR No.</th>
+                                            <th>ScreenShoot</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Date & Time</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ManualdebitReq_datatable_body" class="text-dark">
+                                    </tbody >
+                                </table>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="header-title mt-0 mb-3" id="totAmount_for_manaul"></h3>
+                </div>
+            </div>
+
+
+
+
+            <div role="tabpanel" class="tab-pane fade" id="appManualDebitReq">
+                 <div class="container-fluid">
+                        <div class="row ">
+                            <div class="col-xl-12 col-md-12">
+                                <h4 class="mt-0 header-title"></h4>
+                                <div class="table-responsive" data-pattern="priority-columns">
+                                    <table id="ManualcompleteTable" class="datatable text-center table table-bordered dt-responsive nowrap">
+                                        <thead>
+                                        <tr class="text-danger">
+                                            <th>Sr.</th>
+                                            <th>User Name</th>
+                                            <th>Contact No.</th>
+                                            <th>UPI Name</th>
+                                            <th>UTR No.</th>
+                                            <th>ScreenShoot</th>
+                                            <th>Amount</th>
+                                            <th>Type</th>
+                                            <th>Date & Time</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="ManualcompleteBody" class="text-dark">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="header-title mt-0 mb-3" id="totAmount_for_manaul_approve"></h3>
+                        
+                    </div>
+                    
+
+            <div role="tabpanel" class="tab-pane fade" id="decManualDebitReq">
+                <div class="container-fluid">
+                    <div class="row ">
+                        <div class="col-xl-12 col-md-12">
+                            <h4 class="mt-0 header-title"></h4>
+                            <div class="table-responsive" data-pattern="priority-columns">
+                                <table id="ManualDeclinedTable" class="datatable text-center table table-bordered dt-responsive nowrap">
+                                    <thead>
+                                    <tr class="text-danger">
+                                        <th>Sr.</th>
+                                        <th>User Name</th>
+                                        <th>Contact No.</th>
+                                        <th>UPI Name</th>
+                                        <th>UTR No.</th>
+                                        <th>ScreenShoot</th>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                        <th>Date & Time</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="ManualDeclinedBody" class="text-dark">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="header-title mt-0 mb-3" id="totAmount_for_manaul_decline"></h3>
+            </div>
+
+
+
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+<!-- view upi image  -->
+
+<div id="Custome-modal-for-show-image"  class="modal fade bs-example-modal-center show" tabindex="-1" role="dialog" aria-labelledby="myCenterModalLabel"  aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="myCenterModalLabel">UTR Image</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class=" card-box p-0 m-0">
+                   
+                        <img src="" class="" alt="transaction-Image" id="transactionImage" height="500" width="100%">
+                        <div class="clearfix"></div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+// ----------------  for manual payment --------------
+
+function pendingManualDebit() {
+    $("#ManualdebitReqdatatable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/manual/getManualPaymentList?status=pending",
+            data: {},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                if (data.data.length === 0)
+                {
+                    let html='';
+
+                    // $('#ManualdebitReqdatatable').DataTable().clear().draw();
+
+                    // toastr["warning"]("No Request Found","Bhau777 Bets Games");
+
+                     html += `<tr>  <td colspan="9">No Data Available</td></tr>`
+
+                    $("#ManualdebitReq_datatable_body").html(html);
+
+                }
+                else
+                {
+
+                    
+                    let i=1;
+                    let html='';
+                    let total = 0
+                    data.data.forEach(function(e) {
+                        console.log("e" , e._id);
+                        total += e.amount === undefined || null ? 0 : parseFloat(e.amount)
+                        html += `<tr>
+            <td>${i}</td>
+            <td>${e.userName}</td>
+            <td>${e.mobileNumber}</td>
+            <td>${e.upiId}</td>
+            <td>${e.utrNumber}</td>
+            <td>${e.imageUrl ? `<img src="${e.imageUrl}" onclick="ShowImage('${e.imageUrl}')"   alt="Image" style="width: 100px; height: 50px;"/>` : '-'}</td>
+            <td><p class="badge badge-purple">${e.amount}</p></td>
+            <td>
+                <select id="GetStatus" class="form-select" aria-label="Default select example" onchange="UpdatePaymentRequest('${e._id}', event)">
+  <option selected disabled value='pending'>Pending</option>
+  <option value="approve">Approve</option>
+  <option value="decline">Decline</option>
+</select>
+                
+                </td>
+            <td>${e.createdAt}</td>
+        </tr>`;
+
+                        i++
+                    });
+                    $("#ManualdebitReq_datatable_body").html(html);
+                    $('#ManualdebitReqdatatable').dataTable();
+    
+                    $("#totAmount_for_manaul").html("Total Amount :- " +total+"/-");
+                }
+
+
+
+
+                // document.getElementById("totAmount_for_manaul").innerHTML = "Total Amount : " + total + "/-";
+
+
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+}
+document.addEventListener("DOMContentLoaded", pendingManualDebit);
+
+
+function CompleteManualDebit(){
+        $("#ManualcompleteTable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/manual/getManualPaymentList?status=approve",
+            data: {},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                if (data.data.length === 0)
+                {
+                    $('#ManualcompleteTable').DataTable().clear().draw();
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+
+          
+                    let i=1;
+                    let html='';
+                    let total= 0;
+                    data.data.forEach(function(e) {
+                        total += e.amount === undefined || null ? 0 : parseFloat(e.amount)
+
+                        html += `<tr>
+            <td>${i}</td>
+             <td>${e.userName}</td>
+            <td>${e.mobileNumber}</td>
+            <td>${e.upiId}</td>
+            <td>${e.utrNumber}</td>
+            <td>${e.imageUrl ? `<img src="${e.imageUrl}" alt="Image" onclick="ShowImage('${e.imageUrl}')"  style="width: 100px; height: 50px;"/>` : '-'}</td>
+            <td><p class="badge badge-purple">${e.amount}</p></td>
+            <td><p class="badge badge-success">${e.status}</p></td>
+            <td>${e.createdAt}</td>
+        </tr>`;
+
+                        i++
+                    });
+                    $("#ManualcompleteBody").html(html);
+                    $('#ManualcompleteTable').dataTable();
+                    $("#totAmount_for_manaul_approve").html("Total Amount :- " +total+"/-");
+
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+
+    
+function DeclinedManualDebit(){
+        $("#ManualDeclinedTable").DataTable().destroy();
+        $.ajax({
+            type: "get",
+            url: "/manual/getManualPaymentList?status=decline",
+            data: {},
+            contentType: "text/plain",
+            dataType: 'json',
+            success: function (data) {
+                console.log("data.data" ,data);
+
+                if (data.data.length === 0)
+                {
+                    $('#ManualDeclinedTable').DataTable().clear().draw();
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+                else
+                {
+
+                    let i=1;
+                    let html='';
+                    let total = 0
+                    data.data.forEach(function(e) {
+                        total += e.amount === undefined || null ? 0 : parseFloat(e.amount)
+
+                        html += `<tr>
+            <td>${i}</td>
+             <td>${e.userName}</td>
+            <td>${e.mobileNumber}</td>
+            <td>${e.upiId}</td>
+            <td>${e.utrNumber}</td>
+            <td>${e.imageUrl ? `<img src="${e.imageUrl}" alt="Image" onclick="ShowImage('${e.imageUrl}')"  style="width: 100px; height: 50px;"/>` : '-'}</td>
+            <td><p class="badge badge-purple">${e.amount}</p></td>
+            <td><p class="badge badge-danger">${e.status}</p></td>
+            <td>${e.createdAt}</td>
+        </tr>`;
+
+                        i++
+                    });
+                    $("#ManualDeclinedBody").html(html);
+                    $('#ManualDeclinedTable').dataTable();
+
+                    $("#totAmount_for_manaul_decline").html("Total Amount :- " +total+"/-");
+
+                }
+            },
+            error: function (e) {
+                alert("error: " + JSON.stringify(e));
+            }
+        });
+    }
+
+        
+function UpdatePaymentRequest(id , event){
+    let status = $(event.target).val();
+
+if (window.confirm(`Do You Really Want to ${status.toUpperCase()}  This Request `)){
+
+
+    // let status = $(`#GetStatus`).val();
+let abc = ""
+    let URl = `/manual/${status === 'approve' ? 'approveManualPayment' : 'declineManualPayment'}`;
+
+        $("#ManualDeclinedTable").DataTable().destroy();
+        $.ajax({
+            type: "patch",
+            url: URl,
+            data: JSON.stringify({ id: id }),
+               contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+               if( data.statusCode === 200) {
+                toastr["success"](data.message);
+                location.reload()
+                // setTimeout(() => {
+                    
+                // }, 1000);
+                }else{
+                    toastr["warning"]("No Request Found","Bhau777 Bets Games");
+                }
+            },
+            error: function (e) {
+                toastr["warning"](e);
+
+            }
+        });
+    }else{
+    console.log("");
+}
+
+}
+
+
+function ShowImage(image){
+
+$('#Custome-modal-for-show-image').modal('show');
+$('#transactionImage').attr('src', image);
+
+console.log("image" ,image);
+}
+
+    
+
+
+</script>`

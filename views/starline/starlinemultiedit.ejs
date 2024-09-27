@@ -1,0 +1,69 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Update Settings
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-6 col-md-6">
+
+            <% const m = data 
+             if ( m == "EMPTY" ){ %>
+            <div class="col-xl-6 col-md-6">
+                <div class="card-box pt-4 pb-4">
+                    <p class="text-center" style="font-size: 20px;"> No Record Found For  </p>
+                    <p class="text-center">
+                        <a href="/starlinegamesetting" class="btn btn-warning waves-effect waves-light"> <i class="fa fa-rocket mr-1"></i> <span>Go Back & Add</span> </a>
+                    </p>
+                </div>
+            </div>
+            <% }else { %>
+            <div class="card-box">
+                <p>Multiple Days Timings Edit :
+                </p>
+                <form action="/starlinegamesetting/updateProviderSettings" method="POST" role="form">
+                    <div class="form-group">
+                        <label for="result">Bid Start Time</label>
+                        <input type="text" class="form-control timepicker" name="obtTime" value="<%= data[0].OBT %>">
+                        <input type="hidden" name="providerId" value="<%= data[0].providerId %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="result">Bid End Time</label>
+                        <input type="text" class="form-control timepicker" name="cbtTime" value="<%= data[0].CBT %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="result">Result Time</label>
+                        <input type="text" class="form-control timepicker" name="obrtTime" value="<%= data[0].OBRT %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="result">Is Closed</label>
+                        <select class="form-control" name="openClose">
+                            <option value="1" <% if(data[0].isClosed == 1){ %>
+                                 Selected                                   
+                                <% } %>
+                                >Open</option>
+                            <option value="0"  <% if(data[0].isClosed == 0){ %>
+                                Selected                                   
+                               <% } %>
+                            >Closed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn button-color">Update</button>
+                </form>
+            </div>
+           <% }%>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+<% layout('../layout') %>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Game List</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Content-->
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h4 class="mt-0 header-title">Game List</h4>
+                    <a href="#custom-modal-insert" class="btn button-color btn-sm  waves-light waves-effect float-right mb-2" data-animation="door" data-overlaycolor="#36404a" data-plugin="custommodal" >Add New Game</a>
+                    <table id="starlinegamerates" class="table table-bordered  nowrap">
+                        <thead>
+                            <tr>
+                                <th>Sr.</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="ratesData">
+                        <%
+                        for(index in data){
+                            var i = parseInt([index]);
+                            var j = i+1;
+                        %>
+                            <tr id="rw<%=data[index]._id %>">
+                                <td><%= j %></td>
+                                <td><%=data[index].gameName %></td>
+                                <td><%=data[index].gamePrice %></td>
+                                <td align="center">
+                                    <button type="button"  class="btn btn-icon waves-effect waves-light btn-info btn-sm" data-toggle="modal" data-target="#custom-modal-edit" data-gameName="<%=data[index].gameName %>" data-gamePrice="<%= data[index].gamePrice %>" data-userId="<%=data[index]._id %>"  onclick="edit(this)"><i class="mdi mdi-square-edit-outline"></i><span>Edit</span></button>
+                                </td>
+                                <td align="center">
+                                    <button data-userId="<%=data[index]._id %>" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" onclick="fun(this)"> <i class=" mdi mdi-delete-forever"></i><span>Delete</span> </button>
+                                </td>
+                            </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--insertModal-->
+                <div id="custom-modal-insert" class="modal-demo">
+                    <button type="button" class="close" onclick="Custombox.modal.close();">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="custom-modal-title">Add New Game</h4>
+                    <div class="custom-modal-text">
+                        <div class="card-box">
+                                <div class="form-group">
+                                    <label for="gamename">Game Name</label>
+                                    <input type="text" class="form-control" id="gamenameAdd" aria-describedby="emailHelp"
+                                           placeholder="Enter Games Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="result">Game Price</label>
+                                    <input type="text" class="form-control" id="priceAdd" placeholder="Enter Game Price">
+                                </div>
+                                <button type="submit" onclick="insert(this)" data-dismiss="modal" class="btn button-color">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <!--edit modal-->
+                <div id="custom-modal-edit" class="modal fade" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="exampleModalScrollableTitle">Edit Game Rates</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card-box">
+                                        <div class="form-group">
+                                            <label for="gamename">Game Name</label>
+                                            <input type="text" class="form-control" name="gamename" id="gamename" value="" aria-describedby="emailHelp" placeholder="Enter Games Name">
+                                            <input type="hidden" value="" id="userId" name="userId">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="result">Result</label>
+                                            <input type="number" class="form-control" name="price" id="price" value="" placeholder="Enter Games Result">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="update()"> Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function insert(obj) {
+        const gamePrice = document.getElementById("priceAdd").value ;
+        const gameName  = document.getElementById("gamenameAdd").value ;
+        $.ajax({
+            type: "POST",
+            url: "/starlinegamerates/insertGame",
+            data: { gamePrice : gamePrice, gameName: gameName},
+            success: function(data) {
+                let Html;
+                var i = 1;
+                data.forEach(function(e) {
+                    Html += '<tr id="rw'+e._id+'"><td>' + i + '</td><td>' + e.gameName + '</td><td>' + e.gamePrice +'</td><td align="center"><button type="button"  class="btn btn-icon waves-effect waves-light btn-info btn-sm" data-toggle="modal" data-target="#custom-modal-edit" data-gameName="'+e.gameName+'" data-gamePrice="'+e.gamePrice+'" data-userId="'+e._id+'"  onclick="edit(this)"><i class="mdi mdi-square-edit-outline"></i><span>Edit</span></button></td><td align="center"><button data-userId="'+e._id+'" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" onclick="fun(this)"><i class=" mdi mdi-delete-forever"></i><span>Delete</span></button></td></tr>';
+                    i++
+                }); $("#ratesData").html(Html);
+                Custombox.modal.close();
+            }
+        });
+    }
+
+
+    function edit(obj) {
+
+        const gameName = $(obj).attr('data-gameName');;
+        const gamePrice = $(obj).attr('data-gamePrice');;
+        const id = $(obj).attr('data-userId');
+
+        $('#gamename').val(gameName);
+        $('#price').val(gamePrice);
+        $('#userId').val(id);
+    }
+
+    function fun(obj) {
+        const id = $(obj).attr('data-userId');
+        $.ajax({
+            type: "DELETE",
+            url: "/starlinegamerates?_method=DELETE",
+            data: { userId : id },
+            success: function (result) {
+                $("#rw"+id).remove();
+            }
+        });
+    }
+
+    function update() {
+        const gamePrice = document.getElementById("price").value ;
+        const gameName  = document.getElementById("gamename").value ;
+        const id = document.getElementById("userId").value;
+
+        $.ajax({
+            type: "post",
+            url: "/starlinegamerates/update",
+            data: { userId : id, gameName: gameName,gamePrice: gamePrice },
+            success: function (result) {
+                let Html;
+                var i = 1;
+                result.forEach(function(e) {
+                    Html += '<tr id="rw'+e._id+'"><td>' + i + '</td><td>' + e.gameName + '</td><td>' + e.gamePrice +'</td><td align="center"><button type="button"  class="btn btn-icon waves-effect waves-light btn-info btn-sm" data-toggle="modal" data-target="#custom-modal-edit" data-gameName="'+e.gameName+'" data-gamePrice="'+e.gamePrice+'" data-userId="'+e._id+'"  onclick="edit(this)"><i class="mdi mdi-square-edit-outline"></i><span>Edit</span></button></td><td align="center"><button data-userId="'+e._id+'" class="btn btn-icon waves-effect waves-light btn-danger btn-sm" onclick="fun(this)"><i class=" mdi mdi-delete-forever"></i><span>Delete</span></button></td></tr>';
+                    i++
+                }); $("#ratesData").html(Html);
+            }
+        });
+    }
+
+    
+    function updateClass() {
+    const div = document.getElementById("starlinegamerates");
+    console.log("divdivdiv", div);
+
+    if (window.innerWidth < 620) {
+      div.classList.add("table-responsive");
+    } else {
+      div.classList.remove("table-responsive");
+    }
+  }
+
+  // Add event listener for window resize
+  window.addEventListener("resize", updateClass);
+
+  // Call the function on page load
+  updateClass();
+</script>

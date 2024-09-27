@@ -1,0 +1,314 @@
+<% layout('../layout') %>
+<style>
+    a {
+        cursor: pointer;
+    }
+</style>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box pt-0 pb-0">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item " aria-current="page"><a href="/dashboard"> Home </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Profile Change History</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <h4 class="mt-0 header-title">Profile Change History</h4>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div id="datatable_filter" class="dataTables_filter" style="float:right">
+                                <label>Search:<input type="search" class="form-control form-control-sm" placeholder=""
+                                        aria-controls="datatable" id="searchInputTable"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="dataTable" class="table text-center table-bordered dt-responsive nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Username </th>
+                                    <th>Bank</th>
+                                    <th>Account</th>
+                                    <th>Ifsc</th>
+                                    <th>Acc Holder</th>
+                                    <th>Paytm</th>
+                                    <th>History</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabData">
+                                <% if(records.length>0){
+                                    records.forEach(function(row){  %>
+                                <tr>
+                                    <td><%= row.username %></td>
+                                    <td><%= row.bank_name %></td>
+                                    <td><%= row.account_no %></td>
+                                    <td><%= row.ifsc_code %></td>
+                                    <td><%= row.account_holder_name %></td>
+                                    <td><%= row.paytm_number %></td>
+                                    <td>
+                                        <button class="btn btn-purple waves-effect waves-light btn-xs" id="profile"
+                                            data-toggle="modal" data-target="#custom-modal-edit"
+                                            onclick="getHistroy('<%= row._id %>')">View Chnage History </button>
+                                    </td>
+                                </tr>
+                                <% })} %>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="dataTables_info" id="numbersLine" role="status" aria-live="polite">Showing 1 to 50 of <%= count %> entries</div>
+                            </div>
+                            <div class="col-md-9">
+                                <div id="paginationDisplay">
+                                    <% if (pages > 0) { %>
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination" style="float: right;">
+                                            <% if (current == 1) { %>
+                                            <li class="page-item disabled"><a class="page-link">First</a></li>
+                                            <% } else { %>
+                                            <li class="page-item"><a class="page-link" onclick="pagination(1)">First</a>
+                                            </li>
+                                            <% } %>
+                                            <% var i = (Number(current) > 50 ? Number(current) - 4 : 1) %>
+                                            <% if (i !== 1) { %>
+                                            <li class="page-item disabled"><a class="page-link">...</a></li>
+                                            <% } %>
+                                            <% for (i; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                                            <% if (i == current) { %>
+                                            <li class="page-item active">
+                                                <a class="page-link">
+                                                    <%= i %>
+                                                </a>
+                                            </li>
+                                            <% } else { %>
+                                            <li class="page-item">
+                                                <a class="page-link" onclick="pagination('<%= i %>')">
+                                                    <%= i %>
+                                                </a>
+                                            </li>
+                                            <% } %>
+                                            <% if (i == Number(current) + 4 && i < pages) { %>
+                                            <li class="page-item disabled"><a class="page-link">...</a></li>
+                                            <% } %>
+                                            <% } %>
+                                            <% if (current == pages) { %>
+                                            <li class="page-item disabled"><a class="page-link">Last</a></li>
+                                            <% } else { %>
+                                            <li class="page-item">
+                                                <a class="page-link" onclick="pagination('<%= pages %>')">
+                                                    Last
+                                                </a>
+                                            </li>
+                                            <% } %>
+                                        </ul>
+                                    </nav>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="custom-modal-edit" class="modal fade bs-example-modal-lg show" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="myCenterModalLabel">Change History</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive" data-pattern="priority-columns">
+                    <table id="dataTable" class="table text-center table-bordered dt-responsive nowrap">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Old Bank Name</th>
+                                <th>Old Acc No</th>
+                                <th>Old Ifsc</th>
+                                <th>Old Acc Holder</th>
+                                <th>Old Paytm No.</th>
+                                <th>Chnaged At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="changeData">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function pagination(x) {
+        let skipValue = parseInt(x);
+        let searchInputTable = $("#searchInputTable").val();
+        fetch("/customerBalance/profileChange_ajax", {
+            method: 'POST',
+            body: JSON.stringify({ skipValue: skipValue, searchInputTable: searchInputTable }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'same-origin',
+        })
+        .then(res => res.json())
+        .then(body => {
+            if(body.records.length == 0){
+                let tableNoData = '<tr><td colspan="9">No Data Found</td></tr>';
+                $("#tabData").html(tableNoData);
+                let lineData = 'Showing 0 of  ' + body.total + ' entries';
+                $("#numbersLine").html(lineData);
+            }
+            else{
+                let current = body.current;
+                let pages = body.pages;
+                let recordData = body.records;
+                let html = '';
+                recordData.forEach(e => {
+                    let id =   "'"+ e._id+"'" ;
+                    html += '<tr><td>' + e.username + '</td><td>' + e.bank_name + '</td><td>' + e.account_no + '</td><td>' + e.ifsc_code + '</td><td>' + e.account_holder_name + '</td><td>' + e.paytm_number + '</td><td><button class="btn btn-purple waves-effect waves-light btn-xs" id="profile" data-toggle="modal" data-target="#custom-modal-edit" onclick="getHistroy('+id+')">View Chnage History </button></td></tr>';
+                });
+                $("#tabData").html(html);
+                let lineData = 'Showing ' + body.startEntry + ' to ' + body.lastLimit + ' of  ' + body.total + ' entries';
+                $("#numbersLine").html(lineData);
+
+                let pagination = '<nav aria-label="Page navigation example">\
+                <ul class="pagination" style="float: right;">'
+                if (current == 1) {
+                    pagination += '<li class="page-item disabled"><a class="page-link">First</a></li>'
+                } else {
+                    pagination += '<li class="page-item"><a class="page-link" onclick="pagination(1)" >First</a></li>'
+                }
+                var i = (Number(current) > 5 ? Number(current) - 4 : 1)
+                if (i !== 1) {
+                    pagination += '<li class="page-item disabled"><a class="page-link">...</a></li>'
+                }
+                for (; i <= (Number(current) + 4) && i <= pages; i++) {
+                    if (i == current) {
+                        pagination += '<li class="page-item active">'
+                        pagination += '<a class="page-link">' + i + '</a>'
+                        pagination += '</li>'
+                    } else {
+                        pagination += '<li class="page-item">'
+                        pagination += '<a class="page-link" onclick="pagination(' + i + ')" >' + i + '</a></li>'
+                    }
+                    if (i == Number(current) + 4 && i < pages) {
+                        pagination += '<li class="page-item disabled"><a class="page-link">...</a></li>'
+                    }
+                }
+                if (current == pages) {
+                    pagination += '<li class="page-item disabled"><a class="page-link">Last</a></li>'
+                } else {
+                    pagination += '<li class="page-item">'
+                    pagination += '<a class="page-link" onclick="pagination(' + pages + ')">Last</a></li>'
+                }
+                pagination += '</ul></nav>';
+                $("#paginationDisplay").html(pagination);
+            }
+        });
+    }
+
+    $("#searchInputTable").keyup(function () {
+        pagination(1);
+    });
+
+    function textSearching(x) {
+        let skipValue = parseInt(x);
+        fetch("/customerBalance/profileChange_ajax", {
+            method: 'POST',
+            body: JSON.stringify({ skipValue: skipValue }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: 'same-origin',
+        })
+            .then(res => res.json())
+            .then(body => {
+
+                let current = body.current;
+                let pages = body.pages;
+                let recordData = body.records;
+                let html = '';
+                recordData.forEach(e => {
+                    html += '<tr><td>' + e.userId + '</td><td>' + e.bank_name + '</td><td>' + e.account_no + '</td><td>' + e.ifsc_code + '</td><td>' + e.account_holder_name + '</td><td>' + e.paytm_number + '</td><td><button class="btn btn-purple waves-effect waves-light btn-xs" id="profile" data-toggle="modal" data-target="#custom-modal-edit" onclick="getHistroy(' + e._id + ')">View Chnage History </button></td></tr>';
+                });
+                $("#tabData").html(html);
+                let lineData = 'Showing ' + body.startEntry + ' to ' + body.lastLimit + ' of  ' + body.total + ' entries';
+                $("#numbersLine").html(lineData);
+
+                let pagination = '<nav aria-label="Page navigation example">\
+            <ul class="pagination" style="float: right;">'
+                if (current == 1) {
+                    pagination += '<li class="page-item disabled"><a class="page-link">First</a></li>'
+                } else {
+                    pagination += '<li class="page-item"><a class="page-link" onclick="pagination(1)" >First</a></li>'
+                }
+                var i = (Number(current) > 5 ? Number(current) - 4 : 1)
+                if (i !== 1) {
+                    pagination += '<li class="page-item disabled"><a class="page-link">...</a></li>'
+                }
+                for (; i <= (Number(current) + 4) && i <= pages; i++) {
+                    if (i == current) {
+                        pagination += '<li class="page-item active">'
+                        pagination += '<a class="page-link">' + i + '</a>'
+                        pagination += '</li>'
+                    } else {
+                        pagination += '<li class="page-item">'
+                        pagination += '<a class="page-link" onclick="pagination(' + i + ')" >' + i + '</a></li>'
+                    }
+                    if (i == Number(current) + 4 && i < pages) {
+                        pagination += '<li class="page-item disabled"><a class="page-link">...</a></li>'
+                    }
+                }
+                if (current == pages) {
+                    pagination += '<li class="page-item disabled"><a class="page-link">Last</a></li>'
+                } else {
+                    pagination += '<li class="page-item">'
+                    pagination += '<a class="page-link" onclick="pagination(' + pages + ')">Last</a></li>'
+                }
+                pagination += '</ul></nav>';
+                $("#paginationDisplay").html(pagination);
+            });
+    }
+
+    function getHistroy(id) {
+            const row_id = id;
+            fetch("/customerBalance/getHistory", {
+                method: 'POST',
+                body: JSON.stringify({ row_id: row_id }),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: 'same-origin',
+            })
+            .then(res => res.json())
+            .then(body => {
+                let histData = body.data.changeDetails;
+                let html = '';
+                let i = 1;
+                $.each(histData, function (key, value) {
+                    html += '<tr><td>' + i + '</td><td>' + value.old_bank_name + '</td><td>' + value.old_acc_no + '</td><td>' + value.old_ifsc + '</td><td>' + value.old_acc_name + '</td><td>' + value.old_paytm_no + '</td><td>' + value.changeDate + '</td></tr>';
+                    i++;
+                });
+                $('#changeData').html(html);
+            });
+    }
+</script>

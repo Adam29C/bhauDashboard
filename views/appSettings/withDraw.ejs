@@ -1,0 +1,112 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box">
+                <h4 class="m-t-0 header-title">App Withdraw Text</h4>
+                <div class="row">
+                    <% if(data == null) {%>
+                    <div class="col-12">
+                        <div class="p-2 form-horizontal">
+                            <div class="form-group row">
+                               <label class="col-sm-2  col-form-label" for="example-textarea">Title</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="title_primary" rows="5">
+                                    </textarea>
+                                    <input type="hidden" id="id" value="5db93db73fa60835e45979d1">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2  col-form-label" for="example-textarea">Secondry Title</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="title_sec" rows="5" ></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2  col-form-label" for="simpleinput">Number</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="number" class="form-control" value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2  col-form-label" for="simpleinput">Timing</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="timing" class="form-control" value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group text-right mb-0">
+                                <button class="btn btn-primary waves-effect waves-light mr-1" id="submit" type="submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <% } else{ %>
+                    <div class="col-12">
+                        <div class="p-2 form-horizontal">
+                            <div class="form-group row">
+                                <label class="col-sm-2  col-form-label" for="example-textarea">Title</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="title_primary" rows="5" >
+                                        <%= data.textMain %>
+                                    </textarea>
+                                    <input type="hidden" id="id" value="<%= data._id %>">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2  col-form-label" for="example-textarea">Secondry Title</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="title_sec" rows="5" >
+                                        <%= data.textSecondry %>
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2  col-form-label" for="simpleinput">Number</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="number" class="form-control" value="<%= data.Number %>">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2  col-form-label" for="simpleinput">Timing</label>
+                                <div class="col-sm-10">
+                                    <input type="text" id="timing" class="form-control" value="<%= data.Timing %>">
+                                </div>
+                            </div>
+                            <div class="form-group text-right mb-0">
+                                <button class="btn btn-primary waves-effect waves-light mr-1" id="submit" type="submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+<script>
+    $("#submit").click(function(){
+        const pri_title = ($('#title_primary').val()).trim();
+        const sec_title = ($('#title_sec').val()).trim();
+        const number = $('#number').val();
+        const timing = $("#timing").val();
+        const id=  $('#id').val();
+        $.ajax({
+            type: "POST",
+            url: "/appSettings/updateWithdraw",
+            data: { pri_title : pri_title, sec_title : sec_title, number: number, timing: timing,id: id },
+            success: function(data)
+            {
+                toastr["info"]("Description Updated Successfully", "Bhau777 Games");
+                location.reload();
+            }
+        });
+    });
+</script>

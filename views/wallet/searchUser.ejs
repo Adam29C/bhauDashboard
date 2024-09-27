@@ -1,0 +1,163 @@
+<% layout('../layout') %>
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box pt-0 pb-0">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item" aria-current="page">
+                <a href="/">Home</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">
+                Sales Report
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-12">
+    <div class="card-box">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="gamename">User Account Number</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Type Username"
+                id="findUser"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="col-xl-12">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <div class="input-group mt-4">
+                    <button
+                      class="btn button-color waves-effect waves-light btn-sm"
+                      onclick="seeReport()"
+                    >
+                      <span>Get Details</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-12">
+    <div class="card-box">
+      <h3 class="text-center">Current Details</h3>
+      <table
+        id="creditDebitTab"
+        class="table table-bordered nowrap text-center text-dark"
+      >
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Acc Holder</th>
+            <th>A/C NO</th>
+            <th>Bank</th>
+            <th>IFSC</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="card-box">
+      <h3 class="text-center">Old Details</h3>
+      <table
+        id="serach-table"
+        class="table table-bordered nowrap text-center text-dark"
+      >
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Old Acc No</th>
+            <th>Old Bank Name</th>
+            <th>Old IFSC</th>
+            <th>Old Acc Name</th>
+            <th>Changed On</th>
+          </tr>
+        </thead>
+        <tbody id="changebody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function seeReport() {
+    clear();
+    const acc_num = $("#findUser").val();
+    let jsonData = {
+      acc_num: acc_num.trim(),
+    };
+
+    fetch("/debitReport/getDetails", {
+      method: "POST",
+      body: JSON.stringify(jsonData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (Object.keys(json).length == 0) {
+          return toastr["warning"]("No Data Found", "Bhau777 Games");
+        }
+        let data;
+        let html;
+
+        json.forEach(function (e) {
+          let username = e.username;
+          data += `<tr><td>${e.username}</td><td>${e.account_holder_name}</td><td>${e.account_no}</td><td>${e.bank_name}</td><td>${e.ifsc_code}</td></tr>`;
+          let change = e.changeDetails;
+          change.forEach(function (e) {
+            html += `<tr><td>${username}</td><td>${e.old_acc_no}</td><td>${e.old_bank_name}</td><td>${e.old_ifsc}</td><td>${e.old_acc_name}</td><td>${e.changeDate}</td></tr>`;
+          });
+        });
+        $("#tbody").html(data);
+        $("#changebody").html(html);
+      });
+  }
+
+  function clear() {
+    let html1 = `<tr><td colspan="5">No Data Found</td></tr>`;
+    let html = `<tr><td colspan="6">No Data Found</td></tr>`;
+    $("#changebody").html(html);
+    $("#tbody").html(html1);
+  }
+
+  function updateClass() {
+    const div = document.getElementById("creditDebitTab");
+    const div1 = document.getElementById("serach-table");
+
+    if (window.innerWidth < 620) {
+      div.classList.add("table-responsive");
+      div1.classList.add("table-responsive");
+    } else {
+      div.classList.remove("table-responsive");
+      div1.classList.remove("table-responsive");
+    }
+  }
+
+  // Add event listener for window resize
+  window.addEventListener("resize", updateClass);
+
+  // Call the function on page load
+  updateClass();
+</script>

@@ -1,0 +1,323 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Starline Game Settings</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xl-12 col-md-12">
+                <div class="card-box">
+                    <h4 class="mt-0 header-title">Starline Game Settings</h4>
+                    <a href="/starlinegamesetting/addSetting" class="btn button-color btn-sm waves-effect float-right mb-2">Add New
+                        Game
+                        Settings</a>
+                    <table id="starlinegamesetting" class="table table-bordered  nowrap">
+                        <thead>
+                        <tr>
+                            <th>Sr.</th>
+                            <th>Game Name</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                            <th>Sunday</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% for(index in data){    var i = parseInt([index]);var j = i+1;  %>
+                        <tr class="text-dark">
+                            <td><%= j %></td>
+                            <td class="text-center">
+                                <b>  <%=data[index].providerName %></b>
+                                <br /> <br /> <br /> <br />
+                                <form action="/starlinegamesetting/<%= data[index]._id %>" method="post">
+                                    <button class="btn button-color waves-effect width-md waves-light btn-xs" style="margin-top: -5px;">Multiple Days Edit</button>
+                                </form>
+                            </td>
+                            <% const m = data[index].gameDetails[0];  if (m) { %>
+                            <td>
+                                <b>OBT :</b> <%= data[index].gameDetails[0].OBT %>
+                                <br>
+                                <b>CBT :</b>
+                                <%=data[index].gameDetails[0].CBT %>
+                                <br>
+                                <b>RSLT :</b>
+                                <%=data[index].gameDetails[0].OBRT %>
+                                <br>
+                                <p> <b>Is Closed :</b>
+                                    <% if (data[index].gameDetails[0].isClosed == 0) { %> Closed
+                                    <% } else { %>  Open <% } %>
+                                </p>
+                                <p class="text-center mb-0">
+                                    <button type="button" data-toggle="modal" data-gameday="<%=data[index].gameDetails[0].gameDay %>" data-userid="<%=data[index].gameDetails[0]._id %>" data-OBT="<%= data[index].gameDetails[0].OBT %>" data-CBT="<%=data[index].gameDetails[0].CBT %>" data-gamename="<%=data[index].providerName %>" data-OBRT="<%=data[index].gameDetails[0].OBRT %>" data-close="<%=data[index].gameDetails[0].isClosed %>" data-target="#custom-modal" id="" onclick="fun(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs" data-toggle="modal" data-target="#market-ratio" ><i class="mdi mdi-square-edit-outline mr-1"></i><span>Update</span></button>
+                                </p>
+                            </td>
+                            <% }else {%>
+                            <td> No Record Found </td>
+                            <%}%>
+                            <% const p = data[index].gameDetails[1];  if (p) { %>
+                            <td>
+                                <% const tue = data[index].gameDetails[1].gameDay;
+                                if (tue == "Tuesday") {
+                                %>
+                                <b>OBT :</b>  <%= data[index].gameDetails[1].OBT %>
+                                <br>
+                                <b>CBT :</b>
+                                <%=data[index].gameDetails[1].CBT %>
+                                <br>
+                                <b>RSLT :</b>
+                                <%=data[index].gameDetails[1].OBRT %>
+
+                                <br>
+                                <p> <b>Is Closed :</b>
+                                    <% if (data[index].gameDetails[1].isClosed == 0) { %> Closed
+                                    <% } else { %>  Open <% } %>
+                                </p>
+                                <p class="text-center mb-0">
+                                    <button type="button" data-toggle="modal" data-gameday="<%=data[index].gameDetails[1].gameDay %>" data-userid="<%=data[index].gameDetails[1]._id %>" data-OBT="<%= data[index].gameDetails[1].OBT %>" data-CBT="<%=data[index].gameDetails[1].CBT %>" data-gamename="<%=data[index].providerName %>" data-OBRT="<%=data[index].gameDetails[1].OBRT %>"  data-close="<%=data[index].gameDetails[1].isClosed %>" data-target="#custom-modal" id="" onclick="fun(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs" data-toggle="modal" data-target="#market-ratio" ><i class="mdi mdi-square-edit-outline mr-1"></i><span>Update</span></button>
+                                </p>
+                                <%} else {%>
+                                <b> No Record Found </b> <%}%>
+                            </td>
+                            <% }else {%>
+                            <td> No Record Found </td>
+                            <%}%>
+                            <% const a = data[index].gameDetails[2];  if (a) { %>
+                            <td>
+                                <% const wed = data[index].gameDetails[2].gameDay;
+                                if (wed == "Wednesday") {
+                                %>
+                                <b>OBT :</b>  <%= data[index].gameDetails[2].OBT %>
+                                <br>
+                                <b>CBT :</b>
+                                <%=data[index].gameDetails[2].CBT %>
+                                <br>
+                                <b>RSLT :</b>
+                                <%=data[index].gameDetails[2].OBRT %>
+                                <br>
+                                <p> <b>Is Closed :</b>
+                                    <% if (data[index].gameDetails[2].isClosed == 0) { %> Closed
+                                    <% } else { %>  Open <% } %>
+                                </p>
+                                <p class="text-center mb-0">
+                                    <button type="button" data-toggle="modal" data-gameday="<%=data[index].gameDetails[2].gameDay %>" data-userid="<%=data[index].gameDetails[2]._id %>" data-OBT="<%= data[index].gameDetails[2].OBT %>" data-CBT="<%=data[index].gameDetails[2].CBT %>" data-gamename="<%=data[index].providerName %>" data-OBRT="<%=data[index].gameDetails[2].OBRT %>"  data-close="<%=data[index].gameDetails[2].isClosed %>" data-target="#custom-modal" id="" onclick="fun(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs" data-toggle="modal" data-target="#market-ratio" ><i class="mdi mdi-square-edit-outline mr-1"></i><span>Update</span></button>
+                                </p>
+                                <%} else {%>
+                                <b> No Record Found</b> <%}%>
+                            </td>
+                            <% }else {%>
+                            <td> No Record Found </td>
+                            <%}%>
+                            <% const w = data[index].gameDetails[3];  if (w) { %>
+                            <td>
+                                <% const thu = data[index].gameDetails[3].gameDay;
+                                if (thu == "Thursday") {
+                                %>
+                                <b>OBT :</b>  <%= data[index].gameDetails[3].OBT %>
+                                <br>
+                                <b>CBT :</b>
+                                <%=data[index].gameDetails[3].CBT %>
+                                <br>
+                                <b>RSLT :</b>
+                                <%=data[index].gameDetails[3].OBRT %>
+                                <br>
+                                <p> <b>Is Closed :</b>
+                                    <% if (data[index].gameDetails[3].isClosed == 0) { %> Closed
+                                    <% } else { %>  Open <% } %>
+                                </p>
+                                <p class="text-center mb-0">
+                                    <button type="button" data-toggle="modal" data-gameday="<%=data[index].gameDetails[3].gameDay %>" data-userid="<%=data[index].gameDetails[3]._id %>" data-OBT="<%= data[index].gameDetails[3].OBT %>" data-CBT="<%=data[index].gameDetails[3].CBT %>" data-gamename="<%=data[index].providerName %>" data-OBRT="<%=data[index].gameDetails[3].OBRT %>"  data-close="<%=data[index].gameDetails[3].isClosed %>" data-target="#custom-modal" id="" onclick="fun(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs" data-toggle="modal" data-target="#market-ratio" ><i class="mdi mdi-square-edit-outline mr-1"></i><span>Update</span></button>
+                                </p>
+                                <%} else {%>
+                                <b> No Record Found</b> <%}%>
+                            </td>
+                            <% }else {%>
+                            <td> No Record Found </td>
+                            <%}%>
+                            <% const d = data[index].gameDetails[4];  if (d) { %>
+                            <td>
+                                <% const fri = data[index].gameDetails[4].gameDay;
+                                if (fri == "Friday") {
+                                %>
+                                <b>OBT :</b> <%= data[index].gameDetails[4].OBT %>
+                                <br>
+                                <b>CBT :</b>
+                                <%=data[index].gameDetails[4].CBT %>
+                                <br>
+                                <b>RSLT :</b>
+                                <%=data[index].gameDetails[4].OBRT %>
+                                <br>
+                                <p> <b>Is Closed :</b>
+                                    <% if (data[index].gameDetails[4].isClosed == 0) { %> Closed
+                                    <% } else { %>  Open <% } %>
+                                </p>
+                                <p class="text-center mb-0">
+                                    <button type="button" data-toggle="modal" data-gameday="<%=data[index].gameDetails[4].gameDay %>" data-userid="<%=data[index].gameDetails[4]._id %>" data-OBT="<%= data[index].gameDetails[4].OBT %>" data-CBT="<%=data[index].gameDetails[4].CBT %>" data-gamename="<%=data[index].providerName %>" data-OBRT="<%=data[index].gameDetails[4].OBRT %>" data-close="<%=data[index].gameDetails[4].isClosed %>" data-target="#custom-modal" id="" onclick="fun(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs" data-toggle="modal" data-target="#market-ratio" ><i class="mdi mdi-square-edit-outline mr-1"></i><span>Update</span></button>
+                                </p>
+                                <%} else {%>
+                                <b> No Record Found</b> <%}%>
+                            </td>
+                            <% }else {%>
+                            <td> No Record Found </td>
+                            <%}%>
+                            <% const f = data[index].gameDetails[5];  if (f) { %>
+                            <td>
+                                <% const sat = data[index].gameDetails[5].gameDay;
+                                if (sat == "Saturday") {
+                                %>
+                                <b>OBT :</b> <%= data[index].gameDetails[5].OBT %>
+                                <br>
+                                <b>CBT :</b>
+                                <%=data[index].gameDetails[5].CBT %>
+                                <br>
+                                <b>RSLT :</b>
+                                <%=data[index].gameDetails[5].OBRT %>
+                                <br>
+                                <p> <b>Is Closed :</b>
+                                    <% if (data[index].gameDetails[5].isClosed == 0) { %> Closed
+                                    <% } else { %>  Open <% } %>
+                                </p>
+                                <p class="text-center mb-0">
+                                    <button type="button" data-toggle="modal" data-gameday="<%=data[index].gameDetails[5].gameDay %>" data-userid="<%=data[index].gameDetails[5]._id %>" data-OBT="<%= data[index].gameDetails[5].OBT %>" data-CBT="<%=data[index].gameDetails[5].CBT %>" data-gamename="<%=data[index].providerName %>" data-OBRT="<%=data[index].gameDetails[5].OBRT %>"  data-close="<%=data[index].gameDetails[5].isClosed %>" data-target="#custom-modal" id="" onclick="fun(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs" data-toggle="modal" data-target="#market-ratio" ><i class="mdi mdi-square-edit-outline mr-1"></i><span>Update</span></button>
+                                </p>
+                                <%} else {%>
+                                <b> No Record Found </b> <%}%>
+                            </td>
+                            <% }else {%>
+                            <td> No Record Found </td>
+                            <%}%>
+                            <% const b = data[index].gameDetails[6];  if (b) { %>
+                            <td>
+                                <% const sun = data[index].gameDetails[6].gameDay;
+                                if (sun == "Sunday") {
+                                %>
+                                <b> OBT :</b>  <%= data[index].gameDetails[6].OBT %>
+                                <br>
+                                <b>CBT:</b>
+                                <%=data[index].gameDetails[6].CBT %>
+                                <br>
+                                <b>RSLT :</b>
+                                <%=data[index].gameDetails[6].OBRT %>
+                                <br>
+                                <p> <b>Is Closed :</b>
+                                    <% if (data[index].gameDetails[6].isClosed == 0) { %> Closed
+                                    <% } else { %>  Open <% } %>
+                                </p>
+                                <p class="text-center mb-0">
+                                    <button type="button" data-toggle="modal" data-gameday="<%=data[index].gameDetails[6].gameDay %>" data-userid="<%=data[index].gameDetails[6]._id %>" data-OBT="<%= data[index].gameDetails[6].OBT %>" data-CBT="<%=data[index].gameDetails[6].CBT %>" data-gamename="<%=data[index].providerName %>" data-OBRT="<%=data[index].gameDetails[6].OBRT %>" data-close="<%=data[index].gameDetails[6].isClosed %>" data-target="#custom-modal" id="" onclick="fun(this)" class="btn btn-bordred-dark waves-effect waves-light btn-xs" data-toggle="modal" data-target="#market-ratio" ><i class="mdi mdi-square-edit-outline mr-1"></i><span>Update</span></button>
+                                </p>
+                                <%} else {%>
+                                <b> No Record Found</b> <%}%>
+                            </td>
+                            <% }else {%>
+                            <td> No Record Found </td>
+                            <%}%>
+                        </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="custom-modal" tabindex="-1" role="dialog"
+                     aria-labelledby="custom-modal" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="exampleModalScrollableTitle">Modal title</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card-box">
+                                    <form role="form" action="/starlinegamesetting?_method=PATCH" method="post">
+                                        <div class="form-group">
+                                            <label for="gamename">Game Name</label>
+                                            <input  id="MGAMENAME" name="gamename" type="text"  disabled class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="result">Game Day</label>
+                                            <select  class="form-control" id="MGAMEDAY" disabled name="gameDay">
+                                                <option value="">Select Day</option>
+                                                <option value="Monday">Monday</option>
+                                                <option value="Tuesday">Tuesday</option>
+                                                <option value="Wednesday">Wednesday</option>
+                                                <option value="Thursday">Thursday</option>
+                                                <option value="Friday">Friday</option>
+                                                <option value="Saturday">Saturday</option>
+                                                <option value="Sunday">Sunday</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="result">OBT</label>
+                                            <input id="MID" name="id"  type="hidden" class="form-control ">
+                                            <input id="MOBT"  name="obt" type="text" class="form-control timepicker">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="result">CBT</label>
+                                            <input id="MCBT"  name="cbt" type="text" class="form-control timepicker">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="result">OBRT</label>
+                                            <input id="MOBRT" name="obrt" type="text" class="form-control timepicker">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="gamename">Is Closed</label>
+                                            <select class="form-control" name="close" id="MCLOSED">
+                                                <option value="1">Open</option>
+                                                <option value="0">Closed</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function fun(obj) {
+        $('#MGAMENAME').val($(obj).attr('data-gamename'));
+        $('#MGAMEDAY').val($(obj).attr('data-gameday'));
+        $('#MOBT').val($(obj).attr('data-OBT'));
+        $('#MCBT').val($(obj).attr('data-CBT'));
+        $('#MOBRT').val($(obj).attr('data-OBRT'));
+        $('#MCLOSED').val($(obj).attr('data-close'));
+        $('#MID').val($(obj).attr('data-userid'));
+    }
+
+    function updateClass() {
+    const div = document.getElementById("starlinegamesetting");
+    console.log("divdivdiv", div);
+
+    if (window.innerWidth < 620) {
+      div.classList.add("table-responsive");
+    } else {
+      div.classList.remove("table-responsive");
+    }
+  }
+
+  // Add event listener for window resize
+  window.addEventListener("resize", updateClass);
+
+  // Call the function on page load
+  updateClass();
+</script>

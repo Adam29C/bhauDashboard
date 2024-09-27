@@ -1,0 +1,271 @@
+<% layout('../layout') %>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box pt-0 pb-0">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item " aria-current="page"><a href="/"> Home </a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Profit/Loss Calculations </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box ">
+                <h4 class="mt-0 mb-0 header-title text-center">Andar Bahar Profit/Loss Calculations</h4>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-8 col-md-12">
+            <div class="card-box">
+                <p>Search Panel</p>
+                    <div class="form-row">
+                        <div class="form-group col-xl-6">
+                            <label for="gamename">Start Date</label>
+                            <input type="text" class="datepicker form-control" placeholder="Select a Date" id="gameDate" autocomplete="off">
+                        </div>
+                        <div class="form-group col-xl-6">
+                            <label for="gamename">Result Opening Time</label>
+                            <select class="form-control" id="provideId">
+                                <%  if(data){
+                                    for(index in data){
+                                %>
+                                <option value="<%= data[index]._id %>"><%= data[index].providerName %></option>
+                                <%}
+                                } %>
+                            </select>
+                        </div>
+                    </div>
+                    <center>
+                        <button class="btn btn-danger waves-effect waves-light btn-sm">Cancel</button>
+                        <button type="submit" class="btn button-color  btn-sm" id="submitInfo">Submit</button>
+                    </center>
+            </div>
+        </div>
+        <div class="col-xl-4 col-md-12">
+            <div class="card-box">
+                <table class="tablesaw table mb-0 tablesaw-swipe" data-tablesaw-mode="swipe" data-tablesaw-mode-switch="" data-tablesaw-minimap="" id="tablesaw-5771">
+                    <thead>
+                    <tr>
+                        <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-sortable-default-col="" data-tablesaw-priority="3" class="">Type</th>
+                        <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2" class="">Bids</th>
+                        <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1" class="">Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody style="font-size: 12px;" id="groupData">
+                        <tr ><td class="text-center" colspan="3">No Data Available</td></tr>
+                    </tbody>
+                    <thead id="tfoot">
+                        <tr >
+                            <th  data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class=" tablesaw-swipe-cellpersist">Grand Total</th>
+                            <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2"></th>
+                            <th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-xl-12 col-md-12">
+            <div class="card-box">
+                <div class="table-responsive" data-pattern="priority-columns">
+                    <table id="datatable4" class="table table-bordered dt-responsive nowrap text-center text-dark">
+                        <thead>
+                        <tr>
+                            <th>Digits</th>
+                            <th>Bid Count</th>
+                            <th>Total Bids </th>
+                            <th>Amount To Pay</th>
+                            <th>Amount To Pay Calculated</th>
+                            <th>Profit</th>
+                            <th>Loss</th>
+                        </tr>
+                        </thead>
+                        <tbody id="dataJodi">
+                        </tbody>
+                        <tfoot id="sumTotal">
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-xl show" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-modal="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myExtraLargeModalLabel">Transaction History</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive" data-pattern="priority-columns">
+                        <table id="datatable2" class="table table-bordered dt-responsive nowrap text-center text-dark">
+                            <thead>
+                            <tr>	
+                                <th>Sno</th>		
+                                <th>User Name</th>
+                                <th>Bracket</th>
+                                <th>Amount </th>
+                                <th>Win status</th>
+                                <th>Played Time</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $("#submitInfo").click(function()
+    {
+        const id = $("#provideId").val();
+        const gameDate = $("#gameDate").val();
+        $('#datatable4').DataTable().destroy();
+        $.ajax({
+        type: "post",
+        url: "/ABProfitLoss/getResult",
+        data: { provider : id, date: gameDate },
+        success: function (data) {
+            if (Object.keys(data.data).length === 0 && Object.keys(data.data2).length === 0)
+                {
+                    toastr["warning"]("No Data Found","Bhau777 Bets Games");
+                    $("#groupData").html('<tr class="text-center"><td colspan = "4">No Data Available</td></tr>');
+                    $('#sumTotal').html('');
+                    $('#datatable4').DataTable().clear().draw();
+                }
+            else
+            {
+                let html;
+                let TotalBid = 0;
+                let TotalSum = 0;
+                const gamePrice = data.type[0].gamePrice;
+                data.data.forEach(function(e){
+                    html +='<tr><td>'+e.gameType+'</td><td>'+e.countBid+'</td><td>'+e.sumdigit+'</td></tr>';
+                    TotalBid = TotalBid + e.countBid;
+                    TotalSum = TotalSum + e.sumdigit;
+                });
+                $("#groupData").html(html);
+                $("#tfoot").html('<tr><th data-tablesaw-sortable-col="" data-tablesaw-priority="persist" class=" tablesaw-swipe-cellpersist">Grand Total</th><th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="2">'+ TotalBid +'</th><th scope="col" data-tablesaw-sortable-col="" data-tablesaw-priority="1" >'+ TotalSum +'</th></tr>');
+                let jodiArray = [];
+                let total = 0;
+                
+                data.data2.forEach(function(e) {
+                    let loss = 0;
+                    var profit = 0;
+                    let pl = e.sumdigit * gamePrice;
+                    if(pl > TotalSum){//loss
+                        loss = pl - TotalSum;
+                    }
+                    else{//profit
+                        profit = TotalSum - pl;
+                    }
+
+
+                    jodiArray[e._id] = { 
+                            'Digit' : e._id, 
+                            'bidCount' : '<button class="btn btn-dark btn-rounded width-md waves-effect waves-light btn-xs" data-id="'+id+'" data-date="'+gameDate+'" data-digit="'+e._id+'" data-toggle="modal" data-target=".bs-example-modal-xl" onclick="getBidInfo(this)">View Bids Info ('+e.countBid+')</button>',
+                            'sumdigit' : e.sumdigit,
+                            'amountToPay' : '<p>'+e.sumdigit + '*' + gamePrice + '</p>',
+                            'amountToPayCal' : '<p>'+e.sumdigit + '*' + gamePrice + '=' + parseInt(e.sumdigit * gamePrice) +'</p>',
+                            'profit' : profit,
+                            'loss' : loss
+                    }
+
+                    total = total + e.sumdigit;
+                });   
+                var panaArray = [
+                    "00",'01',"02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37",'38',"39","40","41","42","43","44","45","46","47",'48',"49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99" ]
+                let jodiTable = '';
+
+
+                panaArray.forEach(function(e)
+                {   
+                    let Digit = e;
+                    let bidCount = 0;
+                    let amountToPay = 0;
+                    let sumdigit = 0;
+                    let profit = TotalSum;
+                    let amtToPayCal = 0;
+                    let loss = 0;
+                    if(jodiArray[Digit]){
+                        bidCount = jodiArray[Digit].bidCount;
+                        amountToPay = jodiArray[Digit].amountToPay; 
+                        sumdigit = jodiArray[Digit].sumdigit; 
+                        amtToPayCal = jodiArray[Digit].amountToPayCal;
+                        profit = jodiArray[Digit].profit;
+                        loss = jodiArray[Digit].loss; 
+
+                    }
+
+                    jodiTable += '<tr><td>'+ Digit +'</td>\
+                        <td>'+bidCount+'</td>\
+                        <td>'+ sumdigit +'</td>\
+                        <td>'+ amountToPay +'</td>\
+                        <td>'+ amtToPayCal +'</td>\
+                        <td style="color:#22b922">'+ profit +'</td>\
+                        <td style="color:red">'+ loss  +'</td></tr>';
+                });
+                $('#dataJodi').html(jodiTable);
+                $("#sumTotal").html('<tr><th colspan="7">Total Bidding Amount: '+total+'</th></tr>');
+                $('#datatable4').DataTable({
+                        "pageLength": 50
+                });
+            }
+        },
+        error: function (e) {
+                alert("Contact Support Patner: " + JSON.stringify(e));
+            }
+       });
+    });
+
+    function getBidInfo (obj){
+        const date = $(obj).attr("data-date");
+        const id= $(obj).attr('data-id');
+        const digit = $(obj).attr('data-digit');
+        $.ajax({
+            type : "POST",
+            url: '/ABProfitLoss/getBidData',
+            data: {date: date, id: id, bidDigit: digit},
+            success: function(data)
+            {
+                let i =1;
+                $("#datatable2").DataTable().clear();
+                data.forEach(function(e) {
+                    let status = "Loss"
+                    if(e.winStatus === 1){
+                        status = "Win"
+                    }
+                    $('#datatable2').dataTable().fnAddData([
+                       i,
+                       e.userName,
+                       e.bidDigit,
+                       e.biddingPoints,
+                       status,
+                       e.createdAt
+                    ]);
+                    i++
+                });
+            },
+            error: function(error){
+               alert("Contact Support Patner: " + JSON.stringify(error));
+            }
+        });
+    }
+</script>
