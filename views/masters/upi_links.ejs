@@ -31,7 +31,7 @@
       <div class="col-xl-12 col-md-12">
         <div class="card-box">
           <h4 class="mt-0 mb-0 header-title text-center">All Fund Mode List</h4>
-          <div class="table-responsive mt-3 ">
+          <div class="table-responsive mt-3">
             <table
               class="table table-centered table-bordered mb-0 w-100 text-center"
               id="UpiTable"
@@ -152,7 +152,6 @@
     </div>
   </div>
 
-<!-- 
   <div class="container-fluid">
     <div class="row">
       <div class="col-xl-12 col-md-12">
@@ -170,23 +169,22 @@
             ><span> Add New </span> <i class="fa fa-plus ml-1"></i
           ></a>
           <table
-            class="table table-centered table-bordered mb-0 text-center mt-3"
-            id="btn-editable"
+            class="table table-centered table-bordered mb-0 text-center mt-3 w-100"
+            id="paymentModeTable"
           >
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Status</th>
                 <th>Action</th>
-                <th>Delete</th>
               </tr>
             </thead>
-            <tbody id="paymentModeTable"></tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <div id="for-manual-payment" class="modal-demo">
     <button type="button" class="close" onclick="Custombox.modal.close();">
@@ -195,27 +193,27 @@
     <h4 class="custom-modal-title">Add New UPI</h4>
     <div class="custom-modal-text">
       <div class="form-group">
-        <label for="userName">UPI Id</label>
+        <label for="userName">Name</label>
         <input
           type="text"
           name="upiName"
           parsley-trigger="change"
           class="form-control"
-          id="upiName"
+          id="upiName123"
         />
         <p id="errorText"></p>
       </div>
       <div class="form-group">
         <label for="userName">Status</label>
-        <select class="form-control" name="status" id="status143">
-          <option value="true">Active</option>
-          <option value="false">Disabled</option>
+        <select class="form-control" name="status" id="status123">
+          <option value="enable">Enable</option>
+          <option value="disable">Disabled</option>
         </select>
       </div>
       <div class="form-group text-right mb-0">
         <button
           class="btn btn-primary waves-effect waves-light mr-1"
-          onclick="insertdata();"
+          onclick="insertdata123();"
         >
           Submit
         </button>
@@ -513,11 +511,9 @@
     }
   }
 
+  // ----------------- for manage payment mode -----------------
 
-// ----------------- for manage payment mode -----------------
-
-
-function GetUPIData() {
+  function GetUPIData() {
     $.ajax({
       type: "GET",
       url: "/paymentMode/listGateways",
@@ -575,11 +571,110 @@ function GetUPIData() {
 
   document.addEventListener("DOMContentLoaded", GetUPIData);
 
+  // --------------------------------------------------
 
+  function GetUPIData123() {
+    $.ajax({
+      type: "GET",
+      url: "/payModeStatus/getPaymentModeStatus",
+      data: {},
+      success: function (result) {
+        console.log("result", result);
 
+        let message = result.message;
+        if (result.status) {
+          let data = result.message;
 
+          const tableBody = document.querySelector("#paymentModeTable tbody");
+          data.forEach((item) => {
+            let id = "mb" + item._id;
+            let activeStatus = item.status;
+            let dispText = activeStatus == "enable" ? "Enable" : "Disabled";
 
+            let button = `
+    <select className="form-select form-select-sm" aria-label=".form-select-sm example" id="managestatus123" value="${activeStatus}"
+    onchange="UpdateStatus123('${item._id}' ,);"
+    >
+      <option disabled>Select Actions</option>
+      <option value="enable" ${
+        activeStatus === "enable" ? "selected" : ""
+      }>Enable</option>
+      <option value="disable" ${
+        activeStatus === "disable" ? "selected" : ""
+      }>Disable</option>
+    </select>
+  `;
 
+            let html =
+              '<tr id="' +
+              id +
+              '">' +
+              "<td>" +
+              item.modeName +
+              "</td>" +
+              "<td>" +
+              dispText +
+              "</td>" +
+              "<td>" +
+              button +
+              "</td>";
+            ("</tr>");
 
+            tableBody.insertAdjacentHTML("beforeend", html);
+          });
+        }
+      },
+    });
+  }
 
+  document.addEventListener("DOMContentLoaded", GetUPIData123);
+
+  function insertdata123() {
+    const name = document.getElementById("upiName123").value;
+    const status = document.getElementById("status123").value;
+
+    $.ajax({
+      type: "POST",
+      url: "/payModeStatus/addPaymentModeStatus",
+      data: { modeName: name, status: status },
+      success: function (result) {
+        let message = result.message;
+
+        if (result.status) {
+          window.location.reload();
+          Custombox.modal.close();
+          toastr["success"](message, "Bhau777 Bets Games");
+        } else {
+          toastr["success"](message, "Bhau777 Bets Games");
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error:", xhr);
+        toastr["error"](
+          xhr.responseJSON.msg ,
+          "Bhau777 Bets Games"
+        ); // Display failure message
+      },
+    });
+  }
+
+  function UpdateStatus123(bankId) {
+    const status1 = document.getElementById("managestatus123").value;
+
+    const id = bankId;
+    const status = status1;
+    $.ajax({
+      type: "PATCH",
+      url: "/payModeStatus/updatePaymentModeStatus",
+      data: { id: id, status: status },
+      success: function (result) {
+        let message = result.message;
+        if (result.status) {
+          window.location.reload();
+        } else {
+          toastr["warning"](message, "Bhau777 Bets Games");
+        }
+      },
+    });
+  }
 </script>
