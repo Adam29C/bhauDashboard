@@ -31,17 +31,9 @@
       <div class="col-xl-12 col-md-12">
         <div class="card-box">
           <h4 class="mt-0 mb-0 header-title text-center">All Fund Mode List</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card-box">
-          <div class="table-responsive">
+          <div class="table-responsive mt-3 ">
             <table
-              class="table table-centered table-bordered mb-0 text-center"
+              class="table table-centered table-bordered mb-0 w-100 text-center"
               id="UpiTable"
             >
               <thead>
@@ -76,18 +68,9 @@
             style="float: right; margin-top: -28px"
             ><span> Add New UPI </span> <i class="fa fa-plus ml-1"></i
           ></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card-box">
-          <div class="table-responsive">
+          <div class="table-responsive mt-3">
             <table
-              class="table table-centered table-bordered mb-0 text-center"
+              class="table table-centered table-bordered mb-0 text-center w-100"
               id="btn-editable"
             >
               <thead>
@@ -168,6 +151,79 @@
       </div>
     </div>
   </div>
+
+<!-- 
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 col-md-12">
+        <div class="card-box">
+          <h4 class="mt-0 mb-0 header-title text-center">
+            Manage Payment Modes
+          </h4>
+          <a
+            href="#for-manual-payment"
+            class="btn btn-primary btn-sm waves-effect"
+            data-animation="slit"
+            data-plugin="custommodal"
+            data-overlaycolor="#36404a"
+            style="float: right; margin-top: -28px"
+            ><span> Add New </span> <i class="fa fa-plus ml-1"></i
+          ></a>
+          <table
+            class="table table-centered table-bordered mb-0 text-center mt-3"
+            id="btn-editable"
+          >
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Action</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody id="paymentModeTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div id="for-manual-payment" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.modal.close();">
+      <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Add New UPI</h4>
+    <div class="custom-modal-text">
+      <div class="form-group">
+        <label for="userName">UPI Id</label>
+        <input
+          type="text"
+          name="upiName"
+          parsley-trigger="change"
+          class="form-control"
+          id="upiName"
+        />
+        <p id="errorText"></p>
+      </div>
+      <div class="form-group">
+        <label for="userName">Status</label>
+        <select class="form-control" name="status" id="status143">
+          <option value="true">Active</option>
+          <option value="false">Disabled</option>
+        </select>
+      </div>
+      <div class="form-group text-right mb-0">
+        <button
+          class="btn btn-primary waves-effect waves-light mr-1"
+          onclick="insertdata();"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- -----------------------------  add -->
+
   <div id="custom-modal" class="modal-demo">
     <button type="button" class="close" onclick="Custombox.modal.close();">
       <span>&times;</span><span class="sr-only">Close</span>
@@ -418,14 +474,14 @@
     //     if (result.status === 1) {
     //       window.location.reload();
     //     } else {
-    //       toastr["warning"](message, "Bhau777 Games");
+    //       toastr["warning"](message, "Indo Bets Games");
     //     }
     //   },
     //   error: function (xhr, status, error) {
     //     console.error("AJAX error:", status, error);
     //     toastr["error"](
     //       "An error occurred while processing your request.",
-    //       "Bhau777 Games"
+    //       "Indo Bets Games"
     //     );
     //   },
     // });
@@ -456,4 +512,74 @@
       });
     }
   }
+
+
+// ----------------- for manage payment mode -----------------
+
+
+function GetUPIData() {
+    $.ajax({
+      type: "GET",
+      url: "/paymentMode/listGateways",
+      data: {},
+      success: function (result) {
+        // console.log("result", result);
+
+        let message = result.message;
+        if (result.status) {
+          // console.log("result", result.data);
+          let data = result.data;
+
+          const tableBody = document.querySelector("#UpiTable tbody");
+          data.forEach((item) => {
+            let id = "mb" + item._id;
+            let activeStatus = item.status;
+            let dispText = activeStatus ? "Active" : "Disabled";
+            let bankId = "'" + item._id + "'";
+
+            let button = `
+    <select className="form-select form-select-sm" aria-label=".form-select-sm example" id="managestatus" value="${activeStatus}"
+    onchange="UpdateStatus('${item._id}' ,);"
+    >
+      <option disabled>Select Actions</option>
+      <option value="active" ${
+        activeStatus === "active" ? "selected" : ""
+      }>Active</option>
+      <option value="disable" ${
+        activeStatus === "disable" ? "selected" : ""
+      }>Disable</option>
+    </select>
+  `;
+
+            let html =
+              '<tr id="' +
+              id +
+              '">' +
+              "<td>" +
+              item.paymentMode +
+              "</td>" +
+              "<td>" +
+              dispText +
+              "</td>" +
+              "<td>" +
+              button +
+              "</td>";
+            ("</tr>");
+
+            tableBody.insertAdjacentHTML("beforeend", html);
+          });
+        }
+      },
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", GetUPIData);
+
+
+
+
+
+
+
+
 </script>
