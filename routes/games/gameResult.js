@@ -130,6 +130,7 @@ router.get("/revertPayment", session, permission, async (req, res) => {
 			res.render("./dashboard/starterPage", {
 				userInfo: userInfo,
 				permission: permissionArray,
+				title: "Dashboard",
 			});
 		}
 	} catch (e) {
@@ -715,7 +716,7 @@ router.post("/paymentRevert", session, async (req, res) => {
 				let arrValue = {
 					userId: userid,
 					bidId: rowId,
-					filterType: 3,
+					filterType: 8,
 					reqType: "main",
 					previous_amount: walletBal,
 					current_amount: revertBalance,
@@ -805,6 +806,7 @@ router.get("/refundPayment", session, permission, async (req, res) => {
 		res.render("./dashboard/starterPage", {
 			userInfo: userInfo,
 			permission: permissionArray,
+			title: "Dashboard",
 		});
 	}
 });
