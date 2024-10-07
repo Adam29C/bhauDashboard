@@ -435,6 +435,7 @@ router.get("/refundPayment", session, permission, async (req, res) => {
 		res.render("./dashboard/starterPage", {
 			userInfo: userInfo,
 			permission: permissionArray,
+			title: "Dashboard",
 		});
 	}
 });

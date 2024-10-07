@@ -42,8 +42,7 @@ module.exports = async function (req, res, sumDgit, uesrtoken) {
                     break;
             }
             let length = token.length;
-            console.log("if condition execute")
-            if (length > 500) {
+            if (length > 400) {
                 let finalArr = token.map(token => token.firebaseId).filter(firebaseId => firebaseId !== "");
                 let finalToken = chunks(finalArr, 500);
                 let newLength = finalToken.length;
@@ -53,8 +52,7 @@ module.exports = async function (req, res, sumDgit, uesrtoken) {
                 }
             }
             else {
-                const userToken = token.map(token => token.firebaseId);
-                console.log("Else condition execute")
+                const userToken = token.map(token => token.firebaseId).filter(firebaseId => firebaseId !== "");
                 sendMutipalNotification(userToken, title, body, notificationType)
             }
         } else {
@@ -101,10 +99,12 @@ const sendMutipalNotification = async (tokenArr, title, body, notificationType) 
             icon: 'ic_launcher',
             type: notificationType,
         },
-        tokens: tokenArr,
     };
     try {
-        const response = await messaging.sendMulticast(message);
+        const response = await messaging.sendEachForMulticast({
+            tokens: tokenArr,
+            ...message,
+        });
         if (response.failureCount > 0) {
             response.responses.forEach((resp, idx) => {
                 if (!resp.success) {

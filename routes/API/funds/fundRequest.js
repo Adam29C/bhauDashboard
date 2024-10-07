@@ -1053,35 +1053,30 @@ router.post("/newAutoPaymentUpi", async (req, res) => {
 
 				update(amount);
 
-				res.json({
+				return res.json({
 					status: 1,
-					message:
-						"Previous Balance : " +
-						userBalance +
-						", \n Current Balance : " +
-						updatedBal,
-					updatedBal: updatedBal,
+					updatedBal: `₹ ${updatedBal}.00`,
 				});
 			} else if (status == "pending" || status == "submitted") {
-				res.json({
+				return res.json({
 					status: 1,
 					message:
 						"Your Payment Status is pending, Kindly Share Screenshot with Support To Add Point If Your Payment is Deducted",
 				});
 			} else {
-				res.json({
+				return res.json({
 					status: 0,
 					message: "Please Try Again Later",
 				});
 			}
 		} else {
-			res.json({
+			return res.json({
 				status: 0,
 				message: "User Not Found",
 			});
 		}
 	} catch (error) {
-		res.json({
+		return res.json({
 			status: 0,
 			message: "Something Bad Happened Contact Support",
 			error: error,
