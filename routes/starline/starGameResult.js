@@ -632,10 +632,14 @@ async function sendRefundNotification(tokenArray, name, body) {
         },
     };
     for (let chunk of tokenChunks) {
-        message.tokens = chunk;
+        // message.tokens = chunk;
         try {
-            const response = await messaging.sendMulticast(message);
-            if (response.failureCount > 0) {
+            // const response = await messaging.sendEachForMulticast(message);
+            const response = await messaging.sendEachForMulticast({
+				tokens: chunk,
+				...message,
+			});
+			if (response.failureCount > 0) {
                 response.responses.forEach((resp, idx) => {
                     if (!resp.success) {
                         console.error(`Failed to send to ${chunk[idx]}: ${resp.error}`);
