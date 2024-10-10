@@ -275,14 +275,14 @@ router.post("/updateData", session, async (req, res) => {
 		if (type == 1) {
 			let userToken = [];
 			userToken.push(firebaseToken);
-			let title = "Your Credit (Deposit) Request Of Rs. " + bal + "/- is Approved ✔️🤑💰";
-			let body = "Hello " + username + " 🤩🤩";
+			let title = `Your Credit (Deposit) Request Of Rs.${bal}/- is Approved ✔️🤑💰.\nRegards,\nBhau 777`;
+			let body = `Dear ${username} 🤩🤩`;
 			notification(userToken, title, body);
 		}else{
 			let userToken = [];
 			userToken.push(firebaseToken);
-			let title = "Your Debit (Withdrawal) Request Of Rs. " + bal + "/- is Approved ✔️🤑💰";
-			let body = "Hello " + username + " 🤩🤩";
+			let title = `Your Debit (Withdrawal) Request Of Rs.${bal}/- is Approved ✔️🤑💰.\nRegards,\nBhau 777`;
+			let body = `Dear ${username} 🤩🤩`;
 			notification(userToken, title, body);
 		}
 		res.json({

@@ -715,8 +715,8 @@ router.post("/addpoint", async (req, res) => {
 			if (requestType === 1) {
 				// body = "Wallet Notification";
 				// title = `Your Credit Request Of Rs. ${amount}-/ is Approved`
-				title = `Your Credit (Deposit) Request Of Rs.${amount}/- is Approved ✔️🤑💰`;
-			    body = `Hello ${username} 🤩🤩`;
+				title = `Your Credit Request Of Rs.${amount}-/ is Approved.\nRegards,\nBhau 777`;
+			    body = `Wallet Notification`;
 				wallet_balance = wallet_balance + parseInt(amount);
 				reqType = "Credit";
 				desc = "Amount Added To Wallet By Admin";
@@ -750,8 +750,8 @@ router.post("/addpoint", async (req, res) => {
 						message: `Your Withdrawal request amount is greater than to your current amount ${user.wallet_balance}`,
 					});
 				}
-				title = `Your Debit (Withdrawal) Request Of Rs. ${amount}/- is Approved ✔️🤑💰`;
-			    body = `Hello ${username} 🤩🤩`;
+				title = `Your Debit (Withdrawal) Request Of Rs. ${amount}/- is Approved ✔️🤑💰.\nRegards,\nBhau 777`;
+				body = `Hello ${username} 🤩🤩`;
 				// body = "Wallet Notification";
 				// title = `Your Debit Request Of Rs. ${amount}-/ is Approved`
 				wallet_balance = wallet_balance - parseInt(amount);
@@ -1047,7 +1047,7 @@ router.post("/newAutoPaymentUpi", async (req, res) => {
 
 				let userToken = [];
 				userToken.push(firebaseToken);
-				let title = "Your Credit Request Of Rs. " + amount + " is Approved";
+				let title = `Your Credit Request Of Rs.${amount}is Approved.\nRegards,\nBhau 777`;
 				let body = "Wallet Notification";
 				notification(userToken, title, body);
 
@@ -1221,11 +1221,8 @@ router.post("/addPaymentOnline", async (req, res) => {
 
 			let userToken = [];
 			userToken.push(userCheck.firebaseId);
-			let title =
-				"Your Credit Request Of Rs. " +
-				transaction_amount +
-				"/- is Approved ✔️🤑💰";
-			let body = "Hello " + username + " 🙋‍♂️🤩";
+			let title =`Your Credit Request Of Rs.${transaction_amount}/- is Approved ✔️🤑💰.\nRegards,\nBhau 777`;
+			let body = `Dear ${username} 🙋‍♂️🤩`;
 			notification(userToken, title, body);
 		}
 
@@ -1371,11 +1368,8 @@ router.post("/addPaymentOnlinePayu", async (req, res) => {
 
 			let userToken = [];
 			userToken.push(userCheck.firebaseId);
-			let title =
-				"Your Credit Request Of Rs. " +
-				transaction_amount +
-				"/- is Approved ✔️🤑💰";
-			let body = "Hello " + username + " 🙋‍♂️🤩";
+			let title =`Your Credit Request Of Rs.${transaction_amount}/- is Approved ✔️🤑💰.\nRegards,\nBhau 777`;
+			let body = `Hello ${username} 🙋‍♂️🤩`;
 			notification(userToken, title, body);
 		}
 

@@ -18,7 +18,6 @@ const morgan = require("morgan");
 const whatsAppCron = require("./routes/whatsapp/whatsapp");
 const fs = require('fs');
 const https = require('https'); // Add HTTPS module
-
 // var MemoryStore = require('memorystore')(session)
 
 //API ROUTES

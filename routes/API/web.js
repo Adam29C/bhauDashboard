@@ -971,7 +971,7 @@ router.post("/web/startline_pana_chart", async (req, res) => {
       isClosed: 1,
     });
     let UpperCaseFormate = provider.providerName.toUpperCase();
-    const gameResultsList = await starline_game_Result.find({ providerId: id })
+    const gameResultsList = await starline_game_Result.find({ providerId: id });
     const groupedByWeek = {};
     gameResultsList.forEach((item) => {
       const resultDate = moment(item.resultDate, "MM/DD/YYYY");
@@ -990,7 +990,7 @@ router.post("/web/startline_pana_chart", async (req, res) => {
       }
       groupedByWeek[weekKey].items.push(item);
     });
-    let providerId = "620b5a50ab709c4b86fe704c";
+    let providerId = "";
     const groupedDataByWeek = Object.entries(groupedByWeek).map(
       ([weekNumber, { items, startDate, endDate }]) => {
         providerId = items[0].providerId;
@@ -1002,13 +1002,31 @@ router.post("/web/startline_pana_chart", async (req, res) => {
           weekDays[formattedDate] = [];
         }
         // items.forEach((item) => {
-        //   const formattedDate = item.resultDate;
+        // const formattedDate = item.resultDate;
         //   if (!weekDays[formattedDate]) {
         //     weekDays[formattedDate] = [];
         //   }
         //   weekDays[formattedDate].push(item);
         // });
-
+        let ifCount;
+        let calculateDate;
+        for (let i = 0; i < openCount; i++) {
+          if (items[i]?.resultDate) {
+            const formattedDate = items[i].resultDate;
+            ifCount = i
+            calculateDate = formattedDate;
+            if (!weekDays[formattedDate]) {
+              weekDays[formattedDate] = [];
+            }
+            weekDays[formattedDate].push(items[i]);
+          } else {
+            let finalCount = i - ifCount
+            let currentDate = moment(calculateDate, 'MM/DD/YYYY');
+            let futureDate = currentDate.add(finalCount, 'days');
+            formattedDate = futureDate.format('MM/DD/YYYY')
+            weekDays[formattedDate] = [];
+          }
+        }
         return {
           startDate,
           endDate,
@@ -1016,7 +1034,6 @@ router.post("/web/startline_pana_chart", async (req, res) => {
         };
       }
     );
-
     groupedDataByWeek.forEach((week) => {
       Object.keys(week.weekDays).forEach((date) => {
         if (week.weekDays[date].length === 0) {
@@ -1055,7 +1072,6 @@ router.post("/web/startline_pana_chart", async (req, res) => {
         };
       }),
     };
-
     res.send({ data: finalGroupedDataByWeek.data, status: true });
   } catch (e) {
     res.json({
@@ -1175,7 +1191,7 @@ router.post("/web/startline_pana_chart", async (req, res) => {
 router.post("/web/jackpot_jodi_chart", async (req, res) => {
   try {
     const { name, id } = req.body;
-    const provider = await starProvider.findOne(
+    const provider = await AB_provider.findOne(
       { _id: id }
     );
     if (!provider) {
@@ -1210,7 +1226,7 @@ router.post("/web/jackpot_jodi_chart", async (req, res) => {
       }
       groupedByWeek[weekKey].items.push(item);
     });
-    let providerId = "620b5a50ab709c4b86fe704c";
+    let providerId = "";
     const groupedDataByWeek = Object.entries(groupedByWeek).map(
       ([weekNumber, { items, startDate, endDate }]) => {
         providerId = items[0].providerId;
@@ -1229,7 +1245,25 @@ router.post("/web/jackpot_jodi_chart", async (req, res) => {
         //   }
         //   weekDays[formattedDate].push(item);
         // });
-
+        let ifCount;
+        let calculateDate;
+        for (let i = 0; i < openCount; i++) {
+          if (items[i]?.resultDate) {
+            const formattedDate = items[i].resultDate;
+            ifCount = i
+            calculateDate = formattedDate;
+            if (!weekDays[formattedDate]) {
+              weekDays[formattedDate] = [];
+            }
+            weekDays[formattedDate].push(items[i]);
+          } else {
+            let finalCount = i - ifCount
+            let currentDate = moment(calculateDate, 'MM/DD/YYYY');
+            let futureDate = currentDate.add(finalCount, 'days');
+            formattedDate = futureDate.format('MM/DD/YYYY')
+            weekDays[formattedDate] = [];
+          }
+        }
         return {
           startDate,
           endDate,
@@ -1237,7 +1271,6 @@ router.post("/web/jackpot_jodi_chart", async (req, res) => {
         };
       }
     );
-
     groupedDataByWeek.forEach((week) => {
       Object.keys(week.weekDays).forEach((date) => {
         if (week.weekDays[date].length === 0) {
