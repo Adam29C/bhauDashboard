@@ -161,7 +161,7 @@ router.post("/updateWallet/:id", session, async (req, res) => {
       particular = particular;
       reqType = "Credit";
       filter = 4
-      title = `Your Credit Request Of Rs. ${bal} is Approved`;
+      title = `Your Credit Request Of Rs.${parseInt(bal)}/- is Approved.\nRegards,\nBhau 777`;
       body = "Wallet Notification";
     }
     if (id == 2) {
@@ -170,8 +170,8 @@ router.post("/updateWallet/:id", session, async (req, res) => {
       particular = particular;
       reqType = "Debit";
       filter = 5
-      title = `Your Debit (Withdrawal) Request Of Rs.${parseInt(bal)}/- is Approved ✔️🤑💰`;
-	    body = `Hello ${username} 🤩🤩`;
+      title = `Your Debit (Withdrawal) Request Of Rs.${parseInt(bal)}/- is Approved ✔️🤑💰.\nRegards,\nBhau 777`;
+	    body = `Dear ${username} 🤩🤩`;
     }
     await User.updateOne(
       { _id: userId },

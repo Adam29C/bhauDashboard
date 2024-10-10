@@ -924,7 +924,7 @@ router.post("/refundAll", session, async (req, res) => {
 			const save = await arrValue.save();
 			tokenArray.push(firebaseId);
 			const name = singleUserBidUpdate.providerName;
-			const body = `Hello ${singleUserUpdate.username}, Your Bid Amount ${biddingPoints}/- RS Is Refund Successful In Your Wallet!`;
+			const body = `Dear ${singleUserUpdate.username}, Your Bid Amount ${biddingPoints}/- RS Is Refund Successful In Your Wallet!.\nRegards,\nBhau 777`
 			sendRefundNotification(tokenArray, name, body);
 		} else {
 			const userlist = await gameBids.find({

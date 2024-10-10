@@ -180,8 +180,8 @@ router.post("/decline", session, async (req, res) => {
 		// 	response
 		// ) {});
 
-		let title = `Your Debit (Withdrawal) Request is decline for ${reason} 😌😌`;
-		let body = `Hello ${userName}`;
+		let title = `Your Debit (Withdrawal) Request is decline for ${reason} 😌😌.\nRegards,\nBhau 777`;
+		let body = `Dear ${userName}`;
 		notification(token, title, body);
 
 		res.json({
@@ -288,8 +288,8 @@ router.post("/approveReq", session, async (req, res) => {
 
 			let userToken = [];
 			userToken.push(userDetail.firebaseId);
-			let title = `Your Debit (Withdrawal) Request Of Rs.${transaction_amount}/- is Approved ✔️🤑💰`;
-			let body = `Hello ${userName} 🤩🤩`;
+			let title = `Your Debit (Withdrawal) Request Of Rs.${transaction_amount}/- is Approved ✔️🤑💰.\nRegards,\nBhau 777`;
+			let body = `Dear ${userName} 🤩🤩`;
 			notification(userToken, title, body);
 		}
 

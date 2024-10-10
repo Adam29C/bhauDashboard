@@ -15,7 +15,7 @@ module.exports = async function (data) {
                     let userFirebase = await users.findOne({ _id: id, mainNotification: true }, { firebaseId: 1 });
                     let token = userFirebase.firebaseId;
 
-                    let body = `Your ${userId[index].reqType} Request Of Rs ${userId[index].reqAmount}/- Is Auto Expired`;
+                    let body = `Your ${userId[index].reqType} Request Of Rs ${userId[index].reqAmount}/- Is Auto Expired.\nRegards,\nBhau 777`
                     let message = {
                         android: {
                             priority: 'high',

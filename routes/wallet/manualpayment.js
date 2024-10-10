@@ -140,8 +140,8 @@ router.patch("/approveManualPayment", async (req, res) => {
     await manualPayment.findByIdAndUpdate(id, { status: "approve" });
 
     const userToken = [userDetails.firebaseId];
-    const body = `Hello ${userDetails.username}`;
-    const title = `${manualPaymentDetails.amount} rs deposit request is approved ✅`;
+    const body = `Dear ${userDetails.username}`;
+    const title = `${manualPaymentDetails.amount} rs deposit request is approved ✅.\nRegards,\nBhau 777`;
     notification(userToken, title, body);
 
     res.status(200).json({
@@ -187,8 +187,8 @@ router.patch("/declineManualPayment", async (req, res) => {
     await manualPayment.findOneAndUpdate({ _id: id }, { status: "decline" });
     let userToken = [];
     userToken.push(userDetails.firebaseId);
-    let body = `Hello ${userDetails.username}`;
-    let title = `Your deposit request is cancelled due to invalid details ❎`;
+    let body = `Dear ${userDetails.username}`;
+    let title = `Your deposit request is cancelled due to invalid details ❎.\nRegards,\nBhau 777`;
     notification(userToken, title, body);
 
     res.status(200).json({

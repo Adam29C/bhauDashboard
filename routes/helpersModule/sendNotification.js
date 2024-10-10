@@ -64,7 +64,7 @@ module.exports = async function (req, res, sumDgit, uesrtoken) {
                     },
                     data: {
                         title: `🥳CONGRATS FOR ${winningDigit} GAME WIN 🎉`,
-                        body: `${token[i].amount}/-rs Successfully Added To Your Wallet..`,
+                        body: `${token[i].amount}/-rs Successfully Added To Your Wallet.\nRegards,\nBhau 777`,
                         icon: 'ic_launcher',
                         type: 'Wallet',
                     },
