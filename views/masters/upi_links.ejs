@@ -159,7 +159,7 @@
           <h4 class="mt-0 mb-0 header-title text-center">
             Manage Payment Modes
           </h4>
-          <a
+          <!-- <a
             href="#for-manual-payment"
             class="btn btn-primary btn-sm waves-effect"
             data-animation="slit"
@@ -167,7 +167,7 @@
             data-overlaycolor="#36404a"
             style="float: right; margin-top: -28px"
             ><span> Add New </span> <i class="fa fa-plus ml-1"></i
-          ></a>
+          ></a> -->
           <table
             class="table table-centered table-bordered mb-0 text-center mt-3 w-100"
             id="paymentModeTable"
@@ -523,11 +523,11 @@
 
         let message = result.message;
         if (result.status) {
-          // console.log("result", result.data);
           let data = result.data;
 
           const tableBody = document.querySelector("#UpiTable tbody");
           data.forEach((item) => {
+
             let id = "mb" + item._id;
             let activeStatus = item.status;
             let dispText = activeStatus ? "Active" : "Disabled";
@@ -579,11 +579,11 @@
       url: "/payModeStatus/getPaymentModeStatus",
       data: {},
       success: function (result) {
-        console.log("result", result);
 
         let message = result.message;
         if (result.status) {
-          let data = result.message;
+          let data = result.data;
+
 
           const tableBody = document.querySelector("#paymentModeTable tbody");
           data.forEach((item) => {
