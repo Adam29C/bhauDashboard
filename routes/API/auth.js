@@ -371,7 +371,6 @@ router.post("/register", async (req, res) => {
 		});
 	}
 });
-
 //Login API
 router.post("/login", async (req, res) => {
 	try {
@@ -879,6 +878,62 @@ router.post("/sendOTP", async (req, res) => {
 	// 		});
 	// 	}
 	// });
+});
+
+router.post("/userExistOtpVerifyDevice", async (req, res) => {
+	try {
+		const { mobileNumber, otp, deviceId } = req.body;
+
+		// Validate request body
+		if (!mobileNumber || !otp || !deviceId) {
+			return res.status(400).json({
+				status: 0,
+				message: "Mobile number, OTP, and device ID are required.",
+			});
+		}
+
+		// Find user by mobile number
+		let userDetails = await initialInfo.findOne({ mobileNumber });
+		if (!userDetails) {
+			return res.status(400).json({
+				status: 0,
+				message: "User details not found.",
+			});
+		}
+
+		// Check OTP expiration
+		let newTimestamp = moment(userDetails.forgotOtpTime).add(2, 'minutes').valueOf();
+		let currentTime = Date.now();
+		if (currentTime > newTimestamp) {
+			return res.status(400).json({
+				status: 0,
+				message: "OTP has expired. Please try again.",
+			});
+		}
+
+		// Verify OTP
+		console.log(userDetails.Otp, otp);
+		if (userDetails.Otp !== parseInt(otp)) {
+			return res.status(400).json({
+				status: 0,
+				message: "Invalid OTP. Please try again.",
+			});
+		}
+		const formattedMobileNumber = `+91${mobileNumber}`;
+
+		await User.updateOne({ mobile: formattedMobileNumber }, { $set: { deviceId } });
+
+		return res.status(200).send({
+			status: 1,
+			message: "OTP verified successfully.",
+		});
+	} catch (error) {
+		return res.status(400).json({
+			status: 0,
+			message: "Something bad happened. Please contact support.",
+			error: error.message,
+		});
+	}
 });
 
 async function mappingTableApi(userDetails) {
